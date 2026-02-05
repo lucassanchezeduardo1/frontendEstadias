@@ -18,6 +18,10 @@ const routes: Routes = [
   {
     path: 'tabs',
     loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule)
+  },
+  {
+    path: 'researcher-tabs',
+    loadChildren: () => import('./pages/researcher/researcher-tabs/researcher-tabs.module').then( m => m.ResearcherTabsPageModule)
   }
 ];
 @NgModule({

@@ -1,0 +1,100 @@
+.form-container {
+    padding: 20px;
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    min-height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.form-card {
+    background: white;
+    width: 100%;
+    max-width: 650px;
+    border-radius: 24px;
+    padding: 30px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+}
+
+.event-header ion-icon {
+    color: #0369a1;
+    /* Blue for events */
+}
+
+.form-header h2 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+.event-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.input-group label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #334155;
+}
+
+.input-group input,
+.input-group select,
+.input-group textarea {
+    padding: 10px 15px;
+    border: 2px solid #f1f5f9;
+    border-radius: 10px;
+    background: #f8fafc;
+    transition: 0.2s;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: #0ea5e9;
+    background: white;
+}
+
+.row {
+    display: flex;
+    gap: 10px;
+}
+
+.col {
+    flex: 1;
+}
+
+.btn-event {
+    background: #0ea5e9 !important;
+    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3) !important;
+}
+
+.btn-event:hover {
+    background: #0284c7 !important;
+}
+
+.btn-submit {
+    margin-top: 20px;
+    padding: 14px;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+@media (max-width: 500px) {
+    .row {
+        flex-direction: column;
+    }
+}

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -8,6 +8,8 @@ import { Router } from '@angular/router';
     standalone: false
 })
 export class RegisterPage implements OnInit {
+
+    private router = inject(Router);
 
     selectedUserType: 'student' | 'researcher' = 'student';
     showPassword: boolean = false;
@@ -21,9 +23,10 @@ export class RegisterPage implements OnInit {
         'UAEM'
     ];
 
-    constructor(private router: Router) { }
+    constructor() { }
 
     ngOnInit() {
+        // Inicialización de registro
     }
 
     selectUserType(type: 'student' | 'researcher') {

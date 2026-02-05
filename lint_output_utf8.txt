@@ -1,0 +1,33 @@
+﻿
+Linting "app"...
+
+C:\Users\Acer\Desktop\estadias ing\frontend\src\app\pages\auth\login\login.page.ts
+  21:9  error  Prefer using the inject() function over constructor parameter injection. Use Angular's migration schematic to automatically refactor: ng generate @angular/core:inject  @angular-eslint/prefer-inject
+  24:5  error  Lifecycle methods should not be empty                                                                                                                                   @angular-eslint/no-empty-lifecycle-method
+
+C:\Users\Acer\Desktop\estadias ing\frontend\src\app\pages\auth\register\register.page.ts
+  24:17  error  Prefer using the inject() function over constructor parameter injection. Use Angular's migration schematic to automatically refactor: ng generate @angular/core:inject  @angular-eslint/prefer-inject
+  26:5   error  Lifecycle methods should not be empty                                                                                                                                   @angular-eslint/no-empty-lifecycle-method
+
+C:\Users\Acer\Desktop\estadias ing\frontend\src\app\pages\researcher\researcher-events\researcher-events.page.ts
+  13:3  error  Lifecycle methods should not be empty  @angular-eslint/no-empty-lifecycle-method
+
+C:\Users\Acer\Desktop\estadias ing\frontend\src\app\pages\researcher\researcher-home\researcher-home.page.ts
+  36:15  error  Prefer using the inject() function over constructor parameter injection. Use Angular's migration schematic to automatically refactor: ng generate @angular/core:inject  @angular-eslint/prefer-inject
+  38:3   error  Lifecycle methods should not be empty                                                                                                                                   @angular-eslint/no-empty-lifecycle-method
+
+C:\Users\Acer\Desktop\estadias ing\frontend\src\app\pages\researcher\researcher-profile\researcher-profile.page.ts
+  24:15  error  Prefer using the inject() function over constructor parameter injection. Use Angular's migration schematic to automatically refactor: ng generate @angular/core:inject  @angular-eslint/prefer-inject
+  26:3   error  Lifecycle methods should not be empty                                                                                                                                   @angular-eslint/no-empty-lifecycle-method
+
+C:\Users\Acer\Desktop\estadias ing\frontend\src\app\pages\researcher\researcher-publications\researcher-publications.page.ts
+  13:3  error  Lifecycle methods should not be empty  @angular-eslint/no-empty-lifecycle-method
+
+C:\Users\Acer\Desktop\estadias ing\frontend\src\app\pages\researcher\researcher-tabs\researcher-tabs.page.ts
+  13:3  error  Lifecycle methods should not be empty  @angular-eslint/no-empty-lifecycle-method
+
+C:\Users\Acer\Desktop\estadias ing\frontend\src\app\tab4\tab4.page.ts
+  11:17  error  Prefer using the inject() function over constructor parameter injection. Use Angular's migration schematic to automatically refactor: ng generate @angular/core:inject  @angular-eslint/prefer-inject
+
+Ô£û 12 problems (12 errors, 0 warnings)
+

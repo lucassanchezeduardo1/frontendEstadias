@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -9,6 +9,8 @@ import { Router } from '@angular/router';
 })
 export class LoginPage implements OnInit {
 
+    private router = inject(Router);
+
     // Tipo de usuario seleccionado
     selectedUserType: 'student' | 'researcher' | 'admin' = 'student';
 
@@ -17,11 +19,10 @@ export class LoginPage implements OnInit {
     password: string = '';
     showPassword: boolean = false;
 
-    constructor(
-        private router: Router
-    ) { }
+    constructor() { }
 
     ngOnInit() {
+        // Inicialización de login
     }
 
     /**
@@ -41,6 +42,9 @@ export class LoginPage implements OnInit {
             if (this.selectedUserType === 'admin') {
                 // Navegar al panel de administración
                 this.router.navigate(['/tabs/tab1']);
+            } else if (this.selectedUserType === 'researcher') {
+                // Navegar al inicio del investigador
+                this.router.navigate(['/researcher-tabs']);
             } else {
                 console.log('Funcionalidad para otros roles en desarrollo');
             }
