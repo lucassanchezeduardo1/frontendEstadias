@@ -1,0 +1,84 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>Mi Perfil</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()">
+        <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="admin-container">
+
+    <!-- Tarjeta de Perfil Principal -->
+    <div class="profile-header-card">
+      <div class="profile-avatar-container">
+        <div class="profile-avatar-circle">AM</div>
+        <div class="status-dot"></div>
+      </div>
+      <h2>Administrador Master</h2>
+      <p>Gerente de Operaciones Científicas</p>
+
+      <div class="profile-mini-stats">
+        <div class="stat-item">
+          <span class="val">84</span>
+          <span class="lab">Sesiones</span>
+        </div>
+        <div class="stat-item">
+          <span class="val">High</span>
+          <span class="lab">Nivel</span>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Información Personal</h2>
+
+    <div class="info-list-item">
+      <div class="icon-box">
+        <ion-icon name="person"></ion-icon>
+      </div>
+      <div class="label-content">
+        <div class="l-top">Nombre Completo</div>
+        <div class="l-bot">Administrador General</div>
+      </div>
+    </div>
+
+    <div class="info-list-item">
+      <div class="icon-box">
+        <ion-icon name="mail"></ion-icon>
+      </div>
+      <div class="label-content">
+        <div class="l-top">Correo Electrónico</div>
+        <div class="l-bot">admin@sistema.edu.mx</div>
+      </div>
+    </div>
+
+    <div class="info-list-item">
+      <div class="icon-box">
+        <ion-icon name="shield-checkmark"></ion-icon>
+      </div>
+      <div class="label-content">
+        <div class="l-top">Nivel de Acceso</div>
+        <div class="l-bot">Super Administrador (Root)</div>
+      </div>
+    </div>
+
+    <div class="info-list-item">
+      <div class="icon-box">
+        <ion-icon name="calendar"></ion-icon>
+      </div>
+      <div class="label-content">
+        <div class="l-top">Miembro Desde</div>
+        <div class="l-bot">Enero 2024</div>
+      </div>
+    </div>
+
+    <ion-button expand="block" fill="outline" class="outline-btn">
+      <ion-icon name="settings-outline" slot="start"></ion-icon>
+      Configuración de Cuenta
+    </ion-button>
+
+  </div>
+</ion-content>

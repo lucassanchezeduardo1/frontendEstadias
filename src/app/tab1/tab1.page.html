@@ -1,17 +1,73 @@
-<ion-header [translucent]="true">
+<ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title>
-      Tab 1
-    </ion-title>
+    <ion-title>Panel de Control</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 1</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <div class="admin-container">
 
-  <app-explore-container name="Tab 1 page"></app-explore-container>
+    <!-- Estadísticas Superiores -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <ion-icon name="time" class="stat-icon pending"></ion-icon>
+        <span class="stat-value">1</span>
+        <span class="stat-label">Pendientes</span>
+      </div>
+      <div class="stat-card">
+        <ion-icon name="people" class="stat-icon active"></ion-icon>
+        <span class="stat-value">1</span>
+        <span class="stat-label">Activos</span>
+      </div>
+      <div class="stat-card">
+        <ion-icon name="stats-chart" class="stat-icon activity"></ion-icon>
+        <span class="stat-value">24</span>
+        <span class="stat-label">Actividad</span>
+      </div>
+    </div>
+
+    <!-- Solicitudes Section -->
+    <h2 class="section-title">Solicitudes de Ingreso</h2>
+
+    <div class="researcher-card" *ngFor="let req of researcherRequests">
+      <div class="card-header">
+        <div class="initials-avatar">
+          {{ req.name.split(' ').length > 2 ? req.name.split(' ')[1].substring(0,1) + req.name.split('
+          ')[2].substring(0,1) : req.name.substring(0,2) }}
+        </div>
+        <div class="researcher-info">
+          <h3>{{ req.name }}</h3>
+          <div class="location">
+            <ion-icon name="location"></ion-icon>
+            {{ req.institution }}
+          </div>
+          <span class="area-tag">{{ req.area }}</span>
+        </div>
+      </div>
+      <div class="card-actions">
+        <ion-button fill="solid" class="btn-accept" (click)="acceptResearcher(req.id)">
+          <ion-icon name="checkmark-circle" slot="start"></ion-icon>
+          Aceptar
+        </ion-button>
+        <ion-button fill="clear" class="btn-reject" (click)="rejectResearcher(req.id)">
+          Rechazar
+        </ion-button>
+      </div>
+    </div>
+
+    <!-- Comunidad Activa -->
+    <h2 class="section-title">Comunidad Activa</h2>
+    <div class="active-item" *ngFor="let res of acceptedResearchers">
+      <div class="mini-avatar">
+        {{ res.name.substring(0,1) }}{{ res.name.split(' ')[1]?.substring(0,1) }}
+      </div>
+      <div class="info">
+        <h4>{{ res.name }}</h4>
+        <p>{{ res.area }}</p>
+      </div>
+      <span class="status-badge">Activo</span>
+      <ion-icon name="close-circle-outline" class="action-btn" (click)="deleteResearcher(res.id)"></ion-icon>
+    </div>
+
+  </div>
 </ion-content>

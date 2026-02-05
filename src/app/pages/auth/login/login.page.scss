@@ -1,0 +1,325 @@
+/* ================================================
+   LOGIN PAGE - ESTILOS
+   ================================================ */
+
+/* Contenedor principal */
+.login-content {
+    --background: var(--app-background);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.login-container {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Fondo degradado superior */
+.background-gradient {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 45vh;
+    background: linear-gradient(135deg, #2d1b2e 0%, #4a2545 50%, #822659 100%);
+    z-index: 0;
+    border-bottom-left-radius: 40px;
+    border-bottom-right-radius: 40px;
+}
+
+/* Tarjeta principal de login */
+.login-card {
+    position: relative;
+    background: var(--app-card-background);
+    border-radius: 24px;
+    padding: 40px 28px;
+    box-shadow: var(--app-shadow-large);
+    z-index: 1;
+    margin-top: 80px;
+    animation: slideUp 0.6s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Icono de la aplicación */
+.app-icon {
+    width: 80px;
+    height: 80px;
+    margin: -60px auto 24px;
+    background: linear-gradient(135deg, #822659 0%, #a83367 100%);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 20px rgba(130, 38, 89, 0.3);
+}
+
+.app-icon ion-icon {
+    font-size: 40px;
+    color: white;
+}
+
+/* Título y subtítulo */
+.login-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--app-text-primary);
+    text-align: center;
+    margin: 0 0 8px 0;
+}
+
+.login-subtitle {
+    font-size: 14px;
+    color: var(--app-text-secondary);
+    text-align: center;
+    margin: 0 0 28px 0;
+}
+
+/* Selector de tipo de usuario */
+.user-type-selector {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 28px;
+    background: #f8f9fa;
+    padding: 6px;
+    border-radius: 12px;
+}
+
+.user-type-btn {
+    flex: 1;
+    padding: 12px 16px;
+    border: none;
+    background: transparent;
+    color: var(--app-text-secondary);
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.user-type-btn:hover {
+    color: var(--ion-color-primary);
+}
+
+.user-type-btn.active {
+    background: var(--ion-color-primary);
+    color: white;
+    box-shadow: 0 2px 8px rgba(130, 38, 89, 0.25);
+}
+
+/* Formulario */
+.login-form {
+    width: 100%;
+}
+
+/* Grupos de input */
+.input-group {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.input-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: var(--app-text-secondary);
+    z-index: 1;
+}
+
+.custom-input {
+    width: 100%;
+    padding: 16px 16px 16px 48px;
+    border: 1px solid var(--app-border-color);
+    border-radius: 12px;
+    font-size: 15px;
+    color: var(--app-text-primary);
+    background: var(--app-card-background);
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.custom-input::placeholder {
+    color: var(--app-text-secondary);
+    font-size: 14px;
+}
+
+.custom-input:focus {
+    border-color: var(--ion-color-primary);
+    box-shadow: 0 0 0 3px rgba(130, 38, 89, 0.1);
+}
+
+/* Olvidaste tu contraseña */
+.forgot-password {
+    text-align: right;
+    margin-bottom: 24px;
+}
+
+.forgot-link {
+    font-size: 13px;
+    color: var(--app-text-secondary);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.forgot-link:hover {
+    color: var(--ion-color-primary);
+}
+
+/* Botón de login */
+.login-btn {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, #822659 0%, #a83367 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 4px 12px rgba(130, 38, 89, 0.3);
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.login-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(130, 38, 89, 0.4);
+}
+
+.login-btn:active {
+    transform: translateY(0);
+}
+
+.login-btn ion-icon {
+    font-size: 20px;
+}
+
+/* Sección de registro */
+.register-section {
+    margin-top: 24px;
+    text-align: center;
+}
+
+.register-text {
+    font-size: 14px;
+    color: var(--app-text-secondary);
+    margin: 0;
+}
+
+.register-link {
+    color: var(--ion-color-primary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.register-link:hover {
+    color: var(--ion-color-secondary);
+    text-decoration: underline;
+}
+
+/* ================================================
+   RESPONSIVE DESIGN
+   ================================================ */
+
+/* Tablets y pantallas más pequeñas */
+@media (max-width: 768px) {
+    .login-container {
+        padding: 15px;
+    }
+
+    .login-card {
+        padding: 32px 24px;
+        margin-top: 60px;
+    }
+
+    .app-icon {
+        width: 70px;
+        height: 70px;
+        margin: -50px auto 20px;
+    }
+
+    .app-icon ion-icon {
+        font-size: 35px;
+    }
+
+    .login-title {
+        font-size: 24px;
+    }
+
+    .user-type-btn {
+        padding: 10px 12px;
+        font-size: 12px;
+    }
+}
+
+/* Móviles */
+@media (max-width: 480px) {
+    .background-gradient {
+        height: 40vh;
+        border-bottom-left-radius: 30px;
+        border-bottom-right-radius: 30px;
+    }
+
+    .login-card {
+        padding: 28px 20px;
+        border-radius: 20px;
+    }
+
+    .app-icon {
+        width: 60px;
+        height: 60px;
+        margin: -45px auto 16px;
+    }
+
+    .app-icon ion-icon {
+        font-size: 30px;
+    }
+
+    .login-title {
+        font-size: 22px;
+    }
+
+    .login-subtitle {
+        font-size: 13px;
+    }
+
+    .user-type-btn {
+        padding: 9px 10px;
+        font-size: 11px;
+    }
+
+    .custom-input {
+        padding: 14px 14px 14px 44px;
+        font-size: 14px;
+    }
+
+    .login-btn {
+        padding: 14px;
+        font-size: 15px;
+    }
+}

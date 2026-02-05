@@ -8,6 +8,27 @@ import { Component } from '@angular/core';
 })
 export class Tab1Page {
 
-  constructor() {}
+  researcherRequests = [
+    { id: 1, name: 'Dr. Roberto Gómez', institution: 'UNAM', area: 'Biotecnología' },
+    { id: 2, name: 'Dra. María Curiel', institution: 'IPN', area: 'Física Cuántica' }
+  ];
 
+  acceptedResearchers = [
+    { id: 3, name: 'Dr. Albert Sans', institution: 'Tec de Monterrey', area: 'Robótica' },
+    { id: 4, name: 'Dra. Elena Poniatowska', institution: 'UAM', area: 'Sociología' }
+  ];
+
+  constructor() { }
+
+  acceptResearcher(id: number) {
+    console.log('Aceptando investigador:', id);
+  }
+
+  rejectResearcher(id: number) {
+    console.log('Rechazando investigador:', id);
+  }
+
+  deleteResearcher(id: number) {
+    console.log('Eliminando investigador:', id);
+  }
 }
