@@ -59,10 +59,10 @@
             </form>
 
             <!-- Enlace de registro -->
-            <div class="register-section">
+            <div class="register-section" *ngIf="selectedUserType !== 'admin'">
                 <p class="register-text">
                     ¿No tienes cuenta?
-                    <a href="#" class="register-link">Regístrate aquí</a>
+                    <a routerLink="/register" class="register-link">Regístrate aquí</a>
                 </p>
             </div>
         </div>

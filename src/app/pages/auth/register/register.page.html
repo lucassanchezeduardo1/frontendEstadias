@@ -1,0 +1,173 @@
+<ion-content class="login-content">
+    <div class="login-container">
+        <div class="background-gradient"></div>
+
+        <div class="login-card register-card">
+            <div class="app-icon">
+                <ion-icon name="person-add-outline"></ion-icon>
+            </div>
+
+            <h1 class="login-title">Crear Cuenta</h1>
+            <p class="login-subtitle">Únete a la red de divulgación científica</p>
+
+            <!-- Selector de tipo de usuario -->
+            <div class="user-type-selector">
+                <button class="user-type-btn" [class.active]="selectedUserType === 'student'"
+                    (click)="selectUserType('student')">
+                    Estudiante
+                </button>
+                <button class="user-type-btn" [class.active]="selectedUserType === 'researcher'"
+                    (click)="selectUserType('researcher')">
+                    Investigador
+                </button>
+            </div>
+
+            <!-- Formulario Estudiante -->
+            <form class="login-form" *ngIf="selectedUserType === 'student'" (ngSubmit)="onRegister()">
+                <div class="input-grid">
+                    <div class="input-group">
+                        <ion-icon name="person-outline" class="input-icon"></ion-icon>
+                        <input type="text" class="custom-input" placeholder="Nombre(s)" required>
+                    </div>
+                    <div class="input-group">
+                        <ion-icon name="person-outline" class="input-icon"></ion-icon>
+                        <input type="text" class="custom-input" placeholder="Apellidos" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <ion-icon name="mail-outline" class="input-icon"></ion-icon>
+                    <input type="email" class="custom-input" placeholder="Correo electrónico" required>
+                </div>
+
+                <div class="input-group">
+                    <ion-icon name="lock-closed-outline" class="input-icon"></ion-icon>
+                    <input [type]="showPassword ? 'text' : 'password'" class="custom-input" placeholder="Contraseña"
+                        required>
+                </div>
+
+                <div class="input-grid">
+                    <div class="input-group">
+                        <ion-icon name="briefcase-outline" class="input-icon"></ion-icon>
+                        <input type="text" class="custom-input" placeholder="Oficio" required>
+                    </div>
+                    <div class="input-group">
+                        <ion-icon name="school-outline" class="input-icon"></ion-icon>
+                        <input type="text" class="custom-input" placeholder="Grado Académico" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <ion-icon name="calendar-outline" class="input-icon"></ion-icon>
+                    <input type="number" class="custom-input" placeholder="Edad" required>
+                </div>
+
+                <div class="input-group file-input">
+                    <ion-icon name="image-outline" class="input-icon"></ion-icon>
+                    <label class="custom-file-label">Foto de Perfil</label>
+                    <input type="file" class="hidden-file-input">
+                </div>
+
+                <button type="submit" class="login-btn">
+                    Registrar Estudiante
+                    <ion-icon name="checkmark-circle-outline"></ion-icon>
+                </button>
+            </form>
+
+            <!-- Formulario Investigador -->
+            <form class="login-form researcher-form" *ngIf="selectedUserType === 'researcher'"
+                (ngSubmit)="onRegister()">
+                <div class="input-grid">
+                    <div class="input-group">
+                        <ion-icon name="person-outline" class="input-icon"></ion-icon>
+                        <input type="text" class="custom-input" placeholder="Nombre(s)" required>
+                    </div>
+                    <div class="input-group">
+                        <ion-icon name="person-outline" class="input-icon"></ion-icon>
+                        <input type="text" class="custom-input" placeholder="Apellidos" required>
+                    </div>
+                </div>
+
+                <div class="input-grid">
+                    <div class="input-group">
+                        <ion-icon name="school-outline" class="input-icon"></ion-icon>
+                        <input type="text" class="custom-input" placeholder="Grado Académico" required>
+                    </div>
+                    <div class="input-group">
+                        <ion-icon name="id-card-outline" class="input-icon"></ion-icon>
+                        <input type="text" class="custom-input" placeholder="Cargo Actual" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <ion-icon name="location-outline" class="input-icon"></ion-icon>
+                    <input type="text" class="custom-input" placeholder="Dirección de Oficina" required>
+                </div>
+
+                <div class="input-group">
+                    <ion-icon name="time-outline" class="input-icon"></ion-icon>
+                    <input type="text" class="custom-input" placeholder="Horario de Atención" required>
+                </div>
+
+                <div class="input-group">
+                    <ion-icon name="mail-outline" class="input-icon"></ion-icon>
+                    <input type="email" class="custom-input" placeholder="Correo Institucional" required>
+                </div>
+
+                <div class="input-group">
+                    <ion-icon name="lock-closed-outline" class="input-icon"></ion-icon>
+                    <input [type]="showPassword ? 'text' : 'password'" class="custom-input" placeholder="Contraseña"
+                        required>
+                </div>
+
+                <div class="input-grid">
+                    <div class="input-group">
+                        <ion-icon name="ribbon-outline" class="input-icon"></ion-icon>
+                        <input type="text" class="custom-input" placeholder="Matrícula" required>
+                    </div>
+                    <div class="input-group">
+                        <ion-icon name="business-outline" class="input-icon"></ion-icon>
+                        <select class="custom-select">
+                            <option value="" disabled selected>Institución</option>
+                            <option *ngFor="let inst of institutions" [value]="inst">{{inst}}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <ion-icon name="logo-google" class="input-icon"></ion-icon>
+                    <input type="url" class="custom-input" placeholder="Link Google Académico" required>
+                </div>
+
+                <div class="input-group">
+                    <ion-icon name="document-text-outline" class="input-icon"></ion-icon>
+                    <textarea class="custom-textarea" placeholder="Breve descripción de trayectoria..."
+                        rows="3"></textarea>
+                </div>
+
+                <div class="input-group">
+                    <ion-icon name="flask-outline" class="input-icon"></ion-icon>
+                    <input type="text" class="custom-input" placeholder="Área(s) de Investigación" required>
+                </div>
+
+                <div class="input-group file-input">
+                    <ion-icon name="image-outline" class="input-icon"></ion-icon>
+                    <label class="custom-file-label">Foto de Perfil</label>
+                    <input type="file" class="hidden-file-input">
+                </div>
+
+                <button type="submit" class="login-btn">
+                    Solicitar Registro
+                    <ion-icon name="send-outline"></ion-icon>
+                </button>
+            </form>
+
+            <div class="register-section">
+                <p class="register-text">
+                    ¿Ya tienes cuenta?
+                    <a (click)="goToLogin()" class="register-link">Inicia sesión</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</ion-content>

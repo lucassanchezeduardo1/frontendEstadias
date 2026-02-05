@@ -1,0 +1,103 @@
+/* Reutilizamos casi todo del login.page.scss pero con adaptaciones */
+
+.register-card {
+    max-width: 500px !important;
+    /* Un poco más ancha para los grids */
+    margin: 20px auto !important;
+}
+
+.input-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    width: 100%;
+    margin-bottom: 0;
+}
+
+.custom-textarea {
+    width: 100%;
+    padding: 15px 15px 15px 50px;
+    border-radius: 15px;
+    border: 1px solid #eee;
+    background: #fdfdfd;
+    font-size: 0.95rem;
+    color: #333;
+    transition: all 0.3s ease;
+    resize: none;
+    font-family: inherit;
+
+    &:focus {
+        outline: none;
+        border-color: var(--ion-color-secondary);
+        box-shadow: 0 0 0 4px rgba(168, 51, 103, 0.1);
+        background: #fff;
+    }
+}
+
+.custom-select {
+    width: 100%;
+    padding: 15px 15px 15px 45px;
+    border-radius: 15px;
+    border: 1px solid #eee;
+    background: #fdfdfd;
+    font-size: 0.95rem;
+    color: #333;
+    appearance: none;
+    cursor: pointer;
+
+    &:focus {
+        outline: none;
+        border-color: var(--ion-color-secondary);
+    }
+}
+
+.file-input {
+    position: relative;
+    cursor: pointer;
+
+    .custom-file-label {
+        width: 100%;
+        padding: 15px 15px 15px 50px;
+        display: block;
+        color: #999;
+        font-size: 0.9rem;
+    }
+
+    .hidden-file-input {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+    }
+}
+
+.researcher-form {
+    max-height: 60vh;
+    overflow-y: auto;
+    padding-right: 10px;
+    margin-bottom: 20px;
+
+    /* Estilo del scrollbar */
+    &::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: var(--ion-color-primary);
+        border-radius: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .input-grid {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+}
