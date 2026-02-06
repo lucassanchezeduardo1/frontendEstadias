@@ -1,0 +1,59 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>Panel del Investigador</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="main-container">
+
+    <!-- Impact Summary Stats -->
+    <div class="stats-grid">
+      <div class="stat-card" *ngFor="let stat of stats" [style.border-left-color]="stat.color">
+        <div class="stat-info">
+          <span class="stat-value">{{ stat.value }}</span>
+          <span class="stat-label">{{ stat.label }}</span>
+        </div>
+        <ion-icon [name]="stat.icon" class="stat-icon" [style.color]="stat.color"></ion-icon>
+      </div>
+    </div>
+
+    <div class="section-header">
+      <h2>Mis Publicaciones</h2>
+    </div>
+
+    <!-- Publications List -->
+    <div class="publications-list">
+      <div class="publication-card" *ngFor="let pub of publications">
+        <div class="pub-image" [style.background-image]="'url(' + pub.image + ')'">
+          <div class="category-badge">{{ pub.category }}</div>
+        </div>
+
+        <div class="pub-content">
+          <h3>{{ pub.title }}</h3>
+          <p class="pub-date">Publicado: {{ pub.date }}</p>
+
+          <div class="pub-actions">
+            <ion-button fill="clear" color="primary" (click)="editPublication(pub)">
+              <ion-icon name="create-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear" color="danger" (click)="deletePublication(pub.id)">
+              <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+          </div>
+
+          <div class="comments-section">
+            <div class="comments-header">
+              <ion-icon name="chatbubbles-outline"></ion-icon>
+              <span>Comentarios ({{ pub.comments.length }})</span>
+            </div>
+            <div class="comment-item" *ngFor="let comment of pub.comments">
+              <strong>{{ comment.user }}:</strong> {{ comment.text }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</ion-content>

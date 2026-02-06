@@ -1,0 +1,90 @@
+.form-container {
+    padding: 20px;
+    background: #fdf2f2; // Very subtle red/burgundy tint
+    min-height: 100%;
+}
+
+.form-card {
+    background: white;
+    padding: 25px;
+    border-radius: 25px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+
+    &.event-form {
+        border-top: 6px solid #800020;
+    }
+}
+
+.form-group {
+    margin-bottom: 20px;
+
+    ion-label {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #800020;
+        margin-bottom: 8px;
+    }
+
+    ion-input,
+    ion-textarea,
+    ion-select {
+        --background: #fff;
+        --padding-start: 15px;
+        --padding-end: 15px;
+        border: 1px solid #ced4da;
+        border-radius: 12px;
+        margin-top: 5px;
+        font-size: 0.95rem;
+        transition: all 0.2s;
+
+        &:focus-within {
+            border-color: #800020;
+            box-shadow: 0 0 0 2px rgba(128, 0, 32, 0.1);
+        }
+    }
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+
+    .half {
+        flex: 1;
+    }
+}
+
+.upload-box {
+    background: #f8f9fa;
+    border: 2px dashed #dee2e6;
+    border-radius: 15px;
+    height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 5px;
+    cursor: pointer;
+
+    ion-icon {
+        font-size: 2rem;
+        color: #800020;
+    }
+
+    span {
+        font-size: 0.8rem;
+        color: #666;
+        font-weight: 500;
+    }
+}
+
+.submit-btn {
+    &.event {
+        --background: #800020;
+        --background-hover: #5a0017;
+        --box-shadow: 0 4px 15px rgba(128, 0, 32, 0.3);
+        margin-top: 30px;
+        height: 50px;
+        font-weight: 700;
+    }
+}

@@ -44,7 +44,7 @@ export class LoginPage implements OnInit {
                 this.router.navigate(['/tabs/tab1']);
             } else if (this.selectedUserType === 'researcher') {
                 // Navegar al inicio del investigador
-                this.router.navigate(['/researcher-tabs']);
+                this.router.navigate(['/investigador']);
             } else {
                 console.log('Funcionalidad para otros roles en desarrollo');
             }

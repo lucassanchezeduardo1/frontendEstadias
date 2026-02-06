@@ -20,9 +20,10 @@ const routes: Routes = [
     loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule)
   },
   {
-    path: 'researcher-tabs',
-    loadChildren: () => import('./pages/researcher/researcher-tabs/researcher-tabs.module').then( m => m.ResearcherTabsPageModule)
-  }
+    path: 'investigador',
+    loadChildren: () => import('./pages/investigador/investigador.module').then( m => m.InvestigadorPageModule)
+  },
+
 ];
 @NgModule({
   imports: [

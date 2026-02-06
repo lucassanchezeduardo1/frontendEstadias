@@ -1,0 +1,71 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>Nueva Publicación</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="form-container">
+    <div class="form-card">
+      <div class="form-group">
+        <ion-label position="stacked">Título de la Investigación</ion-label>
+        <ion-input type="text" placeholder="Ej. Avances en Nanotecnología"></ion-input>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group half">
+          <ion-label position="stacked">Categoría</ion-label>
+          <ion-select placeholder="Seleccionar" interface="popover">
+            <ion-select-option value="tecnologia">Tecnología</ion-select-option>
+            <ion-select-option value="ciencias">Ciencias</ion-select-option>
+            <ion-select-option value="humanidades">Humanidades</ion-select-option>
+          </ion-select>
+        </div>
+        <div class="form-group half">
+          <ion-label position="stacked">Sub-categorías</ion-label>
+          <ion-input type="text" placeholder="Ej. IA, Robótica"></ion-input>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <ion-label position="stacked">Imagen de portada</ion-label>
+        <div class="upload-box">
+          <ion-icon name="image-outline"></ion-icon>
+          <span>Seleccionar Imagen</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <ion-label position="stacked">Colaboradores</ion-label>
+        <ion-input type="text" placeholder="Nombres separados por comas"></ion-input>
+      </div>
+
+      <div class="form-group">
+        <ion-label position="stacked">Síntesis / Resumen</ion-label>
+        <ion-textarea rows="4" placeholder="Breve descripción de la investigación..."></ion-textarea>
+      </div>
+
+      <div class="form-group">
+        <ion-label position="stacked">Archivo PDF</ion-label>
+        <div class="upload-box dashed">
+          <ion-icon name="document-outline"></ion-icon>
+          <span>Subir PDF</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <ion-label position="stacked">Links de Referencia</ion-label>
+        <ion-input type="url" placeholder="https://..."></ion-input>
+      </div>
+
+      <div class="form-group">
+        <ion-label position="stacked">Videos (URL)</ion-label>
+        <ion-input type="url" placeholder="https://youtube.com/..."></ion-input>
+      </div>
+
+      <ion-button expand="block" shape="round" class="submit-btn">
+        Crear Publicación
+      </ion-button>
+    </div>
+  </div>
+</ion-content>

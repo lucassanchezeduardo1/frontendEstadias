@@ -1,0 +1,93 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>Perfil del Investigador</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="toggleEdit()" color="primary">
+        {{ isEditing ? 'Cancelar' : 'Editar' }}
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="profile-container">
+
+    <div class="profile-header">
+      <div class="avatar-large">
+        AS
+      </div>
+      <h2>{{ researcher.name }}</h2>
+      <p class="role-tag">Investigador Senior</p>
+    </div>
+
+    <div class="profile-card">
+      <div class="info-section">
+        <div class="info-item">
+          <ion-icon name="mail-outline"></ion-icon>
+          <div class="text">
+            <span>Correo Electrónico</span>
+            <p *ngIf="!isEditing">{{ researcher.email }}</p>
+            <ion-input *ngIf="isEditing" [(ngModel)]="researcher.email"></ion-input>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <ion-icon name="business-outline"></ion-icon>
+          <div class="text">
+            <span>Institución</span>
+            <p *ngIf="!isEditing">{{ researcher.institution }}</p>
+            <ion-input *ngIf="isEditing" [(ngModel)]="researcher.institution"></ion-input>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <ion-icon name="flask-outline"></ion-icon>
+          <div class="text">
+            <span>Área de Investigación</span>
+            <p *ngIf="!isEditing">{{ researcher.area }}</p>
+            <ion-input *ngIf="isEditing" [(ngModel)]="researcher.area"></ion-input>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <ion-icon name="school-outline"></ion-icon>
+          <div class="text">
+            <span>Grado Académico</span>
+            <p *ngIf="!isEditing">{{ researcher.degree }}</p>
+            <ion-input *ngIf="isEditing" [(ngModel)]="researcher.degree"></ion-input>
+          </div>
+        </div>
+
+        <div class="info-item bio">
+          <ion-icon name="information-circle-outline"></ion-icon>
+          <div class="text">
+            <span>Biografía</span>
+            <p *ngIf="!isEditing">{{ researcher.bio }}</p>
+            <ion-textarea *ngIf="isEditing" [(ngModel)]="researcher.bio" rows="4"></ion-textarea>
+          </div>
+        </div>
+      </div>
+
+      <ion-button *ngIf="isEditing" expand="block" shape="round" color="success" (click)="saveProfile()"
+        class="save-btn">
+        Guardar Cambios
+      </ion-button>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-box">
+        <h4>{{ researcher.publicationsCount }}</h4>
+        <span>Publicaciones</span>
+      </div>
+      <div class="stat-box">
+        <h4>15</h4>
+        <span>Eventos</span>
+      </div>
+      <div class="stat-box">
+        <h4>1.5k</h4>
+        <span>Impacto</span>
+      </div>
+    </div>
+
+  </div>
+</ion-content>

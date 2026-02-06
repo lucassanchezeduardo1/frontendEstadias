@@ -1,0 +1,83 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>Agregar Evento</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="form-container">
+    <div class="form-card event-form">
+
+      <div class="form-group">
+        <ion-label position="stacked">Título del Evento</ion-label>
+        <ion-input type="text" placeholder="Ej. Congreso Anual de Ciencias"></ion-input>
+      </div>
+
+      <div class="form-group">
+        <ion-label position="stacked">Imagen del Evento</ion-label>
+        <div class="upload-box">
+          <ion-icon name="calendar-clear-outline"></ion-icon>
+          <span>Seleccionar Banner</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <ion-label position="stacked">Descripción</ion-label>
+        <ion-textarea rows="3" placeholder="Detalles del evento..."></ion-textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group half">
+          <ion-label position="stacked">Tipo de Evento</ion-label>
+          <ion-input type="text" placeholder="Ej. Taller"></ion-input>
+        </div>
+        <div class="form-group half">
+          <ion-label position="stacked">Fecha</ion-label>
+          <ion-input type="date"></ion-input>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group half">
+          <ion-label position="stacked">Hora</ion-label>
+          <ion-input type="time"></ion-input>
+        </div>
+        <div class="form-group half">
+          <ion-label position="stacked">Modalidad</ion-label>
+          <ion-select placeholder="Seleccionar" interface="popover">
+            <ion-select-option value="presencial">Presencial</ion-select-option>
+            <ion-select-option value="virtual">Virtual</ion-select-option>
+            <ion-select-option value="hibrida">Híbrida</ion-select-option>
+          </ion-select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <ion-label position="stacked">Lugar / Link (si es virtual)</ion-label>
+        <ion-input type="text" placeholder="Dirección o URL"></ion-input>
+      </div>
+
+      <div class="form-group">
+        <ion-label position="stacked">Categoría</ion-label>
+        <ion-select placeholder="Seleccionar" interface="popover">
+          <ion-select-option value="tecnologia">Tecnología</ion-select-option>
+          <ion-select-option value="salud">Salud</ion-select-option>
+        </ion-select>
+      </div>
+
+      <div class="form-group">
+        <ion-label position="stacked">Ponentes</ion-label>
+        <ion-input type="text" placeholder="Nombres de los expositores"></ion-input>
+      </div>
+
+      <div class="form-group">
+        <ion-label position="stacked">Público Objetivo</ion-label>
+        <ion-input type="text" placeholder="Ej. Estudiantes, Profesionales"></ion-input>
+      </div>
+
+      <ion-button expand="block" shape="round" class="submit-btn event">
+        Publicar Evento
+      </ion-button>
+    </div>
+  </div>
+</ion-content>
