@@ -45,6 +45,9 @@ export class LoginPage implements OnInit {
             } else if (this.selectedUserType === 'researcher') {
                 // Navegar al inicio del investigador
                 this.router.navigate(['/investigador']);
+            } else if (this.selectedUserType === 'student') {
+                // Navegar al inicio del estudiante
+                this.router.navigate(['/estudiante']);
             } else {
                 console.log('Funcionalidad para otros roles en desarrollo');
             }

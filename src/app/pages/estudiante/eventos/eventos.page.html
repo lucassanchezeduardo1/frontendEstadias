@@ -1,0 +1,43 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>Proximos Eventos</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div class="main-container">
+
+    <div class="events-list">
+      <div class="event-card" *ngFor="let ev of eventos">
+        <div class="event-image" [style.background-image]="'url(' + ev.imagen + ')'">
+          <div class="date-tag">
+            <span class="day">{{ ev.fecha.split(' ')[0] }}</span>
+            <span class="month">{{ ev.fecha.split(' ')[1] }}</span>
+          </div>
+          <div class="mode-badge" [ngClass]="ev.modalidad.toLowerCase()">
+            {{ ev.modalidad }}
+          </div>
+        </div>
+
+        <div class="event-details">
+          <span class="category">{{ ev.categoria }}</span>
+          <h3>{{ ev.titulo }}</h3>
+
+          <div class="info-row">
+            <ion-icon name="time-outline"></ion-icon>
+            <span>{{ ev.hora }}</span>
+          </div>
+
+          <div class="info-row">
+            <ion-icon name="location-outline"></ion-icon>
+            <span class="truncate">{{ ev.lugar }}</span>
+          </div>
+
+          <ion-button expand="block" class="register-btn">
+            Inscribirse al Evento
+          </ion-button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</ion-content>

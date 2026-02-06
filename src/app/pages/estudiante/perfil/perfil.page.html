@@ -1,0 +1,64 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>Mi Perfil</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="main-container">
+
+    <div class="profile-header">
+      <div class="avatar-wrapper">
+        <img [src]="usuario.avatar" alt="Profile Picture">
+        <div class="edit-badge" *ngIf="isEditing">
+          <ion-icon name="camera-outline"></ion-icon>
+        </div>
+      </div>
+      <h2>{{ usuario.nombre }}</h2>
+      <p>{{ usuario.matricula }}</p>
+    </div>
+
+    <div class="info-sections">
+      <div class="info-card">
+        <div class="card-title">Información Académica</div>
+
+        <div class="field">
+          <label>Carrera</label>
+          <p *ngIf="!isEditing">{{ usuario.carrera }}</p>
+          <ion-input *ngIf="isEditing" [(ngModel)]="usuario.carrera" class="custom-input"></ion-input>
+        </div>
+
+        <div class="field">
+          <label>Institución</label>
+          <p>{{ usuario.universidad }}</p>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="card-title">Contacto</div>
+
+        <div class="field">
+          <label>Correo Electrónico</label>
+          <p *ngIf="!isEditing">{{ usuario.correo }}</p>
+          <ion-input *ngIf="isEditing" [(ngModel)]="usuario.correo" class="custom-input"></ion-input>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="card-title">Intereses Científicos</div>
+        <div class="tags-container">
+          <div class="tag" *ngFor="let interes of usuario.intereses">{{ interes }}</div>
+          <div class="tag add" *ngIf="isEditing">+</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions-section">
+      <ion-button expand="block" fill="outline" color="danger" class="logout-btn" (click)="cerrarSesion()">
+        <ion-icon name="log-out-outline" slot="start"></ion-icon>
+        Cerrar Sesión
+      </ion-button>
+    </div>
+
+  </div>
+</ion-content>

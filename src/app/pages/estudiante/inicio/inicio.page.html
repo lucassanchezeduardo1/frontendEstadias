@@ -1,0 +1,59 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>Hola Estudiante</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="main-container">
+
+    <!-- Search Bar -->
+    <div class="search-section">
+      <ion-searchbar placeholder="Buscar publicaciones o autores..." (ionInput)="buscar($event)" class="custom-search"
+        mode="ios">
+      </ion-searchbar>
+    </div>
+
+    <!-- Categories Carousel -->
+    <div class="categories-section">
+      <div class="section-header">
+        <h2>Categorías</h2>
+        <ion-note>Ver todo</ion-note>
+      </div>
+      <div class="horizontal-scroll">
+        <div class="category-card" *ngFor="let cat of categorias" [style.background]="cat.color">
+          <ion-icon [name]="cat.icono"></ion-icon>
+          <span>{{ cat.nombre }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Publications Feed -->
+    <div class="feed-section">
+      <div class="section-header">
+        <h2>Publicaciones Destacadas</h2>
+      </div>
+
+      <div class="publication-card" *ngFor="let pub of publicaciones">
+        <div class="card-image" [style.background-image]="'url(' + pub.imagen + ')'">
+          <div class="badge">{{ pub.categoria }}</div>
+        </div>
+        <div class="card-content">
+          <span class="pub-date">{{ pub.fecha }}</span>
+          <h3>{{ pub.titulo }}</h3>
+          <p class="pub-author">Por <strong>{{ pub.investigador }}</strong></p>
+          <p class="pub-summary">{{ pub.resumen }}</p>
+
+          <div class="card-footer">
+            <ion-button fill="clear" color="primary">Leer más</ion-button>
+            <div class="interactions">
+              <ion-icon name="heart-outline"></ion-icon>
+              <ion-icon name="share-social-outline"></ion-icon>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</ion-content>

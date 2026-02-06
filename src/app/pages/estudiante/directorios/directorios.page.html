@@ -1,0 +1,48 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>Directorio de Investigadores</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="main-container">
+
+    <div class="search-filter">
+      <ion-searchbar placeholder="Buscar investigador o área..." mode="ios"></ion-searchbar>
+    </div>
+
+    <div class="investigators-grid">
+      <div class="investigator-card" *ngFor="let inv of investigadores">
+        <div class="card-gradient" [style.background]="'linear-gradient(135deg, ' + inv.color + ' 0%, #800020 100%)'">
+        </div>
+
+        <div class="card-content">
+          <div class="avatar-container">
+            <img [src]="inv.foto" [alt]="inv.nombre">
+            <div class="status-indicator"></div>
+          </div>
+
+          <h3>{{ inv.nombre }}</h3>
+          <p class="specialty">{{ inv.especialidad }}</p>
+          <p class="institution">{{ inv.institucion }}</p>
+
+          <div class="stats-row">
+            <div class="stat">
+              <span class="value">{{ inv.proyectos }}</span>
+              <span class="label">Proyectos</span>
+            </div>
+            <div class="stat">
+              <span class="value">{{ inv.seguidores }}</span>
+              <span class="label">Seguidores</span>
+            </div>
+          </div>
+
+          <ion-button expand="block" shape="round" class="profile-btn">
+            Ver Perfil
+          </ion-button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</ion-content>
