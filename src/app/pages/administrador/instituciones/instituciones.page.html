@@ -1,0 +1,59 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>Instituciones</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="admin-container">
+
+    <h2 class="section-title">Añadir Institución</h2>
+    <div class="form-card">
+      <ion-item lines="none">
+        <ion-icon name="business" slot="start"></ion-icon>
+        <ion-input type="text" placeholder="Nombre completo" [(ngModel)]="newInstitution.name"></ion-input>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-icon name="layers" slot="start"></ion-icon>
+        <ion-input type="text" placeholder="Tipo (Pública / Privada)" [(ngModel)]="newInstitution.type"></ion-input>
+      </ion-item>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <ion-item lines="none">
+          <ion-icon name="earth" slot="start"></ion-icon>
+          <ion-input type="text" placeholder="País" [(ngModel)]="newInstitution.country"></ion-input>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-icon name="map" slot="start"></ion-icon>
+          <ion-input type="text" placeholder="Estado" [(ngModel)]="newInstitution.state"></ion-input>
+        </ion-item>
+      </div>
+      <ion-item lines="none">
+        <ion-icon name="location" slot="start"></ion-icon>
+        <ion-input type="text" placeholder="Dirección física" [(ngModel)]="newInstitution.address"></ion-input>
+      </ion-item>
+      <ion-button expand="block" fill="solid" class="submit-btn" (click)="addInstitution()">
+        Guardar Institución
+      </ion-button>
+    </div>
+
+    <h2 class="section-title">Entidades Registradas</h2>
+    <div class="active-item" *ngFor="let inst of institutions">
+      <div class="mini-avatar" style="background: #eff6ff; color: #3b82f6;">
+        <ion-icon name="business"></ion-icon>
+      </div>
+      <div class="info">
+        <h4>{{ inst.name }}</h4>
+        <p>{{ inst.type }} • {{ inst.state }}, {{ inst.country }}</p>
+      </div>
+      <div class="action-buttons">
+        <ion-button fill="clear" color="primary" (click)="editInstitution(inst)">
+          <ion-icon name="create-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+        <ion-button fill="clear" color="danger" (click)="deleteInstitution(inst.id)">
+          <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+      </div>
+    </div>
+
+  </div>
+</ion-content>
