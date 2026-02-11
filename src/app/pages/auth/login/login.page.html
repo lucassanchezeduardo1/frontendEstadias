@@ -32,11 +32,13 @@
 
             <!-- Formulario -->
             <form class="login-form" (ngSubmit)="onLogin()">
-                <!-- Campo de correo electrónico -->
+                <!-- Campo de usuario o correo electrónico -->
                 <div class="input-group">
-                    <ion-icon name="mail-outline" class="input-icon"></ion-icon>
-                    <input type="email" class="custom-input" placeholder="Correo electrónico" [(ngModel)]="email"
-                        name="email" required>
+                    <ion-icon [name]="selectedUserType === 'admin' ? 'person-outline' : 'mail-outline'"
+                        class="input-icon"></ion-icon>
+                    <input [type]="selectedUserType === 'admin' ? 'text' : 'email'" class="custom-input"
+                        [placeholder]="selectedUserType === 'admin' ? 'Nombre de usuario' : 'Correo electrónico'"
+                        [(ngModel)]="usernameOrEmail" name="usernameOrEmail" required>
                 </div>
 
                 <!-- Campo de contraseña -->

@@ -28,6 +28,10 @@ export class InstitucionesPage implements OnInit {
     direccion: ''
   };
 
+  // Estado de edición
+  isEditing = false;
+  selectedId: number | null = null;
+
   constructor() { }
 
   ngOnInit() {
@@ -50,36 +54,65 @@ export class InstitucionesPage implements OnInit {
   }
 
   /**
-   * Registrar una nueva institución con validación
+   * Cargar datos en el formulario para editar
    */
-  async addInstitution() {
-    // Validación: Ninguno puede ir vacío
+  editInstitution(inst: Institucion) {
+    this.isEditing = true;
+    this.selectedId = inst.id || null;
+    // Clonamos el objeto para no editar la lista directamente antes de guardar
+    this.newInstitution = { ...inst };
+    // Scroll suave hacia arriba para que el usuario vea el formulario
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  cancelEdit() {
+    this.isEditing = false;
+    this.selectedId = null;
+    this.resetForm();
+  }
+
+  /**
+   * Guardar (Crear o Actualizar)
+   */
+  async saveInstitution() {
     if (!this.newInstitution.nombre || !this.newInstitution.tipo_institucion ||
       !this.newInstitution.pais || !this.newInstitution.estado || !this.newInstitution.direccion) {
       this.showToast('Todos los campos son obligatorios', 'warning');
       return;
     }
 
-    const loading = await this.loadingCtrl.create({ message: 'Guardando...' });
+    const loading = await this.loadingCtrl.create({ message: this.isEditing ? 'Actualizando...' : 'Guardando...' });
     await loading.present();
 
-    this.instService.createInstitucion(this.newInstitution).subscribe({
-      next: (res) => {
-        loading.dismiss();
-        this.showToast('Institución registrada con éxito', 'success');
-        this.resetForm();
-        this.cargarInstituciones(); // Recargar lista
-      },
-      error: (err) => {
-        loading.dismiss();
-        console.error('Error al guardar:', err);
-        if (err.status === 400 || err.status === 409) {
-          this.showToast('Error: El nombre de la institución ya existe o los datos son inválidos', 'danger');
-        } else {
-          this.showToast('Error al conectar con el servidor', 'danger');
+    if (this.isEditing && this.selectedId) {
+      // ACTUALIZAR
+      this.instService.updateInstitucion(this.selectedId, this.newInstitution).subscribe({
+        next: () => {
+          loading.dismiss();
+          this.showToast('Institución actualizada con éxito', 'success');
+          this.cancelEdit();
+          this.cargarInstituciones();
+        },
+        error: () => {
+          loading.dismiss();
+          this.showToast('Error al actualizar', 'danger');
         }
-      }
-    });
+      });
+    } else {
+      // CREAR
+      this.instService.createInstitucion(this.newInstitution).subscribe({
+        next: () => {
+          loading.dismiss();
+          this.showToast('Institución registrada con éxito', 'success');
+          this.resetForm();
+          this.cargarInstituciones();
+        },
+        error: (err) => {
+          loading.dismiss();
+          this.showToast('Error al guardar', 'danger');
+        }
+      });
+    }
   }
 
   /**
@@ -125,11 +158,5 @@ export class InstitucionesPage implements OnInit {
       position: 'bottom'
     });
     await toast.present();
-  }
-
-  // Placeholder para edición
-  editInstitution(inst: Institucion) {
-    console.log('Editando:', inst);
-    // Próximamente implementar modal de edición
   }
 }

@@ -16,12 +16,12 @@ export class AutenticacionService {
 
     /**
      * Iniciar sesión como administrador
-     * @param email Correo electrónico
+     * @param username Nombre de usuario
      * @param password Contraseña
      */
-    loginAdmin(email: string, password: string): Observable<AuthResponse> {
+    loginAdmin(username: string, password: string): Observable<AuthResponse> {
         return this.http.post<AuthResponse>(`${this.API_URL}/administrador/login`, {
-            email,
+            username,
             password
         });
     }

@@ -20,7 +20,7 @@ export class LoginPage implements OnInit {
     selectedUserType: 'student' | 'researcher' | 'admin' = 'student';
 
     // Campos del formulario
-    email: string = '';
+    usernameOrEmail: string = '';
     password: string = '';
     showPassword: boolean = false;
 
@@ -41,7 +41,7 @@ export class LoginPage implements OnInit {
      * Manejar el envío del formulario de login
      */
     async onLogin() {
-        if (!this.email || !this.password) {
+        if (!this.usernameOrEmail || !this.password) {
             this.showToast('Por favor completa todos los campos', 'warning');
             return;
         }
@@ -53,7 +53,7 @@ export class LoginPage implements OnInit {
         await loading.present();
 
         if (this.selectedUserType === 'admin') {
-            this.authService.loginAdmin(this.email, this.password).subscribe({
+            this.authService.loginAdmin(this.usernameOrEmail, this.password).subscribe({
                 next: (res) => {
                     loading.dismiss();
                     this.authService.saveToken(res.token);

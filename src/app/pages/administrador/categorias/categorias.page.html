@@ -7,7 +7,9 @@
 <ion-content>
   <div class="admin-container">
 
-    <h2 class="section-title">Agregar Nueva Categoría</h2>
+    <h2 class="section-title">
+      {{ isEditing ? 'Editar Categoría' : 'Agregar Nueva Categoría' }}
+    </h2>
     <div class="form-card">
       <ion-item lines="none">
         <ion-icon name="pricetag" slot="start"></ion-icon>
@@ -19,8 +21,13 @@
         <ion-textarea placeholder="Descripción detallada del área..." [(ngModel)]="newCategory.descripcion"
           rows="3"></ion-textarea>
       </ion-item>
-      <ion-button expand="block" fill="solid" class="submit-btn" (click)="addCategory()">
-        Registrar Categoría
+
+      <ion-button expand="block" fill="solid" class="submit-btn" (click)="saveCategory()">
+        {{ isEditing ? 'Actualizar Categoría' : 'Registrar Categoría' }}
+      </ion-button>
+
+      <ion-button *ngIf="isEditing" expand="block" fill="clear" color="medium" (click)="cancelEdit()">
+        Cancelar Edición
       </ion-button>
     </div>
 

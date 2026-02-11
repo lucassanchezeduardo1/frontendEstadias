@@ -25,6 +25,10 @@ export class CategoriasPage implements OnInit {
     descripcion: ''
   };
 
+  // Estado de edición
+  isEditing = false;
+  selectedId: number | null = null;
+
   constructor() { }
 
   ngOnInit() {
@@ -47,34 +51,64 @@ export class CategoriasPage implements OnInit {
   }
 
   /**
-   * Registrar una nueva categoría con validación
+   * Cargar datos en el formulario para editar
    */
-  async addCategory() {
+  editCategory(cat: Categoria) {
+    this.isEditing = true;
+    this.selectedId = cat.id || null;
+    this.newCategory = { ...cat };
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  cancelEdit() {
+    this.isEditing = false;
+    this.selectedId = null;
+    this.resetForm();
+  }
+
+  /**
+   * Guardar (Crear o Actualizar)
+   */
+  async saveCategory() {
     if (!this.newCategory.nombre || !this.newCategory.descripcion) {
       this.showToast('Todos los campos son obligatorios', 'warning');
       return;
     }
 
-    const loading = await this.loadingCtrl.create({ message: 'Guardando...' });
+    const loading = await this.loadingCtrl.create({
+      message: this.isEditing ? 'Actualizando...' : 'Guardando...'
+    });
     await loading.present();
 
-    this.catService.createCategoria(this.newCategory).subscribe({
-      next: (res) => {
-        loading.dismiss();
-        this.showToast('Categoría registrada con éxito', 'success');
-        this.resetForm();
-        this.cargarCategorias(); // Recargar lista
-      },
-      error: (err) => {
-        loading.dismiss();
-        console.error('Error al guardar:', err);
-        if (err.status === 400 || err.status === 409) {
-          this.showToast('Error: El nombre de la categoría ya existe', 'danger');
-        } else {
-          this.showToast('Error al conectar con el servidor', 'danger');
+    if (this.isEditing && this.selectedId) {
+      // ACTUALIZAR
+      this.catService.updateCategoria(this.selectedId, this.newCategory).subscribe({
+        next: () => {
+          loading.dismiss();
+          this.showToast('Categoría actualizada con éxito', 'success');
+          this.cancelEdit();
+          this.cargarCategorias();
+        },
+        error: () => {
+          loading.dismiss();
+          this.showToast('Error al actualizar', 'danger');
         }
-      }
-    });
+      });
+    } else {
+      // CREAR
+      this.catService.createCategoria(this.newCategory).subscribe({
+        next: () => {
+          loading.dismiss();
+          this.showToast('Categoría registrada con éxito', 'success');
+          this.resetForm();
+          this.cargarCategorias();
+        },
+        error: (err) => {
+          loading.dismiss();
+          this.showToast('Error al guardar', 'danger');
+        }
+      });
+    }
   }
 
   /**
@@ -117,10 +151,5 @@ export class CategoriasPage implements OnInit {
       position: 'bottom'
     });
     await toast.present();
-  }
-
-  editCategory(cat: Categoria) {
-    console.log('Editando:', cat);
-    // Próximamente implementar modal de edición
   }
 }

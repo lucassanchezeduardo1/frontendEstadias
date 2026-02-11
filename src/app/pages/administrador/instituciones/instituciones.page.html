@@ -7,7 +7,9 @@
 <ion-content>
   <div class="admin-container">
 
-    <h2 class="section-title">Añadir Institución</h2>
+    <h2 class="section-title">
+      {{ isEditing ? 'Editar Institución' : 'Añadir Institución' }}
+    </h2>
     <div class="form-card">
       <ion-item lines="none">
         <ion-icon name="business" slot="start"></ion-icon>
@@ -39,8 +41,12 @@
         <ion-input type="text" placeholder="Dirección física" [(ngModel)]="newInstitution.direccion"></ion-input>
       </ion-item>
 
-      <ion-button expand="block" fill="solid" class="submit-btn" (click)="addInstitution()">
-        Guardar Institución
+      <ion-button expand="block" fill="solid" class="submit-btn" (click)="saveInstitution()">
+        {{ isEditing ? 'Actualizar Institución' : 'Guardar Institución' }}
+      </ion-button>
+
+      <ion-button *ngIf="isEditing" expand="block" fill="clear" color="medium" (click)="cancelEdit()">
+        Cancelar Edición
       </ion-button>
     </div>
 
