@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { CategoriasService } from '../../../servicios/categorias.service';
+import { Categoria } from '../../../modelos/categoria.interface';
+import { ToastController, LoadingController, AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-categorias',
@@ -8,37 +11,116 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CategoriasPage implements OnInit {
 
-  categories = [
-    { id: 1, name: 'Tecnología', description: 'Investigaciones sobre avances tecnológicos.' },
-    { id: 2, name: 'Biología', description: 'Estudios sobre seres vivos y su entorno.' }
-  ];
+  private catService = inject(CategoriasService);
+  private toastCtrl = inject(ToastController);
+  private loadingCtrl = inject(LoadingController);
+  private alertCtrl = inject(AlertController);
 
-  newCategory = {
-    name: '',
-    description: ''
+  // Lista de categorías desde la BD
+  categories: Categoria[] = [];
+
+  // Objeto para el formulario
+  newCategory: Categoria = {
+    nombre: '',
+    descripcion: ''
   };
 
   constructor() { }
 
   ngOnInit() {
+    this.cargarCategorias();
   }
 
-  addCategory() {
-    if (this.newCategory.name && this.newCategory.description) {
-      this.categories.push({
-        id: Date.now(),
-        ...this.newCategory
-      });
-      this.newCategory = { name: '', description: '' };
+  /**
+   * Cargar lista de categorías desde el backend
+   */
+  async cargarCategorias() {
+    this.catService.getCategorias().subscribe({
+      next: (data) => {
+        this.categories = data;
+      },
+      error: (err) => {
+        console.error('Error al cargar categorías:', err);
+        this.showToast('No se pudieron cargar las categorías', 'danger');
+      }
+    });
+  }
+
+  /**
+   * Registrar una nueva categoría con validación
+   */
+  async addCategory() {
+    if (!this.newCategory.nombre || !this.newCategory.descripcion) {
+      this.showToast('Todos los campos son obligatorios', 'warning');
+      return;
     }
+
+    const loading = await this.loadingCtrl.create({ message: 'Guardando...' });
+    await loading.present();
+
+    this.catService.createCategoria(this.newCategory).subscribe({
+      next: (res) => {
+        loading.dismiss();
+        this.showToast('Categoría registrada con éxito', 'success');
+        this.resetForm();
+        this.cargarCategorias(); // Recargar lista
+      },
+      error: (err) => {
+        loading.dismiss();
+        console.error('Error al guardar:', err);
+        if (err.status === 400 || err.status === 409) {
+          this.showToast('Error: El nombre de la categoría ya existe', 'danger');
+        } else {
+          this.showToast('Error al conectar con el servidor', 'danger');
+        }
+      }
+    });
   }
 
-  editCategory(cat: any) {
-    console.log('Editando categoría:', cat);
+  /**
+   * Eliminar categoría con confirmación
+   */
+  async deleteCategory(id: number | undefined) {
+    if (!id) return;
+
+    const alert = await this.alertCtrl.create({
+      header: 'Eliminar',
+      message: '¿Estás seguro de eliminar esta categoría?',
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        {
+          text: 'Eliminar',
+          handler: () => {
+            this.catService.deleteCategoria(id).subscribe(() => {
+              this.showToast('Categoría eliminada', 'success');
+              this.cargarCategorias();
+            });
+          }
+        }
+      ]
+    });
+    await alert.present();
   }
 
-  deleteCategory(id: number) {
-    this.categories = this.categories.filter(c => c.id !== id);
+  resetForm() {
+    this.newCategory = {
+      nombre: '',
+      descripcion: ''
+    };
   }
 
+  async showToast(message: string, color: string) {
+    const toast = await this.toastCtrl.create({
+      message,
+      duration: 2000,
+      color,
+      position: 'bottom'
+    });
+    await toast.present();
+  }
+
+  editCategory(cat: Categoria) {
+    console.log('Editando:', cat);
+    // Próximamente implementar modal de edición
+  }
 }

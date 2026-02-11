@@ -1,6 +1,6 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title>Categorías</ion-title>
+    <ion-title>Categorías de Investigación</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -11,11 +11,12 @@
     <div class="form-card">
       <ion-item lines="none">
         <ion-icon name="pricetag" slot="start"></ion-icon>
-        <ion-input type="text" placeholder="Nombre de la categoría" [(ngModel)]="newCategory.name"></ion-input>
+        <ion-input type="text" placeholder="Nombre de la categoría (ej: Biología)"
+          [(ngModel)]="newCategory.nombre"></ion-input>
       </ion-item>
       <ion-item lines="none">
         <ion-icon name="document-text" slot="start"></ion-icon>
-        <ion-textarea placeholder="Descripción del área..." [(ngModel)]="newCategory.description"
+        <ion-textarea placeholder="Descripción detallada del área..." [(ngModel)]="newCategory.descripcion"
           rows="3"></ion-textarea>
       </ion-item>
       <ion-button expand="block" fill="solid" class="submit-btn" (click)="addCategory()">
@@ -24,13 +25,20 @@
     </div>
 
     <h2 class="section-title">Listado de Áreas</h2>
+
+    <!-- Mensaje cuando no hay datos -->
+    <div *ngIf="categories.length === 0" class="empty-state">
+      <ion-icon name="list-outline"></ion-icon>
+      <p>No hay categorías registradas todavía.</p>
+    </div>
+
     <div class="active-item" *ngFor="let cat of categories">
       <div class="mini-avatar" style="background: #fdf2f8; color: #802030;">
-        {{ cat.name.substring(0,2).toUpperCase() }}
+        {{ cat.nombre.substring(0,2).toUpperCase() }}
       </div>
       <div class="info">
-        <h4>{{ cat.name }}</h4>
-        <p>{{ cat.description }}</p>
+        <h4>{{ cat.nombre }}</h4>
+        <p>{{ cat.descripcion }}</p>
       </div>
       <div class="action-buttons">
         <ion-button fill="clear" color="primary" (click)="editCategory(cat)">

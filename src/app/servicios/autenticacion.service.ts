@@ -35,6 +35,22 @@ export class AutenticacionService {
     }
 
     /**
+     * Guardar los datos del usuario en localStorage
+     * @param user Datos del administrador
+     */
+    saveUser(user: Administrador) {
+        localStorage.setItem('admin_user', JSON.stringify(user));
+    }
+
+    /**
+     * Obtener los datos del usuario logueado
+     */
+    getUser(): Administrador | null {
+        const user = localStorage.getItem('admin_user');
+        return user ? JSON.parse(user) : null;
+    }
+
+    /**
      * Obtener el token de sesión
      */
     getToken(): string | null {
@@ -46,5 +62,6 @@ export class AutenticacionService {
      */
     logout() {
         localStorage.removeItem('admin_token');
+        localStorage.removeItem('admin_user');
     }
 }

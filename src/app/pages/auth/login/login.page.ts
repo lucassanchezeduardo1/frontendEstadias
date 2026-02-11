@@ -57,6 +57,7 @@ export class LoginPage implements OnInit {
                 next: (res) => {
                     loading.dismiss();
                     this.authService.saveToken(res.token);
+                    this.authService.saveUser(res.user);
                     this.showToast('¡Bienvenido Administrador!', 'success');
                     this.router.navigate(['/administrador']);
                 },

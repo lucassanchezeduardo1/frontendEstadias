@@ -11,39 +11,55 @@
     <div class="form-card">
       <ion-item lines="none">
         <ion-icon name="business" slot="start"></ion-icon>
-        <ion-input type="text" placeholder="Nombre completo" [(ngModel)]="newInstitution.name"></ion-input>
+        <ion-input type="text" placeholder="Nombre completo" [(ngModel)]="newInstitution.nombre"></ion-input>
       </ion-item>
+
       <ion-item lines="none">
         <ion-icon name="layers" slot="start"></ion-icon>
-        <ion-input type="text" placeholder="Tipo (Pública / Privada)" [(ngModel)]="newInstitution.type"></ion-input>
+        <ion-select placeholder="Tipo de Institución" [(ngModel)]="newInstitution.tipo_institucion"
+          style="width: 100%;">
+          <ion-select-option value="Pública">Pública</ion-select-option>
+          <ion-select-option value="Privada">Privada</ion-select-option>
+        </ion-select>
       </ion-item>
+
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
         <ion-item lines="none">
           <ion-icon name="earth" slot="start"></ion-icon>
-          <ion-input type="text" placeholder="País" [(ngModel)]="newInstitution.country"></ion-input>
+          <ion-input type="text" placeholder="País" [(ngModel)]="newInstitution.pais"></ion-input>
         </ion-item>
         <ion-item lines="none">
           <ion-icon name="map" slot="start"></ion-icon>
-          <ion-input type="text" placeholder="Estado" [(ngModel)]="newInstitution.state"></ion-input>
+          <ion-input type="text" placeholder="Estado" [(ngModel)]="newInstitution.estado"></ion-input>
         </ion-item>
       </div>
+
       <ion-item lines="none">
         <ion-icon name="location" slot="start"></ion-icon>
-        <ion-input type="text" placeholder="Dirección física" [(ngModel)]="newInstitution.address"></ion-input>
+        <ion-input type="text" placeholder="Dirección física" [(ngModel)]="newInstitution.direccion"></ion-input>
       </ion-item>
+
       <ion-button expand="block" fill="solid" class="submit-btn" (click)="addInstitution()">
         Guardar Institución
       </ion-button>
     </div>
 
     <h2 class="section-title">Entidades Registradas</h2>
+
+    <!-- Mensaje cuando no hay datos -->
+    <div *ngIf="institutions.length === 0" class="empty-state">
+      <ion-icon name="business-outline"></ion-icon>
+      <p>No hay instituciones registradas todavía.</p>
+    </div>
+
     <div class="active-item" *ngFor="let inst of institutions">
       <div class="mini-avatar" style="background: #eff6ff; color: #3b82f6;">
         <ion-icon name="business"></ion-icon>
       </div>
       <div class="info">
-        <h4>{{ inst.name }}</h4>
-        <p>{{ inst.type }} • {{ inst.state }}, {{ inst.country }}</p>
+        <h4>{{ inst.nombre }}</h4>
+        <p>{{ inst.tipo_institucion }} • {{ inst.estado }}, {{ inst.pais }}</p>
+        <small>{{ inst.direccion }}</small>
       </div>
       <div class="action-buttons">
         <ion-button fill="clear" color="primary" (click)="editInstitution(inst)">

@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { InstitucionesService } from '../../../servicios/instituciones.service';
+import { Institucion } from '../../../modelos/institucion.interface';
+import { ToastController, LoadingController, AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-instituciones',
@@ -8,50 +11,125 @@ import { Component, OnInit } from '@angular/core';
 })
 export class InstitucionesPage implements OnInit {
 
-  institutions = [
-    { id: 1, name: 'Universidad Nacional Autónoma de México', type: 'Pública', country: 'México', state: 'CDMX', address: 'Av. Universidad 3000' },
-    { id: 2, name: 'Instituto Politécnico Nacional', type: 'Pública', country: 'México', state: 'CDMX', address: 'Luis Enrique Erro s/n' }
-  ];
+  private instService = inject(InstitucionesService);
+  private toastCtrl = inject(ToastController);
+  private loadingCtrl = inject(LoadingController);
+  private alertCtrl = inject(AlertController);
 
-  newInstitution = {
-    name: '',
-    type: '',
-    country: '',
-    state: '',
-    address: ''
+  // Lista de instituciones desde la BD
+  institutions: Institucion[] = [];
+
+  // Objeto para el formulario (vaciado según tu entidad)
+  newInstitution: Institucion = {
+    nombre: '',
+    tipo_institucion: '',
+    pais: '',
+    estado: '',
+    direccion: ''
   };
 
   constructor() { }
 
   ngOnInit() {
+    this.cargarInstituciones();
   }
 
-  addInstitution() {
-    if (this.newInstitution.name && this.newInstitution.type) {
-      this.institutions.push({
-        id: Date.now(),
-        ...this.newInstitution
-      });
-      this.resetForm();
+  /**
+   * Cargar lista de instituciones desde el backend
+   */
+  async cargarInstituciones() {
+    this.instService.getInstituciones().subscribe({
+      next: (data) => {
+        this.institutions = data;
+      },
+      error: (err) => {
+        console.error('Error al cargar instituciones:', err);
+        this.showToast('No se pudieron cargar las instituciones', 'danger');
+      }
+    });
+  }
+
+  /**
+   * Registrar una nueva institución con validación
+   */
+  async addInstitution() {
+    // Validación: Ninguno puede ir vacío
+    if (!this.newInstitution.nombre || !this.newInstitution.tipo_institucion ||
+      !this.newInstitution.pais || !this.newInstitution.estado || !this.newInstitution.direccion) {
+      this.showToast('Todos los campos son obligatorios', 'warning');
+      return;
     }
+
+    const loading = await this.loadingCtrl.create({ message: 'Guardando...' });
+    await loading.present();
+
+    this.instService.createInstitucion(this.newInstitution).subscribe({
+      next: (res) => {
+        loading.dismiss();
+        this.showToast('Institución registrada con éxito', 'success');
+        this.resetForm();
+        this.cargarInstituciones(); // Recargar lista
+      },
+      error: (err) => {
+        loading.dismiss();
+        console.error('Error al guardar:', err);
+        if (err.status === 400 || err.status === 409) {
+          this.showToast('Error: El nombre de la institución ya existe o los datos son inválidos', 'danger');
+        } else {
+          this.showToast('Error al conectar con el servidor', 'danger');
+        }
+      }
+    });
+  }
+
+  /**
+   * Eliminar institución con confirmación
+   */
+  async deleteInstitution(id: number | undefined) {
+    if (!id) return;
+
+    const alert = await this.alertCtrl.create({
+      header: 'Eliminar',
+      message: '¿Estás seguro de eliminar esta institución?',
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        {
+          text: 'Eliminar',
+          handler: () => {
+            this.instService.deleteInstitution(id).subscribe(() => {
+              this.showToast('Institución eliminada', 'success');
+              this.cargarInstituciones();
+            });
+          }
+        }
+      ]
+    });
+    await alert.present();
   }
 
   resetForm() {
     this.newInstitution = {
-      name: '',
-      type: '',
-      country: '',
-      state: '',
-      address: ''
+      nombre: '',
+      tipo_institucion: '',
+      pais: '',
+      estado: '',
+      direccion: ''
     };
   }
 
-  editInstitution(inst: any) {
-    console.log('Editando institución:', inst);
+  async showToast(message: string, color: string) {
+    const toast = await this.toastCtrl.create({
+      message,
+      duration: 2000,
+      color,
+      position: 'bottom'
+    });
+    await toast.present();
   }
 
-  deleteInstitution(id: number) {
-    this.institutions = this.institutions.filter(i => i.id !== id);
+  // Placeholder para edición
+  editInstitution(inst: Institucion) {
+    console.log('Editando:', inst);
+    // Próximamente implementar modal de edición
   }
-
 }
