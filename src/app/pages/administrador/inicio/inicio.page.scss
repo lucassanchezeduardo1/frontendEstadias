@@ -1,0 +1,278 @@
+/* Estilos existentes... */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+ion-content {
+    --background: #f8f9fa;
+    font-family: 'Inter', sans-serif;
+}
+
+.admin-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.section-title {
+    color: #800000;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 25px 0 15px;
+    border-left: 4px solid #800000;
+    padding-left: 10px;
+}
+
+/* Stats Cards */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+
+    .stat-card {
+        background: white;
+        padding: 15px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        text-align: center;
+        transition: transform 0.2s;
+
+        &:active {
+            transform: scale(0.98);
+        }
+
+        .stat-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 50%;
+
+            &.pending {
+                background: #fff3cd;
+                color: #ffc107;
+            }
+
+            &.active {
+                background: #d1e7dd;
+                color: #198754;
+            }
+
+            &.activity {
+                background: #cfe2ff;
+                color: #0d6efd;
+            }
+        }
+
+        .stat-value {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #666;
+        }
+    }
+}
+
+/* Researcher Request List */
+.researcher-card {
+    background: white;
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border-left: 4px solid #ffc107;
+
+    .card-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 15px;
+
+        .initials-avatar {
+            width: 50px;
+            height: 50px;
+            background: #800000;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .researcher-info {
+            h3 {
+                margin: 0;
+                font-size: 1rem;
+                font-weight: 600;
+                color: #333;
+            }
+
+            .location {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                font-size: 0.85rem;
+                color: #666;
+                margin: 4px 0;
+            }
+
+            .area-tag {
+                background: #f0f0f0;
+                padding: 2px 8px;
+                border-radius: 4px;
+                font-size: 0.75rem;
+                color: #555;
+            }
+        }
+    }
+
+    .card-actions {
+        display: flex;
+        gap: 10px;
+
+        .btn-accept {
+            flex: 1;
+            --background: #198754;
+            --border-radius: 6px;
+            --box-shadow: none;
+            height: 36px;
+            font-weight: 600;
+        }
+
+        .btn-reject {
+            flex: 1;
+            --color: #dc3545;
+            height: 36px;
+            font-weight: 600;
+        }
+    }
+}
+
+/* Modulo Activo */
+.active-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: white;
+    padding: 12px 15px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #eee;
+
+    .mini-avatar {
+        width: 35px;
+        height: 35px;
+        background: #e9ecef;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        color: #495057;
+        font-size: 0.9rem;
+    }
+
+    .info {
+        flex: 1;
+        margin-left: 12px;
+
+        h4 {
+            margin: 0;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        p {
+            margin: 2px 0 0;
+            font-size: 0.8rem;
+            color: #777;
+        }
+    }
+}
+
+/* ESTILOS MODAL DETALLES */
+.profile-header {
+    text-align: center;
+    margin-bottom: 20px;
+
+    .profile-avatar-large {
+        width: 100px;
+        height: 100px;
+        margin: 0 auto 10px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 3px solid #800000;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+
+    h2 {
+        color: #800000;
+        font-weight: 700;
+        margin: 0;
+    }
+
+    .subtitle {
+        color: #666;
+        margin: 5px 0 10px;
+    }
+}
+
+.details-list {
+    background: transparent;
+
+    ion-item-divider {
+        --background: transparent;
+        --color: #800000;
+        font-weight: 600;
+        margin-top: 10px;
+        font-size: 0.9rem;
+        padding-left: 0;
+    }
+
+    ion-item {
+        --background: white;
+        --border-radius: 8px;
+        margin-bottom: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
+        ion-icon {
+            color: #666;
+            margin-right: 10px;
+        }
+
+        h3 {
+            font-size: 0.8rem;
+            color: #888;
+            margin-bottom: 2px;
+        }
+
+        p {
+            font-size: 0.95rem;
+            color: #333;
+            font-weight: 500;
+        }
+
+        a {
+            text-decoration: none;
+            color: #0d6efd;
+            font-weight: 500;
+        }
+    }
+}
+
+.modal-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}

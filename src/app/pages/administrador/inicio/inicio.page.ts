@@ -1,4 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { InvestigadorService } from '../../../servicios/investigador.service';
+import { InstitucionesService } from '../../../servicios/instituciones.service';
+import { CategoriasService } from '../../../servicios/categorias.service';
+import { Investigador } from '../../../modelos/investigador.interface';
+import { ToastController, AlertController, LoadingController } from '@ionic/angular';
 
 @Component({
   selector: 'app-inicio',
@@ -8,31 +13,168 @@ import { Component, OnInit } from '@angular/core';
 })
 export class InicioPage implements OnInit {
 
-  researcherRequests = [
-    { id: 1, name: 'Dr. Roberto Gómez', institution: 'UNAM', area: 'Biotecnología' },
-    { id: 2, name: 'Dra. María Curiel', institution: 'IPN', area: 'Física Cuántica' }
-  ];
+  private invService = inject(InvestigadorService);
+  private instService = inject(InstitucionesService);
+  private catService = inject(CategoriasService);
+  private toastCtrl = inject(ToastController);
+  private alertCtrl = inject(AlertController);
+  private loadingCtrl = inject(LoadingController);
 
-  acceptedResearchers = [
-    { id: 3, name: 'Dr. Albert Sans', institution: 'Tec de Monterrey', area: 'Robótica' },
-    { id: 4, name: 'Dra. Elena Poniatowska', institution: 'UAM', area: 'Sociología' }
-  ];
+  // Estadísticas rápidas
+  stats = {
+    totalResearchers: 0,
+    totalInstitutions: 0,
+    totalCategories: 0
+  };
+
+  // Solicitudes pendientes reales
+  researcherRequests: Investigador[] = [];
+
+  // Modal Detalles
+  selectedResearcher: Investigador | null = null;
+  isModalOpen = false;
+
+  // Cache de Instituciones
+  instituciones: any[] = [];
 
   constructor() { }
 
   ngOnInit() {
+    this.cargarDatosDashboard();
   }
 
-  acceptResearcher(id: number) {
-    console.log('Aceptando investigador:', id);
+  /**
+   * Obtener nombre de la institución por ID
+   */
+  getInstitutionName(id: number): string {
+    const inst = this.instituciones.find(i => i.id === id);
+    return inst ? inst.nombre : `ID: ${id}`;
   }
 
-  rejectResearcher(id: number) {
-    console.log('Rechazando investigador:', id);
+  /**
+   * Abrir modal con detalles COMPLETOS del investigador
+   */
+  async viewDetails(investigador: Investigador) {
+    if (!investigador.id) return;
+
+    const loading = await this.loadingCtrl.create({
+      message: 'Cargando detalles...',
+      spinner: 'circles',
+      duration: 5000 // Timeout de seguridad
+    });
+    await loading.present();
+
+    this.invService.getInvestigador(investigador.id).subscribe({
+      next: (fullData) => {
+        this.selectedResearcher = fullData;
+        this.isModalOpen = true;
+        loading.dismiss();
+      },
+      error: (err) => {
+        loading.dismiss();
+        console.error('Error cargando detalles:', err);
+        this.showToast('No se pudieron cargar los detalles completos', 'warning');
+        // Si hay error, mostramos al menos lo básico que tenemos
+        this.selectedResearcher = investigador;
+        this.isModalOpen = true;
+      }
+    });
   }
 
-  deleteResearcher(id: number) {
-    console.log('Eliminando investigador:', id);
+  closeModal() {
+    this.isModalOpen = false;
+    this.selectedResearcher = null;
   }
 
+  /**
+   * Convertir Buffer a Imagen Base64 para mostrar en HTML
+   */
+  getProfileImage(buffer: any): string {
+    if (!buffer) return 'assets/images/default-avatar.png'; // Imagen por defecto
+    // Si viene como buffer byte array e.g. { type: 'Buffer', data: [...] }
+    if (buffer.type === 'Buffer' && buffer.data) {
+      const binary = String.fromCharCode(...buffer.data);
+      return `data:image/jpeg;base64,${btoa(binary)}`;
+    }
+    // Si ya es un string base64 o url
+    return buffer;
+  }
+
+  async cargarDatosDashboard() {
+    // 1. Cargar Investigadores Pendientes
+    this.invService.getPendientes().subscribe({
+      next: (data) => {
+        this.researcherRequests = data;
+      },
+      error: (err) => {
+        console.error('Error al cargar pendientes:', err);
+      }
+    });
+
+    // 2. Cargar Estadísticas
+    this.instService.getInstituciones().subscribe(data => {
+      this.instituciones = data;
+      this.stats.totalInstitutions = data.length;
+    });
+    this.catService.getCategorias().subscribe(data => this.stats.totalCategories = data.length);
+    this.invService.getAprobados().subscribe(data => this.stats.totalResearchers = data.length);
+  }
+
+  /**
+   * Aprobar solicitud
+   */
+  async approveRequest(id: number | undefined) {
+    if (!id) return;
+
+    const loading = await this.loadingCtrl.create({ message: 'Aprobando...' });
+    await loading.present();
+
+    this.invService.aprobar(id).subscribe({
+      next: () => {
+        loading.dismiss();
+        this.showToast('Investigador aprobado correctamente', 'success');
+        this.cargarDatosDashboard();
+      },
+      error: () => {
+        loading.dismiss();
+        this.showToast('Error al aprobar solicitud', 'danger');
+      }
+    });
+  }
+
+  /**
+   * Rechazar solicitud
+   */
+  async rejectRequest(id: number | undefined) {
+    if (!id) return;
+
+    const alert = await this.alertCtrl.create({
+      header: 'Rechazar Solicitud',
+      message: '¿Estás seguro de que deseas rechazar este registro?',
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        {
+          text: 'Rechazar',
+          cssClass: 'alert-danger',
+          handler: () => {
+            this.invService.rechazar(id).subscribe(() => {
+              this.showToast('Solicitud rechazada', 'warning');
+              this.cargarDatosDashboard();
+            });
+          }
+        }
+      ]
+    });
+    await alert.present();
+  }
+
+  async showToast(message: string, color: string) {
+    const toast = await this.toastCtrl.create({
+      message,
+      duration: 2000,
+      color,
+      position: 'bottom'
+    });
+    await toast.present();
+  }
 }

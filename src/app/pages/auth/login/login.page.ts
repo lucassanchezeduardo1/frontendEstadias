@@ -1,6 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AutenticacionService } from '../../../servicios/autenticacion.service';
+import { InvestigadorService } from '../../../servicios/investigador.service';
 import { LoadingController, ToastController } from '@ionic/angular';
 
 @Component({
@@ -13,6 +14,7 @@ export class LoginPage implements OnInit {
 
     private router = inject(Router);
     private authService = inject(AutenticacionService);
+    private invService = inject(InvestigadorService);
     private loadingCtrl = inject(LoadingController);
     private toastCtrl = inject(ToastController);
 
@@ -72,9 +74,25 @@ export class LoginPage implements OnInit {
                 }
             });
         } else if (this.selectedUserType === 'researcher') {
-            // Navegar al inicio del investigador (pendiente conectar backend)
-            loading.dismiss();
-            this.router.navigate(['/investigador']);
+            this.invService.login({ email: this.usernameOrEmail, password: this.password }).subscribe({
+                next: (res) => {
+                    loading.dismiss();
+                    localStorage.setItem('inv_token', 'TOKEN_INV'); // Ajustar según backend real
+                    this.showToast('¡Bienvenido Investigador!', 'success');
+                    this.router.navigate(['/investigador']);
+                },
+                error: (err) => {
+                    loading.dismiss();
+                    console.error('Error login investigador:', err);
+                    if (err.status === 400 && err.error?.message) {
+                        this.showToast(err.error.message, 'warning');
+                    } else if (err.status === 401 || err.status === 403) {
+                        this.showToast('Credenciales incorrectas', 'danger');
+                    } else {
+                        this.showToast('Error al iniciar sesión', 'danger');
+                    }
+                }
+            });
         } else if (this.selectedUserType === 'student') {
             // Navegar al inicio del estudiante (pendiente conectar backend)
             loading.dismiss();
