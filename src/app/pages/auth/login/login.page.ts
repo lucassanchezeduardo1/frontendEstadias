@@ -77,7 +77,8 @@ export class LoginPage implements OnInit {
             this.invService.login({ email: this.usernameOrEmail, password: this.password }).subscribe({
                 next: (res) => {
                     loading.dismiss();
-                    localStorage.setItem('inv_token', 'TOKEN_INV'); // Ajustar según backend real
+                    localStorage.setItem('inv_token', res.token || 'TOKEN_INV');
+                    localStorage.setItem('inv_user', JSON.stringify(res.user || res));
                     this.showToast('¡Bienvenido Investigador!', 'success');
                     this.router.navigate(['/investigador']);
                 },
