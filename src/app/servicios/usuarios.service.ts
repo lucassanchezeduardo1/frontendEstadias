@@ -61,4 +61,25 @@ export class UsuariosService {
         localStorage.removeItem('student_user');
         localStorage.removeItem('student_token');
     }
+
+    /**
+     * Actualizar perfil de usuario
+     */
+    actualizar(id: number, usuario: any, foto?: File): Observable<any> {
+        const formData = new FormData();
+
+        // Agregar los campos del usuario al FormData
+        Object.keys(usuario).forEach(key => {
+            if (usuario[key] !== null && usuario[key] !== undefined) {
+                formData.append(key, usuario[key]);
+            }
+        });
+
+        // Agregar la foto si existe
+        if (foto) {
+            formData.append('foto_perfil', foto);
+        }
+
+        return this.http.patch(`${this.API_URL}/usuarios/${id}`, formData);
+    }
 }

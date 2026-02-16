@@ -4,33 +4,58 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content *ngIf="usuario">
   <div class="main-container">
 
     <div class="profile-header">
       <div class="avatar-wrapper">
-        <img [src]="usuario.avatar" alt="Profile Picture">
-        <div class="edit-badge" *ngIf="isEditing">
+        <img [src]="photoPreview" alt="Profile Picture" onerror="this.src='assets/icon/favicon.png'">
+        <div class="edit-badge" *ngIf="isEditing" (click)="fileInput.click()">
           <ion-icon name="camera-outline"></ion-icon>
+          <input type="file" #fileInput class="hidden-input" (change)="onFileSelected($event)" accept="image/*"
+            style="display: none;">
         </div>
       </div>
-      <h2>{{ usuario.nombre }}</h2>
-      <p>{{ usuario.matricula }}</p>
+      <h2>{{ usuario.nombre }} {{ usuario.apellidos }}</h2>
+      <p>{{ usuario.email }}</p>
     </div>
 
     <div class="info-sections">
       <div class="info-card">
-        <div class="card-title">Información Académica</div>
+        <div class="card-title">Información Personal</div>
 
         <div class="field">
-          <label>Carrera</label>
-          <p *ngIf="!isEditing">{{ usuario.carrera }}</p>
-          <ion-input *ngIf="isEditing" [(ngModel)]="usuario.carrera" class="custom-input"></ion-input>
+          <label>Nombre(s)</label>
+          <p *ngIf="!isEditing">{{ usuario.nombre }}</p>
+          <ion-input *ngIf="isEditing" [(ngModel)]="usuario.nombre" class="custom-input"></ion-input>
         </div>
 
         <div class="field">
-          <label>Institución</label>
-          <p>{{ usuario.universidad }}</p>
+          <label>Apellidos</label>
+          <p *ngIf="!isEditing">{{ usuario.apellidos }}</p>
+          <ion-input *ngIf="isEditing" [(ngModel)]="usuario.apellidos" class="custom-input"></ion-input>
+        </div>
+
+        <div class="field">
+          <label>Edad</label>
+          <p *ngIf="!isEditing">{{ usuario.edad }} años</p>
+          <ion-input *ngIf="isEditing" type="number" [(ngModel)]="usuario.edad" class="custom-input"></ion-input>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="card-title">Académico y Profesional</div>
+
+        <div class="field">
+          <label>Oficio / Ocupación</label>
+          <p *ngIf="!isEditing">{{ usuario.oficio }}</p>
+          <ion-input *ngIf="isEditing" [(ngModel)]="usuario.oficio" class="custom-input"></ion-input>
+        </div>
+
+        <div class="field">
+          <label>Grado Académico</label>
+          <p *ngIf="!isEditing">{{ usuario.grado_academico }}</p>
+          <ion-input *ngIf="isEditing" [(ngModel)]="usuario.grado_academico" class="custom-input"></ion-input>
         </div>
       </div>
 
@@ -39,21 +64,34 @@
 
         <div class="field">
           <label>Correo Electrónico</label>
-          <p *ngIf="!isEditing">{{ usuario.correo }}</p>
-          <ion-input *ngIf="isEditing" [(ngModel)]="usuario.correo" class="custom-input"></ion-input>
-        </div>
-      </div>
-
-      <div class="info-card">
-        <div class="card-title">Intereses Científicos</div>
-        <div class="tags-container">
-          <div class="tag" *ngFor="let interes of usuario.intereses">{{ interes }}</div>
-          <div class="tag add" *ngIf="isEditing">+</div>
+          <p *ngIf="!isEditing">{{ usuario.email }}</p>
+          <ion-input *ngIf="isEditing" type="email" [(ngModel)]="usuario.email" class="custom-input"></ion-input>
         </div>
       </div>
     </div>
 
     <div class="actions-section">
+      <!-- Botón Editar Datos (Solo visible cuando no se está editando) -->
+      <ion-button *ngIf="!isEditing" expand="block" fill="outline" color="primary" class="edit-btn"
+        (click)="toggleEdit()">
+        <ion-icon name="create-outline" slot="start"></ion-icon>
+        Editar Datos
+      </ion-button>
+
+      <!-- Botón Guardar Cambios (Solo visible cuando se está editando) -->
+      <ion-button *ngIf="isEditing" expand="block" color="success" class="save-btn" (click)="confirmSave()">
+        <ion-icon name="save-outline" slot="start"></ion-icon>
+        Guardar Cambios
+      </ion-button>
+
+      <!-- Botón Cancelar Edición (Solo visible cuando se está editando) -->
+      <ion-button *ngIf="isEditing" expand="block" fill="outline" color="medium" class="cancel-btn"
+        (click)="toggleEdit()">
+        <ion-icon name="close-circle-outline" slot="start"></ion-icon>
+        Cancelar Edición
+      </ion-button>
+
+      <!-- Botón Cerrar Sesión -->
       <ion-button expand="block" fill="outline" color="danger" class="logout-btn" (click)="cerrarSesion()">
         <ion-icon name="log-out-outline" slot="start"></ion-icon>
         Cerrar Sesión
