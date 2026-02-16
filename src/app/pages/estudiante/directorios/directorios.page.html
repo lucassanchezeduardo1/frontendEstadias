@@ -42,12 +42,12 @@
 
           <div class="stats-row">
             <div class="stat">
-              <span class="value">{{ inv.areas_investigacion?.split(',')?.length || 0 }}</span>
-              <span class="label">Áreas</span>
+              <span class="value">{{ inv.num_publicaciones || 0 }}</span>
+              <span class="label">Publicaciones</span>
             </div>
             <div class="stat">
-              <span class="value">0</span>
-              <span class="label">Impacto</span>
+              <span class="value">{{ inv.num_eventos || 0 }}</span>
+              <span class="label">Eventos</span>
             </div>
           </div>
 
