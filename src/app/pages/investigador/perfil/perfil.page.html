@@ -1,93 +1,159 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title>Perfil del Investigador</ion-title>
+    <ion-title>Mi Perfil</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="toggleEdit()" color="primary">
-        {{ isEditing ? 'Cancelar' : 'Editar' }}
+      <ion-button (click)="logout()" color="danger">
+        <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <div class="profile-container">
+  <div class="profile-header-bg"></div>
 
-    <div class="profile-header">
-      <div class="avatar-large">
-        AS
-      </div>
-      <h2>{{ researcher.name }}</h2>
-      <p class="role-tag">Investigador Senior</p>
-    </div>
-
+  <div class="profile-container" *ngIf="user">
+    <!-- Card de Perfil -->
     <div class="profile-card">
+      <div class="photo-section">
+        <div class="avatar-wrapper">
+          <!-- Usamos una URL de respaldo si la imagen falla o no existe -->
+          <img [src]="imgPreview || (user.id ? apiUrl + '/' + user.id + '/foto' : defaultAvatar)" class="profile-img"
+            alt="Foto de Perfil" (error)="$any($event.target).src = defaultAvatar">
+
+          <div class="edit-badge" *ngIf="isEditing" (click)="photoInput.click()">
+            <ion-icon name="camera-outline"></ion-icon>
+          </div>
+          <input type="file" #photoInput (change)="onImgSelected($event)" accept="image/*" hidden>
+        </div>
+        <div class="user-main-info" *ngIf="!isEditing">
+          <h2>{{ user.nombre }} {{ user.apellidos }}</h2>
+          <p class="user-role">{{ user.grado_academico }} - {{ user.cargo_actual }}</p>
+          <div class="email-badge">
+            <ion-icon name="mail-outline"></ion-icon>
+            <span>{{ user.email }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="profile-actions">
+        <ion-button fill="outline" color="primary" (click)="toggleEdit()" *ngIf="!isEditing" shape="round">
+          <ion-icon name="create-outline" slot="start"></ion-icon>
+          Editar Perfil
+        </ion-button>
+        <div class="edit-buttons" *ngIf="isEditing">
+          <ion-button fill="clear" color="medium" (click)="toggleEdit()" shape="round">Cancelar</ion-button>
+          <ion-button fill="solid" color="success" (click)="saveProfile()" shape="round">Guardar Cambios</ion-button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Secciones de Información -->
+    <form [formGroup]="profileForm" *ngIf="isEditing" class="info-content">
       <div class="info-section">
-        <div class="info-item">
-          <ion-icon name="mail-outline"></ion-icon>
-          <div class="text">
-            <span>Correo Electrónico</span>
-            <p *ngIf="!isEditing">{{ researcher.email }}</p>
-            <ion-input *ngIf="isEditing" [(ngModel)]="researcher.email"></ion-input>
+        <div class="section-title">Información Personal</div>
+        <div class="form-row">
+          <div class="form-group half">
+            <ion-label>Nombre</ion-label>
+            <ion-input type="text" formControlName="nombre"></ion-input>
+          </div>
+          <div class="form-group half">
+            <ion-label>Apellidos</ion-label>
+            <ion-input type="text" formControlName="apellidos"></ion-input>
           </div>
         </div>
+        <div class="form-row">
+          <div class="form-group half">
+            <ion-label>Grado Académico</ion-label>
+            <ion-input type="text" formControlName="grado_academico"></ion-input>
+          </div>
+          <div class="form-group half">
+            <ion-label>Cargo Actual</ion-label>
+            <ion-input type="text" formControlName="cargo_actual"></ion-input>
+          </div>
+        </div>
+      </div>
 
-        <div class="info-item">
+      <div class="info-section">
+        <div class="section-title">Resumen y Especialidad</div>
+        <div class="form-group">
+          <ion-label>Áreas de Investigación</ion-label>
+          <ion-input type="text" formControlName="areas_investigacion"
+            placeholder="Ej. IA, Robótica, Medicina"></ion-input>
+        </div>
+        <div class="form-group">
+          <ion-label>Trayectoria Académica</ion-label>
+          <ion-textarea rows="6" formControlName="descripcion_trayectoria"></ion-textarea>
+        </div>
+      </div>
+
+      <div class="info-section">
+        <div class="section-title">Contacto y Enlaces</div>
+        <div class="form-group">
+          <ion-label>Dirección de Oficina</ion-label>
+          <ion-input type="text" formControlName="direccion_oficina"></ion-input>
+        </div>
+        <div class="form-group">
+          <ion-label>Horario de Atención</ion-label>
+          <ion-input type="text" formControlName="horario_atencion"></ion-input>
+        </div>
+        <div class="form-group">
+          <ion-label>Google Académico (Link)</ion-label>
+          <ion-input type="url" formControlName="google_academico_url"></ion-input>
+        </div>
+        <div class="form-group">
+          <ion-label>ResearchGate (Link)</ion-label>
+          <ion-input type="url" formControlName="researchgate_url"></ion-input>
+        </div>
+      </div>
+    </form>
+
+    <!-- Modo Visualización -->
+    <div class="info-content" *ngIf="!isEditing">
+      <div class="info-section">
+        <div class="section-title">Sobre mí</div>
+        <p class="bio-text">{{ user.descripcion_trayectoria }}</p>
+      </div>
+
+      <div class="info-section">
+        <div class="section-title">Áreas de Investigación</div>
+        <div class="tags-container">
+          <span class="tag">{{ user.areas_investigacion }}</span>
+        </div>
+      </div>
+
+      <div class="info-section">
+        <div class="section-title">Información de Contacto</div>
+        <div class="contact-item">
           <ion-icon name="business-outline"></ion-icon>
-          <div class="text">
-            <span>Institución</span>
-            <p *ngIf="!isEditing">{{ researcher.institution }}</p>
-            <ion-input *ngIf="isEditing" [(ngModel)]="researcher.institution"></ion-input>
+          <div>
+            <strong>Oficina:</strong>
+            <p>{{ user.direccion_oficina || 'No especificada' }}</p>
           </div>
         </div>
-
-        <div class="info-item">
-          <ion-icon name="flask-outline"></ion-icon>
-          <div class="text">
-            <span>Área de Investigación</span>
-            <p *ngIf="!isEditing">{{ researcher.area }}</p>
-            <ion-input *ngIf="isEditing" [(ngModel)]="researcher.area"></ion-input>
-          </div>
-        </div>
-
-        <div class="info-item">
-          <ion-icon name="school-outline"></ion-icon>
-          <div class="text">
-            <span>Grado Académico</span>
-            <p *ngIf="!isEditing">{{ researcher.degree }}</p>
-            <ion-input *ngIf="isEditing" [(ngModel)]="researcher.degree"></ion-input>
-          </div>
-        </div>
-
-        <div class="info-item bio">
-          <ion-icon name="information-circle-outline"></ion-icon>
-          <div class="text">
-            <span>Biografía</span>
-            <p *ngIf="!isEditing">{{ researcher.bio }}</p>
-            <ion-textarea *ngIf="isEditing" [(ngModel)]="researcher.bio" rows="4"></ion-textarea>
+        <div class="contact-item">
+          <ion-icon name="time-outline"></ion-icon>
+          <div>
+            <strong>Horario:</strong>
+            <p>{{ user.horario_atencion || 'No especificado' }}</p>
           </div>
         </div>
       </div>
 
-      <ion-button *ngIf="isEditing" expand="block" shape="round" color="success" (click)="saveProfile()"
-        class="save-btn">
-        Guardar Cambios
-      </ion-button>
-    </div>
-
-    <div class="stats-row">
-      <div class="stat-box">
-        <h4>{{ researcher.publicationsCount }}</h4>
-        <span>Publicaciones</span>
-      </div>
-      <div class="stat-box">
-        <h4>15</h4>
-        <span>Eventos</span>
-      </div>
-      <div class="stat-box">
-        <h4>1.5k</h4>
-        <span>Impacto</span>
+      <div class="info-section" *ngIf="user.google_academico_url || user.researchgate_url">
+        <div class="section-title">Perfiles Externos</div>
+        <div class="external-links">
+          <a *ngIf="user.google_academico_url" [href]="user.google_academico_url" target="_blank"
+            class="ext-btn google">
+            <ion-icon name="logo-google"></ion-icon>
+            Google Académico
+          </a>
+          <a *ngIf="user.researchgate_url" [href]="user.researchgate_url" target="_blank" class="ext-btn researchgate">
+            <ion-icon name="library-outline"></ion-icon>
+            ResearchGate
+          </a>
+        </div>
       </div>
     </div>
-
   </div>
 </ion-content>

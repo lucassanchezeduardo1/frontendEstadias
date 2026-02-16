@@ -77,4 +77,40 @@ export class InvestigadorService {
     getAprobados(): Observable<Investigador[]> {
         return this.http.get<Investigador[]>(`${this.API_URL}/aprobados`);
     }
+
+    /**
+     * Actualizar datos del investigador
+     */
+    update(id: number, datos: any, foto?: File): Observable<any> {
+        const formData = new FormData();
+        Object.keys(datos).forEach(key => {
+            if (datos[key] !== null && datos[key] !== undefined) {
+                formData.append(key, datos[key]);
+            }
+        });
+
+        if (foto) {
+            formData.append('foto_perfil', foto);
+        }
+
+        return this.http.patch(`${this.API_URL}/${id}`, formData);
+    }
+
+    /**
+     * Gestión de sesión
+     */
+    saveSession(user: any, token: string) {
+        localStorage.setItem('inv_token', token);
+        localStorage.setItem('inv_user', JSON.stringify(user));
+    }
+
+    getLoggedUser(): Investigador | null {
+        const user = localStorage.getItem('inv_user');
+        return user ? JSON.parse(user) : null;
+    }
+
+    logout() {
+        localStorage.removeItem('inv_token');
+        localStorage.removeItem('inv_user');
+    }
 }
