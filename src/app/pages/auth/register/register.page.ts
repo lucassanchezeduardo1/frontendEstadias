@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { InstitucionesService } from '../../../servicios/instituciones.service';
 import { InvestigadorService } from '../../../servicios/investigador.service';
+import { UsuariosService } from '../../../servicios/usuarios.service';
 import { Institucion } from '../../../modelos/institucion.interface';
 import { ToastController, LoadingController } from '@ionic/angular';
 
@@ -16,6 +17,7 @@ export class RegisterPage implements OnInit {
     private router = inject(Router);
     private instService = inject(InstitucionesService);
     private invService = inject(InvestigadorService);
+    private usrService = inject(UsuariosService);
     private toastCtrl = inject(ToastController);
     private loadingCtrl = inject(LoadingController);
 
@@ -38,9 +40,20 @@ export class RegisterPage implements OnInit {
         matricula: '',
         institucion_id: null,
         google_academico_url: '',
-        researchgate_url: '', // Campo opcional agregado según DTO
+        researchgate_url: '',
         descripcion_trayectoria: '',
         areas_investigacion: ''
+    };
+
+    // Objeto para registro de estudiante
+    newEstudiante: any = {
+        nombre: '',
+        apellidos: '',
+        email: '',
+        password: '',
+        oficio: '',
+        grado_academico: '',
+        edad: null
     };
 
     selectedFile: File | null = null;
@@ -60,6 +73,7 @@ export class RegisterPage implements OnInit {
 
     selectUserType(type: 'student' | 'researcher') {
         this.selectedUserType = type;
+        this.selectedFile = null; // Reset file when switching
     }
 
     goToLogin() {
@@ -77,9 +91,38 @@ export class RegisterPage implements OnInit {
         if (this.selectedUserType === 'researcher') {
             await this.registerInvestigador();
         } else {
-            console.log('Registro de estudiante en construcción');
-            this.showToast('El registro de estudiantes estará disponible pronto', 'warning');
+            await this.registerEstudiante();
         }
+    }
+
+    async registerEstudiante() {
+        // Validación básica
+        if (!this.selectedFile) {
+            this.showToast('Debes subir una foto de perfil', 'warning');
+            return;
+        }
+
+        if (!this.newEstudiante.nombre || !this.newEstudiante.email || !this.newEstudiante.password || !this.newEstudiante.edad) {
+            this.showToast('Por favor completa los campos obligatorios', 'warning');
+            return;
+        }
+
+        const loading = await this.loadingCtrl.create({ message: 'Registrando estudiante...' });
+        await loading.present();
+
+        this.usrService.registrar(this.newEstudiante, this.selectedFile).subscribe({
+            next: (res) => {
+                loading.dismiss();
+                this.showToast('¡Registro exitoso! Ya puedes iniciar sesión.', 'success');
+                this.router.navigate(['/login']);
+            },
+            error: (err) => {
+                loading.dismiss();
+                console.error('Error registro estudiante:', err);
+                const msg = err.error?.message || 'Error al registrar. Verifica tus datos.';
+                this.showToast(msg, 'danger');
+            }
+        });
     }
 
     async registerInvestigador() {

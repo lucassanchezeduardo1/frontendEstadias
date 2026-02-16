@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AutenticacionService } from '../../../servicios/autenticacion.service';
 import { InvestigadorService } from '../../../servicios/investigador.service';
+import { UsuariosService } from '../../../servicios/usuarios.service';
 import { LoadingController, ToastController } from '@ionic/angular';
 
 @Component({
@@ -15,6 +16,7 @@ export class LoginPage implements OnInit {
     private router = inject(Router);
     private authService = inject(AutenticacionService);
     private invService = inject(InvestigadorService);
+    private usrService = inject(UsuariosService);
     private loadingCtrl = inject(LoadingController);
     private toastCtrl = inject(ToastController);
 
@@ -56,14 +58,14 @@ export class LoginPage implements OnInit {
 
         if (this.selectedUserType === 'admin') {
             this.authService.loginAdmin(this.usernameOrEmail, this.password).subscribe({
-                next: (res) => {
+                next: (res: any) => {
                     loading.dismiss();
                     this.authService.saveToken(res.token);
                     this.authService.saveUser(res.user);
                     this.showToast('¡Bienvenido Administrador!', 'success');
                     this.router.navigate(['/administrador']);
                 },
-                error: (err) => {
+                error: (err: any) => {
                     loading.dismiss();
                     console.error('Error detallado:', err);
                     if (err.status === 0) {
@@ -75,7 +77,7 @@ export class LoginPage implements OnInit {
             });
         } else if (this.selectedUserType === 'researcher') {
             this.invService.login({ email: this.usernameOrEmail, password: this.password }).subscribe({
-                next: (res) => {
+                next: (res: any) => {
                     loading.dismiss();
                     // El backend devuelve { message, investigador }
                     const user = res.investigador || res;
@@ -86,7 +88,7 @@ export class LoginPage implements OnInit {
                     this.showToast('¡Bienvenido Investigador!', 'success');
                     this.router.navigate(['/investigador']);
                 },
-                error: (err) => {
+                error: (err: any) => {
                     loading.dismiss();
                     console.error('Error login investigador:', err);
                     if (err.status === 400 && err.error?.message) {
@@ -99,12 +101,27 @@ export class LoginPage implements OnInit {
                 }
             });
         } else if (this.selectedUserType === 'student') {
-            // Navegar al inicio del estudiante (pendiente conectar backend)
-            loading.dismiss();
-            this.router.navigate(['/estudiante']);
+            this.usrService.login({ email: this.usernameOrEmail, password: this.password }).subscribe({
+                next: (res: any) => {
+                    loading.dismiss();
+                    this.usrService.saveSession(res.usuario, res.token || 'TOKEN_STUDENT');
+                    this.showToast('¡Bienvenido Estudiante!', 'success');
+                    this.router.navigate(['/estudiante']);
+                },
+                error: (err: any) => {
+                    loading.dismiss();
+                    console.error('Error login estudiante:', err);
+                    if (err.status === 400 || err.status === 401) {
+                        const msg = err.error?.message || 'Credenciales incorrectas';
+                        this.showToast(msg, 'danger');
+                    } else {
+                        this.showToast('Error al conectar con el servidor', 'danger');
+                    }
+                }
+            });
         } else {
             loading.dismiss();
-            console.log('Funcionalidad para otros roles en desarrollo');
+            this.showToast('Funcionalidad para otros roles en desarrollo', 'warning');
         }
     }
 

@@ -27,45 +27,51 @@
                 <div class="input-grid">
                     <div class="input-group">
                         <ion-icon name="person-outline" class="input-icon"></ion-icon>
-                        <input type="text" class="custom-input" placeholder="Nombre(s)" required>
+                        <input type="text" class="custom-input" placeholder="Nombre(s)" 
+                            [(ngModel)]="newEstudiante.nombre" name="nombre" required>
                     </div>
                     <div class="input-group">
                         <ion-icon name="person-outline" class="input-icon"></ion-icon>
-                        <input type="text" class="custom-input" placeholder="Apellidos" required>
+                        <input type="text" class="custom-input" placeholder="Apellidos" 
+                            [(ngModel)]="newEstudiante.apellidos" name="apellidos" required>
                     </div>
                 </div>
 
                 <div class="input-group">
                     <ion-icon name="mail-outline" class="input-icon"></ion-icon>
-                    <input type="email" class="custom-input" placeholder="Correo electrónico" required>
+                    <input type="email" class="custom-input" placeholder="Correo electrónico" 
+                        [(ngModel)]="newEstudiante.email" name="email" required>
                 </div>
 
                 <div class="input-group">
                     <ion-icon name="lock-closed-outline" class="input-icon"></ion-icon>
                     <input [type]="showPassword ? 'text' : 'password'" class="custom-input" placeholder="Contraseña"
-                        required>
+                        [(ngModel)]="newEstudiante.password" name="password" required>
                 </div>
 
                 <div class="input-grid">
                     <div class="input-group">
                         <ion-icon name="briefcase-outline" class="input-icon"></ion-icon>
-                        <input type="text" class="custom-input" placeholder="Oficio" required>
+                        <input type="text" class="custom-input" placeholder="Oficio" 
+                            [(ngModel)]="newEstudiante.oficio" name="oficio" required>
                     </div>
                     <div class="input-group">
                         <ion-icon name="school-outline" class="input-icon"></ion-icon>
-                        <input type="text" class="custom-input" placeholder="Grado Académico" required>
+                        <input type="text" class="custom-input" placeholder="Grado Académico" 
+                            [(ngModel)]="newEstudiante.grado_academico" name="grado_academico" required>
                     </div>
                 </div>
 
                 <div class="input-group">
                     <ion-icon name="calendar-outline" class="input-icon"></ion-icon>
-                    <input type="number" class="custom-input" placeholder="Edad" required>
+                    <input type="number" class="custom-input" placeholder="Edad" 
+                        [(ngModel)]="newEstudiante.edad" name="edad" required>
                 </div>
 
                 <div class="input-group file-input">
                     <ion-icon name="image-outline" class="input-icon"></ion-icon>
-                    <label class="custom-file-label">Foto de Perfil</label>
-                    <input type="file" class="hidden-file-input">
+                    <label class="custom-file-label">{{ selectedFile ? selectedFile.name : 'Foto de Perfil' }}</label>
+                    <input type="file" class="hidden-file-input" (change)="onFileSelected($event)" accept="image/*">
                 </div>
 
                 <button type="submit" class="login-btn">
