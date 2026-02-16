@@ -6,45 +6,63 @@
 
 <ion-content>
   <div class="form-container">
-    <div class="form-card event-form">
+    <form [formGroup]="eventoForm" (ngSubmit)="onSubmit()" class="form-card event-form">
 
-      <div class="form-group">
-        <ion-label position="stacked">Título del Evento</ion-label>
-        <ion-input type="text" placeholder="Ej. Congreso Anual de Ciencias"></ion-input>
+      <div class="section-title">
+        <ion-icon name="calendar-outline"></ion-icon>
+        <span>Detalles del Evento</span>
       </div>
 
       <div class="form-group">
-        <ion-label position="stacked">Imagen del Evento</ion-label>
-        <div class="upload-box">
-          <ion-icon name="calendar-clear-outline"></ion-icon>
-          <span>Seleccionar Banner</span>
+        <ion-label position="stacked">Título del Evento <span class="required">*</span></ion-label>
+        <ion-input type="text" formControlName="titulo"
+          placeholder="Ej. Congreso Anual de Ciencias Médicas"></ion-input>
+        <div class="error-msg" *ngIf="eventoForm.get('titulo')?.touched && eventoForm.get('titulo')?.invalid">
+          El título debe tener entre 10 y 255 caracteres
         </div>
       </div>
 
       <div class="form-group">
-        <ion-label position="stacked">Descripción</ion-label>
-        <ion-textarea rows="3" placeholder="Detalles del evento..."></ion-textarea>
+        <ion-label position="stacked">Imagen del Evento <span class="required">*</span></ion-label>
+        <input type="file" #imgInput (change)="onImgSelected($event)" accept="image/*" hidden>
+        <div class="upload-box" (click)="imgInput.click()" [class.has-preview]="imgPreview">
+          <div *ngIf="!imgPreview" class="upload-content">
+            <ion-icon name="image-outline"></ion-icon>
+            <span>Seleccionar Banner del Evento</span>
+          </div>
+          <img *ngIf="imgPreview" [src]="imgPreview" class="preview-img">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <ion-label position="stacked">Descripción <span class="required">*</span></ion-label>
+        <ion-textarea rows="4" formControlName="descripcion"
+          placeholder="Describe detalladamente de qué trata el evento (mínimo 50 caracteres)...">
+        </ion-textarea>
+        <div class="error-msg" *ngIf="eventoForm.get('descripcion')?.touched && eventoForm.get('descripcion')?.invalid">
+          La descripción debe tener al menos 50 caracteres
+        </div>
       </div>
 
       <div class="form-row">
         <div class="form-group half">
-          <ion-label position="stacked">Tipo de Evento</ion-label>
-          <ion-input type="text" placeholder="Ej. Taller"></ion-input>
+          <ion-label position="stacked">Tipo de Evento <span class="required">*</span></ion-label>
+          <ion-input type="text" formControlName="tipo_evento" placeholder="Ej. Conferencia"></ion-input>
         </div>
         <div class="form-group half">
-          <ion-label position="stacked">Fecha</ion-label>
-          <ion-input type="date"></ion-input>
+          <ion-label position="stacked">Fecha <span class="required">*</span></ion-label>
+          <ion-input type="date" formControlName="fecha"></ion-input>
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group half">
-          <ion-label position="stacked">Hora</ion-label>
-          <ion-input type="time"></ion-input>
+          <ion-label position="stacked">Hora <span class="required">*</span></ion-label>
+          <ion-input type="time" formControlName="hora"></ion-input>
         </div>
         <div class="form-group half">
-          <ion-label position="stacked">Modalidad</ion-label>
-          <ion-select placeholder="Seleccionar" interface="popover">
+          <ion-label position="stacked">Modalidad <span class="required">*</span></ion-label>
+          <ion-select placeholder="Seleccionar" interface="popover" formControlName="modalidad">
             <ion-select-option value="presencial">Presencial</ion-select-option>
             <ion-select-option value="virtual">Virtual</ion-select-option>
             <ion-select-option value="hibrida">Híbrida</ion-select-option>
@@ -53,31 +71,36 @@
       </div>
 
       <div class="form-group">
-        <ion-label position="stacked">Lugar / Link (si es virtual)</ion-label>
-        <ion-input type="text" placeholder="Dirección o URL"></ion-input>
+        <ion-label position="stacked">Lugar / Link de acceso <span class="required">*</span></ion-label>
+        <ion-input type="text" formControlName="lugar_enlace"
+          placeholder="Dirección física o URL de la reunión"></ion-input>
       </div>
 
       <div class="form-group">
-        <ion-label position="stacked">Categoría</ion-label>
-        <ion-select placeholder="Seleccionar" interface="popover">
-          <ion-select-option value="tecnologia">Tecnología</ion-select-option>
-          <ion-select-option value="salud">Salud</ion-select-option>
+        <ion-label position="stacked">Categoría <span class="required">*</span></ion-label>
+        <ion-select placeholder="Seleccionar" interface="popover" formControlName="categoria_id">
+          <ion-select-option *ngFor="let cat of categorias" [value]="cat.id">{{cat.nombre}}</ion-select-option>
         </ion-select>
       </div>
 
       <div class="form-group">
-        <ion-label position="stacked">Ponentes</ion-label>
-        <ion-input type="text" placeholder="Nombres de los expositores"></ion-input>
+        <ion-label position="stacked">Ponentes <span class="required">*</span></ion-label>
+        <ion-input type="text" formControlName="ponentes" placeholder="Ej. Dr. Juan Pérez, Dra. Ana Gómez"></ion-input>
       </div>
 
       <div class="form-group">
-        <ion-label position="stacked">Público Objetivo</ion-label>
-        <ion-input type="text" placeholder="Ej. Estudiantes, Profesionales"></ion-input>
+        <ion-label position="stacked">Público Objetivo <span class="required">*</span></ion-label>
+        <ion-input type="text" formControlName="publico_objetivo"
+          placeholder="Ej. Investigadores y estudiantes"></ion-input>
       </div>
 
-      <ion-button expand="block" shape="round" class="submit-btn event">
-        Publicar Evento
-      </ion-button>
-    </div>
+      <div class="submit-container">
+        <ion-button expand="block" type="submit" [disabled]="eventoForm.invalid || !selectedImg" class="submit-btn"
+          shape="round">
+          <ion-icon name="calendar-clear-outline" slot="start"></ion-icon>
+          Publicar Evento
+        </ion-button>
+      </div>
+    </form>
   </div>
 </ion-content>
