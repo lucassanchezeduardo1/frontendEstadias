@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { InvestigadorService } from '../../../servicios/investigador.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-directorios',
@@ -8,52 +10,44 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DirectoriosPage implements OnInit {
 
-  investigadores = [
-    {
-      id: 1,
-      nombre: 'Dr. Roberto Sánchez',
-      especialidad: 'Biotecnología Genómica',
-      institucion: 'Universidad Politécnica de Chiapas',
-      proyectos: 15,
-      seguidores: '1.2k',
-      foto: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=200',
-      color: '#4facfe'
-    },
-    {
-      id: 2,
-      nombre: 'Dra. María García',
-      especialidad: 'Inteligencia Artificial',
-      institucion: 'Instituto Tecnológico de Tuxtla',
-      proyectos: 8,
-      seguidores: '950',
-      foto: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=200',
-      color: '#f093fb'
-    },
-    {
-      id: 3,
-      nombre: 'Dr. Carlos Ruiz',
-      especialidad: 'Energías Renovables',
-      institucion: 'UNACH',
-      proyectos: 12,
-      seguidores: '2.1k',
-      foto: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=200',
-      color: '#667eea'
-    },
-    {
-      id: 4,
-      nombre: 'Dra. Elena Torres',
-      especialidad: 'Ecología Marina',
-      institucion: 'ECOSUR',
-      proyectos: 20,
-      seguidores: '3.4k',
-      foto: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=200',
-      color: '#30cfd0'
-    }
-  ];
+  private invService = inject(InvestigadorService);
+  private router = inject(Router);
+
+  investigadores: any[] = [];
+  loading: boolean = true;
+  readonly API_URL = 'http://localhost:3000/investigador';
 
   constructor() { }
 
   ngOnInit() {
+    this.cargarInvestigadores();
+  }
+
+  cargarInvestigadores() {
+    this.loading = true;
+    this.invService.getAprobados().subscribe({
+      next: (data: any[]) => {
+        this.investigadores = data.map(inv => ({
+          ...inv,
+          // Definir un color basado en el ID para el fondo de la tarjeta si no tiene uno
+          color: this.getRandomColor(inv.id || 0)
+        }));
+        this.loading = false;
+      },
+      error: (err: any) => {
+        console.error('Error al cargar investigadores:', err);
+        this.loading = false;
+      }
+    });
+  }
+
+  verPerfil(id: number) {
+    this.router.navigate(['/estudiante/tabs/directorios', id]);
+  }
+
+  getRandomColor(id: number) {
+    const colors = ['#4facfe', '#f093fb', '#667eea', '#30cfd0', '#ff9a9e', '#a18cd1'];
+    return colors[id % colors.length];
   }
 
 }

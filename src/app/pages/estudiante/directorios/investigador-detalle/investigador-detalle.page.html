@@ -1,0 +1,133 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="regresar()" class="back-link">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+        Regresar
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Loader -->
+  <div *ngIf="loading" class="loading-full">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+    <p>Cargando información científica...</p>
+  </div>
+
+  <div class="main-container" *ngIf="!loading && investigador">
+
+    <!-- Perfil Principal Rediseñado -->
+    <div class="profile-header-new">
+      <div class="header-decoration"></div>
+      <div class="avatar-container-new">
+        <div class="image-wrapper">
+          <img [src]="API_URL + '/' + investigador.id + '/foto'" [alt]="investigador.nombre"
+            onerror="this.src='https://ionicframework.com/docs/img/demos/avatar.svg'">
+        </div>
+        <div class="verified-badge">
+          <ion-icon name="checkmark-circle"></ion-icon>
+        </div>
+      </div>
+
+      <div class="header-info">
+        <h1>{{ investigador.nombre }} {{ investigador.apellidos }}</h1>
+        <p class="degree">{{ investigador.grado_academico }}</p>
+        <div class="status-chip">Investigador Aprobado</div>
+      </div>
+    </div>
+
+    <!-- Contenido Detallado -->
+    <div class="content-grid">
+
+      <!-- Sobre el Investigador -->
+      <div class="info-card-new profile-summary">
+        <div class="card-header">
+          <div class="icon-box">
+            <ion-icon name="person-outline"></ion-icon>
+          </div>
+          <h3>Sobre el Investigador</h3>
+        </div>
+        <p class="description-text">{{ investigador.descripcion_trayectoria }}</p>
+      </div>
+
+      <!-- Investigación -->
+      <div class="info-card-new">
+        <div class="card-header">
+          <div class="icon-box">
+            <ion-icon name="flask-outline"></ion-icon>
+          </div>
+          <h3>Foco de Investigación</h3>
+        </div>
+        <div class="info-item">
+          <span class="label">Cargo Actual</span>
+          <span class="value main">{{ investigador.cargo_actual }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Áreas de Especialidad</span>
+          <div class="tags-wrapper">
+            <span class="tag-item" *ngFor="let area of investigador.areas_investigacion?.split(',')">
+              {{ area.trim() }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contacto y Horarios -->
+      <div class="info-card-new">
+        <div class="card-header">
+          <div class="icon-box">
+            <ion-icon name="calendar-outline"></ion-icon>
+          </div>
+          <h3>Contacto y Atención</h3>
+        </div>
+        <div class="info-item">
+          <span class="label">Email de Contacto</span>
+          <span class="value accent">{{ investigador.email }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Ubicación de Oficina</span>
+          <span class="value">{{ investigador.direccion_oficina }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Horarios de Atención</span>
+          <span class="value">{{ investigador.horario_atencion }}</span>
+        </div>
+      </div>
+
+      <!-- Enlaces Externos -->
+      <div class="info-card-new" *ngIf="investigador.google_academico_url || investigador.researchgate_url">
+        <div class="card-header">
+          <div class="icon-box">
+            <ion-icon name="globe-outline"></ion-icon>
+          </div>
+          <h3>Repositorios Científicos</h3>
+        </div>
+        <div class="extra-links">
+          <ion-button *ngIf="investigador.google_academico_url" [href]="investigador.google_academico_url"
+            target="_blank" expand="block" fill="clear" class="sci-link google">
+            <ion-icon name="logo-google" slot="start"></ion-icon>
+            Google Scholar
+            <ion-icon name="open-outline" slot="end"></ion-icon>
+          </ion-button>
+          <ion-button *ngIf="investigador.researchgate_url" [href]="investigador.researchgate_url" target="_blank"
+            expand="block" fill="clear" class="sci-link gate">
+            <ion-icon name="planet-outline" slot="start"></ion-icon>
+            ResearchGate
+            <ion-icon name="open-outline" slot="end"></ion-icon>
+          </ion-button>
+        </div>
+      </div>
+
+      <!-- Botón Regresar al final -->
+      <div class="actions-footer">
+        <ion-button (click)="regresar()" expand="block" fill="outline" color="primary" class="footer-back-btn">
+          <ion-icon name="arrow-back-outline" slot="start"></ion-icon>
+          Volver al Directorio
+        </ion-button>
+      </div>
+
+    </div>
+  </div>
+</ion-content>

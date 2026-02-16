@@ -7,11 +7,16 @@ const routes: Routes = [
   {
     path: '',
     component: DirectoriosPage
+  },
+  {
+    path: ':id',
+    loadChildren: () => import('./investigador-detalle/investigador-detalle.module').then(m => m.InvestigadorDetallePageModule)
   }
+
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class DirectoriosPageRoutingModule {}
+export class DirectoriosPageRoutingModule { }

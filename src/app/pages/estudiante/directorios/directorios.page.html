@@ -11,33 +11,47 @@
       <ion-searchbar placeholder="Buscar investigador o área..." mode="ios"></ion-searchbar>
     </div>
 
-    <div class="investigators-grid">
+    <!-- Spinner de carga -->
+    <div class="loading-container" *ngIf="loading">
+      <ion-spinner name="crescent" color="primary"></ion-spinner>
+      <p>Cargando investigadores...</p>
+    </div>
+
+    <!-- Mensaje si no hay datos -->
+    <div class="empty-container" *ngIf="!loading && investigadores.length === 0">
+      <ion-icon name="people-outline" color="medium"></ion-icon>
+      <p>No se encontraron investigadores aprobados.</p>
+    </div>
+
+    <!-- Grid de investigadores -->
+    <div class="investigators-grid" *ngIf="!loading && investigadores.length > 0">
       <div class="investigator-card" *ngFor="let inv of investigadores">
         <div class="card-gradient" [style.background]="'linear-gradient(135deg, ' + inv.color + ' 0%, #800020 100%)'">
         </div>
 
         <div class="card-content">
           <div class="avatar-container">
-            <img [src]="inv.foto" [alt]="inv.nombre">
+            <img [src]="API_URL + '/' + inv.id + '/foto'" [alt]="inv.nombre"
+              onerror="this.src='https://ionicframework.com/docs/img/demos/avatar.svg'">
             <div class="status-indicator"></div>
           </div>
 
-          <h3>{{ inv.nombre }}</h3>
-          <p class="specialty">{{ inv.especialidad }}</p>
-          <p class="institution">{{ inv.institucion }}</p>
+          <h3>{{ inv.nombre }} {{ inv.apellidos }}</h3>
+          <p class="specialty">{{ inv.grado_academico }}</p>
+          <p class="institution">{{ inv.cargo_actual }}</p>
 
           <div class="stats-row">
             <div class="stat">
-              <span class="value">{{ inv.proyectos }}</span>
-              <span class="label">Proyectos</span>
+              <span class="value">{{ inv.areas_investigacion?.split(',')?.length || 0 }}</span>
+              <span class="label">Áreas</span>
             </div>
             <div class="stat">
-              <span class="value">{{ inv.seguidores }}</span>
-              <span class="label">Seguidores</span>
+              <span class="value">0</span>
+              <span class="label">Impacto</span>
             </div>
           </div>
 
-          <ion-button expand="block" shape="round" class="profile-btn">
+          <ion-button expand="block" shape="round" class="profile-btn" (click)="verPerfil(inv.id)">
             Ver Perfil
           </ion-button>
         </div>
