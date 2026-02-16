@@ -94,6 +94,8 @@ export class PublicacionPage implements OnInit {
   }
 
   async generarSintesisIA(file: File) {
+    if (this.isGeneratingAiSummary) return;
+
     this.isGeneratingAiSummary = true;
     const loading = await this.loadingCtrl.create({
       message: 'Analizando PDF con IA...',
@@ -111,20 +113,27 @@ export class PublicacionPage implements OnInit {
             this.showToast('Síntesis de IA generada con éxito', 'success');
           },
           error: (err) => {
-            console.error(err);
             this.isGeneratingAiSummary = false;
             loading.dismiss();
-            this.showToast('Error al generar síntesis con IA. Verifica la clave de API.', 'danger');
+            const msg = err.message || 'Error al generar síntesis con IA.';
+            this.showToast(msg, 'danger');
           }
         });
       },
       error: (err) => {
-        console.error(err);
         this.isGeneratingAiSummary = false;
         loading.dismiss();
         this.showToast('Error al leer el texto del PDF', 'danger');
       }
     });
+  }
+
+  reintentarSintesis() {
+    if (this.selectedPdf) {
+      this.generarSintesisIA(this.selectedPdf);
+    } else {
+      this.showToast('Primero selecciona un archivo PDF', 'warning');
+    }
   }
 
   async onSubmit() {

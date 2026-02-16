@@ -10,7 +10,7 @@
 <ion-content>
   <div class="form-container">
     <form [formGroup]="publicacionForm" (ngSubmit)="onSubmit()" class="form-card">
-      
+
       <div class="section-title">
         <ion-icon name="information-circle-outline"></ion-icon>
         <span>Información General</span>
@@ -18,8 +18,10 @@
 
       <div class="form-group">
         <ion-label position="stacked">Título de la Investigación <span class="required">*</span></ion-label>
-        <ion-input type="text" formControlName="titulo" placeholder="Ej. El impacto de la IA en la medicina moderna"></ion-input>
-        <div class="error-msg" *ngIf="publicacionForm.get('titulo')?.touched && publicacionForm.get('titulo')?.errors?.['required']">
+        <ion-input type="text" formControlName="titulo"
+          placeholder="Ej. El impacto de la IA en la medicina moderna"></ion-input>
+        <div class="error-msg"
+          *ngIf="publicacionForm.get('titulo')?.touched && publicacionForm.get('titulo')?.errors?.['required']">
           El título es obligatorio
         </div>
       </div>
@@ -68,14 +70,14 @@
         <ion-label position="stacked">Archivo PDF <span class="required">*</span></ion-label>
         <input type="file" #pdfInput (change)="onPdfSelected($event)" accept="application/pdf" hidden>
         <div class="upload-box dashed" (click)="pdfInput.click()" [class.has-file]="selectedPdf">
-          <ion-icon [name]="selectedPdf ? 'document-check-outline' : 'document-outline'"></ion-icon>
+          <ion-icon [name]="selectedPdf ? 'checkmark-circle-outline' : 'document-outline'"></ion-icon>
           <span>{{ selectedPdf ? selectedPdf.name : 'Subir Archivo PDF' }}</span>
         </div>
       </div>
 
       <div class="form-group">
         <ion-label position="stacked">Síntesis del Investigador <span class="required">*</span></ion-label>
-        <ion-textarea rows="6" formControlName="sintesis_investigador" 
+        <ion-textarea rows="6" formControlName="sintesis_investigador"
           placeholder="Escribe aquí un resumen detallado de tu investigación (mínimo 500 caracteres)...">
         </ion-textarea>
         <div class="char-count" [class.error]="publicacionForm.get('sintesis_investigador')?.value?.length < 500">
@@ -83,16 +85,26 @@
         </div>
       </div>
 
-      <div class="form-group ai-summary-box" *ngIf="isGeneratingAiSummary || publicacionForm.get('sintesis_ia')?.value">
+      <div class="form-group ai-summary-box" *ngIf="selectedPdf">
         <ion-label position="stacked" color="primary">
           <ion-icon name="sparkles"></ion-icon> Síntesis Generada por IA
         </ion-label>
-        <div class="ai-content" *ngIf="!isGeneratingAiSummary">
-          {{ publicacionForm.get('sintesis_ia')?.value }}
-        </div>
+
         <div class="ai-loading" *ngIf="isGeneratingAiSummary">
           <ion-spinner name="dots"></ion-spinner>
-          <span>Procesando PDF...</span>
+          <span>Procesando PDF con Gemini...</span>
+        </div>
+
+        <div class="ai-content" *ngIf="!isGeneratingAiSummary && publicacionForm.get('sintesis_ia')?.value">
+          {{ publicacionForm.get('sintesis_ia')?.value }}
+        </div>
+
+        <div class="ai-empty" *ngIf="!isGeneratingAiSummary && !publicacionForm.get('sintesis_ia')?.value">
+          <p>No se pudo generar la síntesis automáticamente.</p>
+          <ion-button fill="outline" size="small" (click)="reintentarSintesis()" color="primary">
+            <ion-icon name="refresh-outline" slot="start"></ion-icon>
+            Intentar de nuevo
+          </ion-button>
         </div>
       </div>
 
@@ -112,12 +124,13 @@
       </div>
 
       <div class="submit-container">
-        <ion-button expand="block" type="submit" [disabled]="publicacionForm.invalid || !selectedPdf || !selectedImg" class="submit-btn" shape="round">
+        <ion-button expand="block" type="submit" [disabled]="publicacionForm.invalid || !selectedPdf || !selectedImg"
+          class="submit-btn" shape="round">
           <ion-icon name="cloud-upload-outline" slot="start"></ion-icon>
           Publicar Investigación
         </ion-button>
       </div>
-      
+
     </form>
   </div>
 </ion-content>

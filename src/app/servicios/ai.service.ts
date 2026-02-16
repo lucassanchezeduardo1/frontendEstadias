@@ -4,6 +4,8 @@ import { Observable, from } from 'rxjs';
 import { map, switchMap, catchError } from 'rxjs/operators';
 import * as pdfjsLib from 'pdfjs-dist';
 
+import { environment } from '../../environments/environment';
+
 // Configuración del worker de PDF.js (usando la copia local definida en angular.json)
 pdfjsLib.GlobalWorkerOptions.workerSrc = './pdf.worker.min.mjs';
 
@@ -13,13 +15,17 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = './pdf.worker.min.mjs';
 export class AiService {
     private http = inject(HttpClient);
 
-    // URL de la API de Gemini (Versión estable v1)
-    private readonly GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent';
+    // URL de la API de Gemini
+    private readonly GEMINI_API_URL = environment.geminiApiUrl;
 
-    // ESTA CLAVE DEBE SER PROPORCIONADA POR EL USUARIO O GUARDADA EN ENVIRONMENT
-    private readonly API_KEY = 'AIzaSyCjCxg8ZhWRqnaKWtEqpYHPcp_mTN1U3TY';
+    // CLAVE DE API desde environment
+    private readonly API_KEY = environment.geminiApiKey;
 
-    constructor() { }
+    constructor() {
+        if (!this.API_KEY) {
+            console.error('CRÍTICO: No se ha configurado la clave de API de Gemini en environment.ts');
+        }
+    }
 
     /**
      * Extrae el texto de un archivo PDF
@@ -63,7 +69,16 @@ export class AiService {
      * @returns Observable con la síntesis generada
      */
     generarSintesis(texto: string): Observable<string> {
-        const prompt = `Actúa como un divulgador científico experto. Resume la siguiente investigación científica de manera clara, profesional y atractiva para un público interesado en la ciencia. La síntesis debe ser de aproximadamente 300 palabras y resaltar los hallazgos más importantes: \n\n ${texto}`;
+        if (!texto || texto.trim().length === 0) {
+            throw new Error('No se pudo extraer texto del PDF para generar la síntesis');
+        }
+
+        const prompt = `Actúa como un divulgador científico experto de alto nivel.
+        Resume la siguiente investigación científica de manera clara, profesional, coherente y atractiva para un público interesado en la ciencia. 
+        La síntesis debe ser de aproximadamente 300 a 400 palabras, resaltar los hallazgos más importantes, la metodología y las conclusiones principales.
+        Usa un lenguaje formal pero accesible.
+        
+        Investigación: \n\n ${texto}`;
 
         const body = {
             contents: [{
@@ -71,7 +86,12 @@ export class AiService {
             }]
         };
 
-        return this.http.post<any>(`${this.GEMINI_API_URL}?key=${this.API_KEY}`, body).pipe(
+        return this.http.post<any>(this.GEMINI_API_URL, body, {
+            headers: {
+                'Content-Type': 'application/json',
+                'X-goog-api-key': this.API_KEY
+            }
+        }).pipe(
             map(res => {
                 if (res.candidates && res.candidates[0] && res.candidates[0].content && res.candidates[0].content.parts) {
                     return res.candidates[0].content.parts[0].text;
@@ -80,10 +100,17 @@ export class AiService {
             }),
             catchError(err => {
                 console.error('Error detallado de Gemini API:', err);
-                if (err.error) {
-                    console.error('MENSAJE DE GOOGLE:', err.error);
+                let message = 'Error al generar la síntesis';
+
+                if (err.status === 429) {
+                    message = 'Se ha alcanzado el límite de peticiones de la IA (429). Por favor, intenta de nuevo en unos momentos.';
+                } else if (err.status === 404) {
+                    message = 'El modelo de IA solicitado no fue encontrado (404). Verifica la URL y el nombre del modelo.';
+                } else if (err.error && err.error.error && err.error.error.message) {
+                    message = `Error de la IA: ${err.error.error.message}`;
                 }
-                throw err;
+
+                throw new Error(message);
             })
         );
     }

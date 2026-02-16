@@ -183,6 +183,16 @@ ion-content {
     color: #7a1024;
     font-weight: 500;
   }
+  .ai-empty {
+    text-align: center;
+    padding: 10px;
+    color: #666;
+    font-size: 0.9rem;
+    
+    p {
+      margin-bottom: 12px;
+    }
+  }
 }
 
 .submit-container {
