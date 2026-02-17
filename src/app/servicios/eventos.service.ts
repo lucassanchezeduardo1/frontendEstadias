@@ -60,6 +60,13 @@ export class EventosService {
     }
 
     /**
+     * Actualizar un evento (solo campos de texto)
+     */
+    actualizarEvento(id: number, datos: any): Observable<any> {
+        return this.http.patch(`${this.API_URL}/${id}`, datos);
+    }
+
+    /**
      * Eliminar un evento
      */
     eliminarEvento(id: number): Observable<any> {

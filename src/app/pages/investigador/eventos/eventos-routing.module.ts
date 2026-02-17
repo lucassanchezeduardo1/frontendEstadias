@@ -7,6 +7,10 @@ const routes: Routes = [
   {
     path: '',
     component: EventosPage
+  },
+  {
+    path: ':id',
+    component: EventosPage
   }
 ];
 
@@ -14,4 +18,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class EventosPageRoutingModule {}
+export class EventosPageRoutingModule { }

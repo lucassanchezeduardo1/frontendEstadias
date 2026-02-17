@@ -55,6 +55,13 @@ export class PublicacionesService {
   }
 
   /**
+   * Actualizar una publicación (solo campos de texto)
+   */
+  actualizarPublicacion(id: number, datos: any): Observable<any> {
+    return this.http.patch(`${this.API_URL}/${id}`, datos);
+  }
+
+  /**
    * Eliminar una publicación
    */
   eliminarPublicacion(id: number): Observable<any> {
