@@ -4,7 +4,7 @@ import { PublicacionesService } from '../../../servicios/publicaciones.service';
 import { AiService } from '../../../servicios/ai.service';
 import { CategoriasService } from '../../../servicios/categorias.service';
 import { ToastController, LoadingController } from '@ionic/angular';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-publicacion',
@@ -20,10 +20,6 @@ export class PublicacionPage implements OnInit {
   private toastCtrl = inject(ToastController);
   private loadingCtrl = inject(LoadingController);
   private router = inject(Router);
-  private route = inject(ActivatedRoute);
-
-  publicacionId: number | null = null;
-  isEditMode = false;
 
   publicacionForm!: FormGroup;
   categorias: any[] = [];
@@ -40,34 +36,6 @@ export class PublicacionPage implements OnInit {
 
   ngOnInit() {
     this.cargarCategorias();
-
-    // Verificar si estamos en modo edición
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.publicacionId = +id;
-      this.isEditMode = true;
-      this.cargarPublicacion(this.publicacionId);
-    }
-  }
-
-  cargarPublicacion(id: number) {
-    this.publicacionesService.getPublicacion(id).subscribe({
-      next: (pub) => {
-        this.publicacionForm.patchValue({
-          titulo: pub.titulo,
-          categoria_id: pub.categoria_id,
-          sub_categoria: pub.sub_categoria,
-          colaboradores: pub.colaboradores,
-          sintesis_investigador: pub.sintesis_investigador,
-          sintesis_ia: pub.sintesis_ia,
-          links_referencia: pub.links_referencia,
-          videos_url: pub.videos_url,
-          investigador_principal_id: pub.investigador_principal_id
-        });
-        this.imgPreview = `http://localhost:3000/publicacion/${id}/imagen`;
-      },
-      error: (err) => console.error('Error al cargar publicación', err)
-    });
   }
 
   initForm() {
@@ -80,10 +48,9 @@ export class PublicacionPage implements OnInit {
       sintesis_ia: [''],
       links_referencia: [''],
       videos_url: [''],
-      investigador_principal_id: [1] // ID temporal, debería venir del usuario logueado
+      investigador_principal_id: [1]
     });
 
-    // Intentar obtener el ID del investigador logueado
     const invUser = localStorage.getItem('inv_user');
     if (invUser) {
       const user = JSON.parse(invUser);
@@ -92,7 +59,7 @@ export class PublicacionPage implements OnInit {
   }
 
   resetForm() {
-    this.initForm(); // Reinicializa con el ID del investigador y valores por defecto
+    this.initForm();
     this.selectedPdf = null;
     this.selectedImg = null;
     this.pdfPreview = null;
@@ -112,8 +79,6 @@ export class PublicacionPage implements OnInit {
     if (file && file.type === 'application/pdf') {
       this.selectedPdf = file;
       this.pdfPreview = file.name;
-
-      // Generar síntesis con IA automáticamente
       await this.generarSintesisIA(file);
     } else {
       this.showToast('Por favor selecciona un archivo PDF válido', 'warning');
@@ -178,53 +143,33 @@ export class PublicacionPage implements OnInit {
   }
 
   async onSubmit() {
-    if (this.publicacionForm.invalid) {
+    if (this.publicacionForm.invalid || !this.selectedPdf || !this.selectedImg) {
       this.showToast('Por favor completa todos los campos requeridos', 'warning');
       return;
     }
 
-    if (!this.isEditMode && (!this.selectedPdf || !this.selectedImg)) {
-      this.showToast('Debe subir el PDF y la imagen de portada', 'warning');
-      return;
-    }
-
     const loading = await this.loadingCtrl.create({
-      message: this.isEditMode ? 'Actualizando investigación...' : 'Publicando investigación...',
+      message: 'Publicando investigación...',
     });
     await loading.present();
 
-    if (this.isEditMode) {
-      this.publicacionesService.actualizarPublicacion(this.publicacionId!, this.publicacionForm.value).subscribe({
-        next: () => {
-          loading.dismiss();
-          this.showToast('¡Investigación actualizada con éxito!', 'success');
-          this.router.navigate(['/investigador/inicio']);
-        },
-        error: (err) => {
-          loading.dismiss();
-          console.error('Error al actualizar', err);
-          this.showToast('Error al actualizar la investigación', 'danger');
-        }
-      });
-    } else {
-      this.publicacionesService.crearPublicacion(
-        this.publicacionForm.value,
-        this.selectedPdf!,
-        this.selectedImg!
-      ).subscribe({
-        next: (res) => {
-          loading.dismiss();
-          this.showToast('¡Investigación publicada con éxito!', 'success');
-          this.resetForm();
-          this.router.navigate(['/investigador/inicio']);
-        },
-        error: (err) => {
-          loading.dismiss();
-          console.error('Error al publicar', err);
-          this.showToast('Error al publicar la investigación', 'danger');
-        }
-      });
-    }
+    this.publicacionesService.crearPublicacion(
+      this.publicacionForm.value,
+      this.selectedPdf!,
+      this.selectedImg!
+    ).subscribe({
+      next: (res) => {
+        loading.dismiss();
+        this.showToast('¡Investigación publicada con éxito!', 'success');
+        this.resetForm();
+        this.router.navigate(['/investigador/inicio']);
+      },
+      error: (err) => {
+        loading.dismiss();
+        console.error('Error al publicar', err);
+        this.showToast('Error al publicar la investigación', 'danger');
+      }
+    });
   }
 
   async showToast(message: string, color: string) {

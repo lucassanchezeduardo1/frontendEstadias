@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EventosService } from '../../../servicios/eventos.service';
 import { CategoriasService } from '../../../servicios/categorias.service';
 import { ToastController, LoadingController } from '@ionic/angular';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-eventos',
@@ -18,10 +18,6 @@ export class EventosPage implements OnInit {
   private toastCtrl = inject(ToastController);
   private loadingCtrl = inject(LoadingController);
   private router = inject(Router);
-  private route = inject(ActivatedRoute);
-
-  eventoId: number | null = null;
-  isEditMode = false;
 
   eventoForm!: FormGroup;
   categorias: any[] = [];
@@ -34,36 +30,6 @@ export class EventosPage implements OnInit {
 
   ngOnInit() {
     this.cargarCategorias();
-
-    // Verificar si estamos en modo edición
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.eventoId = +id;
-      this.isEditMode = true;
-      this.cargarEvento(this.eventoId);
-    }
-  }
-
-  cargarEvento(id: number) {
-    this.eventosService.getEvento(id).subscribe({
-      next: (evento) => {
-        this.eventoForm.patchValue({
-          titulo: evento.titulo,
-          descripcion: evento.descripcion,
-          tipo_evento: evento.tipo_evento,
-          fecha: evento.fecha,
-          hora: evento.hora,
-          modalidad: evento.modalidad,
-          lugar_enlace: evento.lugar_enlace,
-          categoria_id: evento.categoria_id,
-          ponentes: evento.ponentes,
-          publico_objetivo: evento.publico_objetivo,
-          investigador_organizador_id: evento.investigador_organizador_id
-        });
-        this.imgPreview = `http://localhost:3000/eventos/${id}/imagen`;
-      },
-      error: (err) => console.error('Error al cargar evento', err)
-    });
   }
 
   initForm() {
@@ -81,7 +47,6 @@ export class EventosPage implements OnInit {
       investigador_organizador_id: [null]
     });
 
-    // Cargar ID del investigador logueado
     const invUser = localStorage.getItem('inv_user');
     if (invUser) {
       const user = JSON.parse(invUser);
@@ -99,12 +64,11 @@ export class EventosPage implements OnInit {
   onImgSelected(event: any) {
     const file = event.target.files[0];
     if (file && file.type.startsWith('image/')) {
-      const maxSize = 5 * 1024 * 1024; // 5MB
+      const maxSize = 5 * 1024 * 1024;
       if (file.size > maxSize) {
         this.showToast('La imagen no puede superar los 5MB', 'warning');
         return;
       }
-
       this.selectedImg = file;
       const reader = new FileReader();
       reader.onload = () => {
@@ -112,70 +76,42 @@ export class EventosPage implements OnInit {
       };
       reader.readAsDataURL(file);
     } else {
-      this.showToast('Por favor selecciona una imagen válida (JPEG, PNG, WebP)', 'warning');
+      this.showToast('Por favor selecciona una imagen válida', 'warning');
     }
   }
 
   async onSubmit() {
-    if (this.eventoForm.invalid) {
-      this.showToast('Por favor completa todos los campos requeridos', 'warning');
+    if (this.eventoForm.invalid || !this.selectedImg) {
+      this.showToast('Por favor completa todos los campos y selecciona una imagen', 'warning');
       this.eventoForm.markAllAsTouched();
       return;
     }
 
-    if (!this.isEditMode && !this.selectedImg) {
-      this.showToast('Por favor selecciona una imagen para el evento', 'warning');
-      return;
-    }
-
     const loading = await this.loadingCtrl.create({
-      message: this.isEditMode ? 'Actualizando evento...' : 'Publicando evento...',
+      message: 'Publicando evento...',
       spinner: 'crescent'
     });
     await loading.present();
 
-    if (this.isEditMode) {
-      this.eventosService.actualizarEvento(this.eventoId!, this.eventoForm.value).subscribe({
-        next: () => {
-          loading.dismiss();
-          this.showToast('¡Evento actualizado con éxito!', 'success');
-          this.router.navigate(['/investigador/inicio']);
-        },
-        error: (err) => {
-          loading.dismiss();
-          console.error('Error al actualizar evento', err);
-          this.showToast('Error al actualizar el evento', 'danger');
-        }
-      });
-    } else {
-      this.eventosService.crearEvento(this.eventoForm.value, this.selectedImg!).subscribe({
-        next: (res) => {
-          loading.dismiss();
-          this.showToast('¡Evento publicado con éxito!', 'success');
-          this.resetForm();
-          this.router.navigate(['/investigador/inicio']);
-        },
-        error: (err) => {
-          loading.dismiss();
-          console.error('Error al publicar evento', err);
-          const errorMsg = err.error?.message || 'Error al conectar con el servidor';
-          this.showToast(errorMsg, 'danger');
-        }
-      });
-    }
+    this.eventosService.crearEvento(this.eventoForm.value, this.selectedImg!).subscribe({
+      next: (res) => {
+        loading.dismiss();
+        this.showToast('¡Evento publicado con éxito!', 'success');
+        this.resetForm();
+        this.router.navigate(['/investigador/inicio']);
+      },
+      error: (err) => {
+        loading.dismiss();
+        console.error('Error al publicar evento', err);
+        this.showToast('Error al publicar el evento', 'danger');
+      }
+    });
   }
 
   resetForm() {
     this.initForm();
     this.selectedImg = null;
     this.imgPreview = null;
-    // Marcamos como no tocados para limpiar mensajes de error
-    Object.keys(this.eventoForm.controls).forEach(key => {
-      const control = this.eventoForm.get(key);
-      control?.setErrors(null);
-      control?.markAsPristine();
-      control?.markAsUntouched();
-    });
   }
 
   async showToast(message: string, color: string) {
@@ -188,4 +124,3 @@ export class EventosPage implements OnInit {
     await toast.present();
   }
 }
-

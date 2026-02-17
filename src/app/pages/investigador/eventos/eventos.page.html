@@ -1,6 +1,6 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title>{{ isEditMode ? 'Editar Evento' : 'Agregar Evento' }}</ion-title>
+    <ion-title>Agregar Evento</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -95,10 +95,10 @@
       </div>
 
       <div class="submit-container">
-        <ion-button expand="block" type="submit" [disabled]="eventoForm.invalid || (!isEditMode && !selectedImg)"
-          class="submit-btn" shape="round">
-          <ion-icon [name]="isEditMode ? 'save-outline' : 'calendar-clear-outline'" slot="start"></ion-icon>
-          {{ isEditMode ? 'Guardar Cambios' : 'Publicar Evento' }}
+        <ion-button expand="block" type="submit" [disabled]="eventoForm.invalid || !selectedImg" class="submit-btn"
+          shape="round">
+          <ion-icon name="calendar-clear-outline" slot="start"></ion-icon>
+          Publicar Evento
         </ion-button>
       </div>
     </form>

@@ -35,6 +35,14 @@ const routes: Routes = [
     path: '',
     redirectTo: 'tabs/inicio',
     pathMatch: 'full'
+  },
+  {
+    path: 'publicacion-edit/:id',
+    loadChildren: () => import('./publicacion-edit/publicacion-edit.module').then(m => m.PublicacionEditPageModule)
+  },
+  {
+    path: 'eventos-edit/:id',
+    loadChildren: () => import('./eventos-edit/eventos-edit.module').then(m => m.EventosEditPageModule)
   }
 ];
 
@@ -42,4 +50,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class InvestigadorPageRoutingModule {}
+export class InvestigadorPageRoutingModule { }

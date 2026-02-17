@@ -1,0 +1,96 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/investigador/tabs/inicio" icon="chevron-back-outline"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Editar Investigación</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="form-container">
+    <form [formGroup]="publicacionForm" (ngSubmit)="onSubmit()" class="form-card">
+
+      <div class="section-title">
+        <ion-icon name="create-outline"></ion-icon>
+        <span>Modificar Información</span>
+      </div>
+
+      <div class="form-group">
+        <ion-label position="stacked">Título de la Investigación</ion-label>
+        <ion-input type="text" formControlName="titulo" placeholder="Actualizar título"></ion-input>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group half">
+          <ion-label position="stacked">Categoría</ion-label>
+          <ion-select placeholder="Cambiar" interface="popover" formControlName="categoria_id">
+            <ion-select-option *ngFor="let cat of categorias" [value]="cat.id">{{cat.nombre}}</ion-select-option>
+          </ion-select>
+        </div>
+        <div class="form-group half">
+          <ion-label position="stacked">Sub-categoría</ion-label>
+          <ion-input type="text" formControlName="sub_categoria" placeholder="Actualizar sub-categoría"></ion-input>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <ion-label position="stacked">Colaboradores</ion-label>
+        <ion-input type="text" formControlName="colaboradores" placeholder="Lista de nombres"></ion-input>
+      </div>
+
+      <div class="section-title">
+        <ion-icon name="document-text-outline"></ion-icon>
+        <span>Contenido</span>
+      </div>
+
+      <div class="form-group">
+        <ion-label position="stacked">Síntesis del Investigador</ion-label>
+        <ion-textarea rows="8" formControlName="sintesis_investigador"
+          placeholder="Modificar resumen... (mínimo 500 caracteres)">
+        </ion-textarea>
+        <div class="char-count" [class.error]="publicacionForm.get('sintesis_investigador')?.value?.length < 500">
+          {{ publicacionForm.get('sintesis_investigador')?.value?.length || 0 }}/500 caracteres
+        </div>
+      </div>
+
+      <div class="form-group">
+        <ion-label position="stacked">Síntesis IA (Solo Lectura)</ion-label>
+        <ion-textarea rows="4" formControlName="sintesis_ia" [readonly]="true" class="readonly-text"></ion-textarea>
+      </div>
+
+      <div class="section-title">
+        <ion-icon name="link-outline"></ion-icon>
+        <span>Enlaces</span>
+      </div>
+
+      <div class="form-group">
+        <ion-label position="stacked">Links de Referencia</ion-label>
+        <ion-input type="url" formControlName="links_referencia" placeholder="https://..."></ion-input>
+      </div>
+
+      <div class="form-group">
+        <ion-label position="stacked">Videos (URL)</ion-label>
+        <ion-input type="url" formControlName="videos_url" placeholder="https://youtube.com/..."></ion-input>
+      </div>
+
+      <!-- Imagen actual (Informativo) -->
+      <div class="current-image-info" *ngIf="imgPreview">
+        <ion-label>Imagen de Portada Actual</ion-label>
+        <div class="preview-box">
+          <img [src]="imgPreview" alt="Portada actual">
+        </div>
+        <p class="helper-text">Para cambiar la imagen o el PDF, debes crear una nueva publicación (funcionalidad de
+          reemplazo masivo no disponible en esta edición rápida).</p>
+      </div>
+
+      <div class="submit-container">
+        <ion-button expand="block" type="submit" class="submit-btn" shape="round">
+          <ion-icon name="save-outline" slot="start"></ion-icon>
+          Guardar Cambios
+        </ion-button>
+      </div>
+
+    </form>
+  </div>
+</ion-content>

@@ -57,11 +57,11 @@ export class InicioPage implements OnInit {
   }
 
   editPublication(pub: any) {
-    this.router.navigate(['/investigador/tabs/publicacion', pub.id]);
+    this.router.navigate(['/investigador/publicacion-edit', pub.id]);
   }
 
   editEvent(event: any) {
-    this.router.navigate(['/investigador/tabs/eventos', event.id]);
+    this.router.navigate(['/investigador/eventos-edit', event.id]);
   }
 
   async deletePublication(id: number) {

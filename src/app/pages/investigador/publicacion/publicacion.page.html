@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/investigador" icon="chevron-back-outline"></ion-back-button>
     </ion-buttons>
-    <ion-title>{{ isEditMode ? 'Editar Investigación' : 'Nueva Investigación' }}</ion-title>
+    <ion-title>Nueva Investigación</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -124,11 +124,10 @@
       </div>
 
       <div class="submit-container">
-        <ion-button expand="block" type="submit"
-          [disabled]="publicacionForm.invalid || (!isEditMode && (!selectedPdf || !selectedImg))" class="submit-btn"
-          shape="round">
-          <ion-icon [name]="isEditMode ? 'save-outline' : 'cloud-upload-outline'" slot="start"></ion-icon>
-          {{ isEditMode ? 'Guardar Cambios' : 'Publicar Investigación' }}
+        <ion-button expand="block" type="submit" [disabled]="publicacionForm.invalid || !selectedPdf || !selectedImg"
+          class="submit-btn" shape="round">
+          <ion-icon name="cloud-upload-outline" slot="start"></ion-icon>
+          Publicar Investigación
         </ion-button>
       </div>
 
