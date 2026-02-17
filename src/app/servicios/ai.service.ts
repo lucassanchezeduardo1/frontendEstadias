@@ -15,17 +15,10 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = './pdf.worker.min.mjs';
 export class AiService {
     private http = inject(HttpClient);
 
-    // URL de la API de Gemini
-    private readonly GEMINI_API_URL = environment.geminiApiUrl;
+    // URL de nuestro backend (Proxy de IA seguro)
+    private readonly API_URL = 'http://localhost:3000/ai/sintesis';
 
-    // CLAVE DE API desde environment
-    private readonly API_KEY = environment.geminiApiKey;
-
-    constructor() {
-        if (!this.API_KEY) {
-            console.error('CRÍTICO: No se ha configurado la clave de API de Gemini en environment.ts');
-        }
-    }
+    constructor() { }
 
     /**
      * Extrae el texto de un archivo PDF
@@ -64,7 +57,7 @@ export class AiService {
     }
 
     /**
-     * Genera una síntesis con IA a partir del texto de la investigación
+     * Genera una síntesis con IA a través de nuestro servidor (usando Groq)
      * @param texto Texto completo de la investigación
      * @returns Observable con la síntesis generada
      */
@@ -73,41 +66,23 @@ export class AiService {
             throw new Error('No se pudo extraer texto del PDF para generar la síntesis');
         }
 
-        const prompt = `Actúa como un divulgador científico experto de alto nivel.
-        Resume la siguiente investigación científica de manera clara, profesional, coherente y atractiva para un público interesado en la ciencia. 
-        La síntesis debe ser de aproximadamente 300 a 400 palabras, resaltar los hallazgos más importantes, la metodología y las conclusiones principales.
-        Usa un lenguaje formal pero accesible.
-        
-        Investigación: \n\n ${texto}`;
+        const body = { texto };
 
-        const body = {
-            contents: [{
-                parts: [{ text: prompt }]
-            }]
-        };
-
-        return this.http.post<any>(this.GEMINI_API_URL, body, {
-            headers: {
-                'Content-Type': 'application/json',
-                'X-goog-api-key': this.API_KEY
-            }
-        }).pipe(
+        return this.http.post<any>(this.API_URL, body).pipe(
             map(res => {
-                if (res.candidates && res.candidates[0] && res.candidates[0].content && res.candidates[0].content.parts) {
-                    return res.candidates[0].content.parts[0].text;
+                if (res && res.sintesis) {
+                    return res.sintesis;
                 }
-                throw new Error('No se pudo generar la síntesis');
+                throw new Error('La respuesta del servidor no contiene la síntesis');
             }),
             catchError(err => {
-                console.error('Error detallado de Gemini API:', err);
+                console.error('Error detallado llamando al backend AI:', err);
                 let message = 'Error al generar la síntesis';
 
-                if (err.status === 429) {
-                    message = 'Se ha alcanzado el límite de peticiones de la IA (429). Por favor, intenta de nuevo en unos momentos.';
-                } else if (err.status === 404) {
-                    message = 'El modelo de IA solicitado no fue encontrado (404). Verifica la URL y el nombre del modelo.';
-                } else if (err.error && err.error.error && err.error.error.message) {
-                    message = `Error de la IA: ${err.error.error.message}`;
+                if (err.status === 0) {
+                    message = 'No se pudo conectar con el servidor backend. Asegúrate de que esté encendido (Puerto 3000).';
+                } else if (err.error && err.error.message) {
+                    message = `Error del servidor: ${err.error.message}`;
                 }
 
                 throw new Error(message);

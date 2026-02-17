@@ -59,6 +59,15 @@ export class PublicacionPage implements OnInit {
     }
   }
 
+  resetForm() {
+    this.initForm(); // Reinicializa con el ID del investigador y valores por defecto
+    this.selectedPdf = null;
+    this.selectedImg = null;
+    this.pdfPreview = null;
+    this.imgPreview = null;
+    this.isGeneratingAiSummary = false;
+  }
+
   cargarCategorias() {
     this.categoriasService.getCategorias().subscribe({
       next: (res) => this.categorias = res,
@@ -155,6 +164,10 @@ export class PublicacionPage implements OnInit {
       next: (res) => {
         loading.dismiss();
         this.showToast('¡Investigación publicada con éxito!', 'success');
+
+        // Limpiar el formulario y archivos
+        this.resetForm();
+
         this.router.navigate(['/investigador/inicio']);
       },
       error: (err) => {
