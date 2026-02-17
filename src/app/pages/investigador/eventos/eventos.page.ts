@@ -43,8 +43,16 @@ export class EventosPage implements OnInit {
       lugar_enlace: ['', [Validators.required, Validators.maxLength(500)]],
       categoria_id: ['', [Validators.required]],
       ponentes: ['', [Validators.required, Validators.minLength(5)]],
-      publico_objetivo: ['', [Validators.required, Validators.maxLength(255)]]
+      publico_objetivo: ['', [Validators.required, Validators.maxLength(255)]],
+      investigador_organizador_id: [null]
     });
+
+    // Cargar ID del investigador logueado
+    const invUser = localStorage.getItem('inv_user');
+    if (invUser) {
+      const user = JSON.parse(invUser);
+      this.eventoForm.patchValue({ investigador_organizador_id: user.id });
+    }
   }
 
   cargarCategorias() {
@@ -103,7 +111,7 @@ export class EventosPage implements OnInit {
   }
 
   resetForm() {
-    this.eventoForm.reset();
+    this.initForm();
     this.selectedImg = null;
     this.imgPreview = null;
     // Marcamos como no tocados para limpiar mensajes de error

@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { PublicacionesService } from '../../../servicios/publicaciones.service';
+import { EventosService } from '../../../servicios/eventos.service';
 
 @Component({
   selector: 'app-inicio',
@@ -7,41 +9,46 @@ import { Component, OnInit } from '@angular/core';
   standalone: false,
 })
 export class InicioPage implements OnInit {
+  private publicacionesService = inject(PublicacionesService);
+  private eventosService = inject(EventosService);
 
-  stats = [
-    { label: 'Publicaciones', value: '12', icon: 'document-text', color: '#800020' },
-    { label: 'Vistas', value: '1.2k', icon: 'eye', color: '#C70039' },
-    { label: 'Descargas', value: '450', icon: 'cloud-download', color: '#FF5733' },
-    { label: 'Citas', value: '89', icon: 'bookmark', color: '#900C3F' }
-  ];
-
-  publications = [
-    {
-      id: 1,
-      title: 'Inteligencia Artificial en la Medicina Moderna',
-      category: 'Tecnología',
-      image: 'https://img.freepik.com/free-photo/doctor-working-with-ai_23-2151107332.jpg',
-      date: '2024-05-10',
-      comments: [
-        { user: 'Dr. García', text: 'Excelente investigación, muy útil.' },
-        { user: 'Marta R.', text: '¿Tienen el dataset disponible?' }
-      ]
-    },
-    {
-      id: 2,
-      title: 'Impacto del Cambio Climático en la Biodiversidad',
-      category: 'Ciencias Naturales',
-      image: 'https://img.freepik.com/free-photo/dry-cracked-earth-background_23-2148824933.jpg',
-      date: '2024-03-22',
-      comments: [
-        { user: 'Prof. Wilson', text: 'Datos muy precisos sobre la fauna.' }
-      ]
-    }
-  ];
+  publications: any[] = [];
+  events: any[] = [];
+  investigadorId: number | null = null;
 
   constructor() { }
 
   ngOnInit() {
+    const invUser = localStorage.getItem('inv_user');
+    if (invUser) {
+      const user = JSON.parse(invUser);
+      this.investigadorId = user.id;
+      this.cargarDatos();
+    }
+  }
+
+  cargarDatos() {
+    if (this.investigadorId) {
+      // Cargar mis publicaciones
+      this.publicacionesService.getMisPublicaciones(this.investigadorId).subscribe({
+        next: (res) => this.publications = res,
+        error: (err) => console.error('Error al cargar publicaciones', err)
+      });
+
+      // Cargar mis eventos
+      this.eventosService.getMisEventosById(this.investigadorId).subscribe({
+        next: (res) => this.events = res.eventos || [],
+        error: (err) => console.error('Error al cargar eventos', err)
+      });
+    }
+  }
+
+  getImagenUrl(pubId: number) {
+    return `http://localhost:3000/publicacion/${pubId}/imagen`;
+  }
+
+  getEventoImagenUrl(eventoId: number) {
+    return `http://localhost:3000/eventos/${eventoId}/imagen`;
   }
 
   editPublication(pub: any) {
@@ -49,7 +56,20 @@ export class InicioPage implements OnInit {
   }
 
   deletePublication(id: number) {
-    this.publications = this.publications.filter(p => p.id !== id);
+    this.publicacionesService.eliminarPublicacion(id).subscribe({
+      next: () => {
+        this.publications = this.publications.filter(p => p.id !== id);
+      },
+      error: (err) => console.error('Error al eliminar publicación', err)
+    });
   }
 
+  deleteEvent(id: number) {
+    this.eventosService.eliminarEvento(id).subscribe({
+      next: () => {
+        this.events = this.events.filter(e => e.id !== id);
+      },
+      error: (err) => console.error('Error al eliminar evento', err)
+    });
+  }
 }

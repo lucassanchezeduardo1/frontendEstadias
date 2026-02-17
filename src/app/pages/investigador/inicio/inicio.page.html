@@ -1,65 +1,98 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title>Panel del Investigador</ion-title>
+    <ion-title>Dashboard del Investigador</ion-title>
+    <ion-buttons slot="end">
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <div class="main-container">
 
-    <!-- Impact Summary Stats -->
-    <div class="stats-grid">
-      <div class="stat-card" *ngFor="let stat of stats" [style.border-left-color]="stat.color">
-        <div class="stat-info">
-          <span class="stat-value">{{ stat.value }}</span>
-          <span class="stat-label">{{ stat.label }}</span>
-        </div>
-        <ion-icon [name]="stat.icon" class="stat-icon" [style.color]="stat.color"></ion-icon>
+    <!-- Mis Publicaciones -->
+    <div class="section-header">
+      <div class="header-content">
+        <h2>Mis Publicaciones</h2>
+        <span class="count-badge">{{ publications.length }}</span>
       </div>
     </div>
 
-    <div class="section-header">
-      <h2>Mis Publicaciones</h2>
-    </div>
-
-    <!-- Publications List -->
-    <div class="publications-list">
-      <div class="publication-card" *ngFor="let pub of publications">
-        <div class="pub-image" [style.background-image]="'url(' + pub.image + ')'">
-          <div class="category-badge">{{ pub.category }}</div>
+    <div class="grid-list" *ngIf="publications.length > 0">
+      <div class="item-card" *ngFor="let pub of publications">
+        <div class="item-image" [style.background-image]="'url(' + getImagenUrl(pub.id) + ')'">
+          <div class="category-badge">{{ pub.categoria?.nombre || 'General' }}</div>
         </div>
 
-        <div class="pub-content">
-          <h3>{{ pub.title }}</h3>
-          <p class="pub-date">Publicado: {{ pub.date }}</p>
+        <div class="item-content">
+          <h3>{{ pub.titulo }}</h3>
+          <div class="item-meta">
+            <ion-icon name="calendar-outline"></ion-icon>
+            <span>{{ pub.created_at | date:'dd/MM/yyyy' }}</span>
+          </div>
 
-          <div class="pub-actions">
+          <div class="item-actions">
             <ion-button fill="clear" color="primary" (click)="editPublication(pub)">
-              <ion-icon name="create-outline" slot="icon-only"></ion-icon>
+              <ion-icon name="create-outline" slot="start"></ion-icon>
+              Editar
             </ion-button>
             <ion-button fill="clear" color="danger" (click)="deletePublication(pub.id)">
               <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
             </ion-button>
           </div>
+        </div>
+      </div>
+    </div>
 
-          <div class="comments-section">
-            <div class="comments-header">
-              <ion-icon name="chatbubbles-outline"></ion-icon>
-              <span>Comentarios ({{ pub.comments.length }})</span>
-            </div>
-            <div class="comment-item" *ngFor="let comment of pub.comments">
-              <strong>{{ comment.user }}:</strong> {{ comment.text }}
-            </div>
+    <div class="empty-state" *ngIf="publications.length === 0">
+      <ion-icon name="document-text-outline"></ion-icon>
+      <p>No has realizado ninguna publicación todavía.</p>
+      <ion-button fill="outline" routerLink="/investigador/publicacion">Subir Publicación</ion-button>
+    </div>
+
+    <!-- Mis Eventos -->
+    <div class="section-header">
+      <div class="header-content">
+        <h2>Mis Eventos</h2>
+        <span class="count-badge secondary">{{ events.length }}</span>
+      </div>
+    </div>
+
+    <div class="grid-list" *ngIf="events.length > 0">
+      <div class="item-card" *ngFor="let event of events">
+        <div class="item-image" [style.background-image]="'url(' + getEventoImagenUrl(event.id) + ')'">
+          <div class="type-badge">{{ event.tipo_evento }}</div>
+        </div>
+
+        <div class="item-content">
+          <h3>{{ event.titulo }}</h3>
+          <div class="item-meta">
+            <ion-icon name="location-outline"></ion-icon>
+            <span>{{ event.lugar_enlace }}</span>
+          </div>
+          <div class="item-meta">
+            <ion-icon name="calendar-outline"></ion-icon>
+            <span>{{ event.fecha }} - {{ event.hora }}</span>
+          </div>
+
+          <div class="item-actions">
+            <ion-button fill="clear" color="secondary" (click)="editPublication(event)">
+              <ion-icon name="create-outline" slot="start"></ion-icon>
+              Editar
+            </ion-button>
+            <ion-button fill="clear" color="danger" (click)="deleteEvent(event.id)">
+              <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+            </ion-button>
           </div>
         </div>
       </div>
     </div>
 
+    <div class="empty-state" *ngIf="events.length === 0">
+      <ion-icon name="calendar-clear-outline"></ion-icon>
+      <p>No has creado ningún evento todavía.</p>
+      <ion-button fill="outline" color="secondary" routerLink="/investigador/eventos">Crear Evento</ion-button>
+    </div>
+
   </div>
 
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button color="primary" routerLink="/pages/investigador/tabs/publicacion">
-      <ion-icon name="add"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
 </ion-content>

@@ -39,7 +39,14 @@ export class EventosService {
     }
 
     /**
-     * Obtener eventos propios del investigador
+     * Obtener eventos de un investigador específico
+     */
+    getMisEventosById(investigadorId: number): Observable<any> {
+        return this.http.get<any>(`${this.API_URL}/investigador/${investigadorId}`);
+    }
+
+    /**
+     * Obtener eventos propios del investigador (vía Token)
      */
     getMisEventos(): Observable<any> {
         return this.http.get<any>(`${this.API_URL}/mis-eventos`);

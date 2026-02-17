@@ -34,6 +34,13 @@ export class PublicacionesService {
   }
 
   /**
+   * Obtener publicaciones de un investigador específico
+   */
+  getMisPublicaciones(investigadorId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.API_URL}/investigador/${investigadorId}`);
+  }
+
+  /**
    * Obtener todas las publicaciones
    */
   getPublicaciones(): Observable<any[]> {
