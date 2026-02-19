@@ -1,54 +1,135 @@
 <ion-header class="ion-no-border">
-  <ion-toolbar>
-    <ion-title>Hola Estudiante</ion-title>
+  <ion-toolbar class="header-toolbar">
+    <div class="header-content">
+      <div class="header-greeting">
+        <span class="greeting-sub">Bienvenido/a</span>
+        <h1 class="greeting-title">Explorar Ciencia</h1>
+      </div>
+      <div class="header-avatar">
+        <ion-icon name="person-circle-outline"></ion-icon>
+      </div>
+    </div>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <div class="main-container">
 
-    <!-- Search Bar -->
+    <!-- Barra de búsqueda -->
     <div class="search-section">
-      <ion-searchbar placeholder="Buscar publicaciones o autores..." (ionInput)="buscar($event)" class="custom-search"
-        mode="ios">
+      <ion-searchbar
+        placeholder="Buscar publicaciones o investigadores..."
+        (ionInput)="buscar($event)"
+        class="custom-search"
+        mode="ios"
+        animated="true">
       </ion-searchbar>
     </div>
 
-    <!-- Categories Carousel -->
-    <div class="categories-section">
+    <!-- ============================================
+         SECCIÓN DE CATEGORÍAS
+    ============================================ -->
+    <div class="section-block">
       <div class="section-header">
-        <h2>Categorías</h2>
-        <ion-note>Ver todo</ion-note>
-      </div>
-      <div class="horizontal-scroll">
-        <div class="category-card" *ngFor="let cat of categorias" [style.background]="cat.color">
-          <ion-icon [name]="cat.icono"></ion-icon>
-          <span>{{ cat.nombre }}</span>
+        <div class="section-title-group">
+          <span class="section-label">Explorar por</span>
+          <h2 class="section-title">Categorías</h2>
         </div>
+        <button class="ver-todo-btn">
+          Ver todo
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </button>
+      </div>
+
+      <!-- Estado: Cargando -->
+      <div class="skeleton-row" *ngIf="cargandoCategorias">
+        <div class="skeleton-card" *ngFor="let s of [1,2,3,4]"></div>
+      </div>
+
+      <!-- Estado: Error -->
+      <div class="error-state" *ngIf="errorCategorias && !cargandoCategorias">
+        <ion-icon name="cloud-offline-outline"></ion-icon>
+        <p>No se pudieron cargar las categorías.</p>
+        <ion-button fill="outline" size="small" color="danger" (click)="cargarCategorias()">
+          Reintentar
+        </ion-button>
+      </div>
+
+      <!-- Categorías desde el backend -->
+      <div class="horizontal-scroll" *ngIf="!cargandoCategorias && !errorCategorias">
+        <div
+          class="category-card"
+          *ngFor="let cat of categorias"
+          [style.background]="cat.color"
+          [class.selected]="categoriaSeleccionada?.id === cat.id"
+          (click)="seleccionarCategoria(cat)">
+          <div class="cat-icon-wrapper">
+            <ion-icon [name]="cat.icono"></ion-icon>
+          </div>
+          <span class="cat-name">{{ cat.nombre }}</span>
+          <span class="cat-check" *ngIf="categoriaSeleccionada?.id === cat.id">
+            <ion-icon name="checkmark-circle"></ion-icon>
+          </span>
+        </div>
+      </div>
+
+      <!-- Sin resultados -->
+      <div class="empty-categories" *ngIf="!cargandoCategorias && !errorCategorias && categorias.length === 0">
+        <ion-icon name="folder-open-outline"></ion-icon>
+        <p>No hay categorías disponibles.</p>
       </div>
     </div>
 
-    <!-- Publications Feed -->
-    <div class="feed-section">
+    <!-- Filtro activo de categoría -->
+    <div class="active-filter" *ngIf="categoriaSeleccionada">
+      <ion-chip class="filter-chip" [style.--background]="'rgba(128,0,32,0.1)'">
+        <ion-icon name="pricetag-outline" color="danger"></ion-icon>
+        <ion-label>{{ categoriaSeleccionada.nombre }}</ion-label>
+        <ion-icon name="close-circle" (click)="seleccionarCategoria(categoriaSeleccionada)" color="danger"></ion-icon>
+      </ion-chip>
+    </div>
+
+    <!-- ============================================
+         SECCIÓN DE PUBLICACIONES DESTACADAS
+    ============================================ -->
+    <div class="section-block">
       <div class="section-header">
-        <h2>Publicaciones Destacadas</h2>
+        <div class="section-title-group">
+          <span class="section-label">Contenido relevante</span>
+          <h2 class="section-title">Publicaciones Destacadas</h2>
+        </div>
       </div>
 
-      <div class="publication-card" *ngFor="let pub of publicaciones">
-        <div class="card-image" [style.background-image]="'url(' + pub.imagen + ')'">
-          <div class="badge">{{ pub.categoria }}</div>
-        </div>
-        <div class="card-content">
-          <span class="pub-date">{{ pub.fecha }}</span>
-          <h3>{{ pub.titulo }}</h3>
-          <p class="pub-author">Por <strong>{{ pub.investigador }}</strong></p>
-          <p class="pub-summary">{{ pub.resumen }}</p>
-
-          <div class="card-footer">
-            <ion-button fill="clear" color="primary">Leer más</ion-button>
-            <div class="interactions">
-              <ion-icon name="heart-outline"></ion-icon>
-              <ion-icon name="share-social-outline"></ion-icon>
+      <div class="publications-feed">
+        <div class="publication-card" *ngFor="let pub of publicaciones">
+          <div class="card-image" [style.background-image]="'url(' + pub.imagen + ')'">
+            <div class="image-overlay"></div>
+            <div class="card-badge">{{ pub.categoria }}</div>
+            <div class="card-date-overlay">{{ pub.fecha }}</div>
+          </div>
+          <div class="card-body">
+            <h3 class="card-titulo">{{ pub.titulo }}</h3>
+            <div class="card-autor">
+              <ion-icon name="person-circle-outline"></ion-icon>
+              <span>{{ pub.investigador }}</span>
+            </div>
+            <p class="card-resumen">{{ pub.resumen }}</p>
+            <div class="card-footer">
+              <ion-button fill="clear" class="btn-leer-mas" size="small">
+                Leer más
+                <ion-icon slot="end" name="arrow-forward-outline"></ion-icon>
+              </ion-button>
+              <div class="card-actions">
+                <button class="action-btn">
+                  <ion-icon name="heart-outline"></ion-icon>
+                </button>
+                <button class="action-btn">
+                  <ion-icon name="share-social-outline"></ion-icon>
+                </button>
+                <button class="action-btn">
+                  <ion-icon name="bookmark-outline"></ion-icon>
+                </button>
+              </div>
             </div>
           </div>
         </div>
