@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CategoriasService } from '../../../servicios/categorias.service';
+import { PublicacionesService } from '../../../servicios/publicaciones.service';
 import { Categoria } from '../../../modelos/categoria.interface';
 
 // Paleta de colores vibrantes para las tarjetas de categoría
@@ -33,53 +34,33 @@ const CATEGORIA_ICONS = [
 })
 export class InicioPage implements OnInit {
 
+  readonly API_URL = 'http://localhost:3000';
+
   searchTerm: string = '';
+
+  // Categorías
   categorias: (Categoria & { color: string; icono: string })[] = [];
   cargandoCategorias: boolean = true;
   errorCategorias: boolean = false;
-
   categoriaSeleccionada: (Categoria & { color: string; icono: string }) | null = null;
 
-  publicaciones = [
-    {
-      id: 1,
-      titulo: 'Avances en la Edición Genética CRISPR',
-      investigador: 'Dr. Roberto Sánchez',
-      resumen: 'Explorando las nuevas fronteras de la edición genética y su impacto en enfermedades hereditarias.',
-      imagen: 'https://images.unsplash.com/photo-1532187875605-1ef6c237c145?auto=format&fit=crop&q=80&w=600',
-      fecha: '05 Feb 2026',
-      categoria: 'Biotecnología'
-    },
-    {
-      id: 2,
-      titulo: 'Modelos de Lenguaje Eficientes para Móviles',
-      investigador: 'Dra. María García',
-      resumen: 'Cómo optimizar la arquitectura de transformadores para dispositivos móviles con recursos limitados.',
-      imagen: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=600',
-      fecha: '03 Feb 2026',
-      categoria: 'Inteligencia Artificial'
-    },
-    {
-      id: 3,
-      titulo: 'Nuevos Materiales para Energía Solar',
-      investigador: 'Dr. Carlos Ruiz',
-      resumen: 'Nuevos materiales de perovskita que superan el límite de eficiencia convencional.',
-      imagen: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&q=80&w=600',
-      fecha: '01 Feb 2026',
-      categoria: 'Física'
-    }
-  ];
+  // Publicaciones
+  todasLasPublicaciones: any[] = [];
+  publicacionesFiltradas: any[] = [];
+  cargandoPublicaciones: boolean = true;
+  errorPublicaciones: boolean = false;
 
-  constructor(private categoriasService: CategoriasService) { }
+  constructor(
+    private categoriasService: CategoriasService,
+    private publicacionesService: PublicacionesService
+  ) { }
 
   ngOnInit() {
     this.cargarCategorias();
+    this.cargarPublicaciones();
   }
 
-  /**
-   * Carga las categorías desde el backend y les asigna
-   * colores e íconos de forma dinámica.
-   */
+  /** Carga las categorías desde el backend */
   cargarCategorias() {
     this.cargandoCategorias = true;
     this.errorCategorias = false;
@@ -101,12 +82,82 @@ export class InicioPage implements OnInit {
     });
   }
 
-  seleccionarCategoria(cat: Categoria & { color: string; icono: string }) {
-    this.categoriaSeleccionada = this.categoriaSeleccionada?.id === cat.id ? null : cat;
-    // Aquí se puede filtrar publicaciones por categoría en el futuro
+  /** Carga todas las publicaciones desde el backend */
+  cargarPublicaciones() {
+    this.cargandoPublicaciones = true;
+    this.errorPublicaciones = false;
+
+    this.publicacionesService.getPublicaciones().subscribe({
+      next: (data) => {
+        this.todasLasPublicaciones = data;
+        this.aplicarFiltro();
+        this.cargandoPublicaciones = false;
+      },
+      error: (err) => {
+        console.error('Error al cargar publicaciones:', err);
+        this.errorPublicaciones = true;
+        this.cargandoPublicaciones = false;
+      }
+    });
   }
 
+  /** Aplica el filtro de categoría y búsqueda */
+  aplicarFiltro() {
+    let resultado = [...this.todasLasPublicaciones];
+
+    // Filtrar por categoría seleccionada
+    if (this.categoriaSeleccionada) {
+      resultado = resultado.filter(pub =>
+        pub.categoria?.id === this.categoriaSeleccionada!.id
+      );
+    }
+
+    // Filtrar por término de búsqueda
+    if (this.searchTerm && this.searchTerm.trim() !== '') {
+      const termino = this.searchTerm.toLowerCase();
+      resultado = resultado.filter(pub =>
+        pub.titulo?.toLowerCase().includes(termino) ||
+        pub.sintesis_investigador?.toLowerCase().includes(termino) ||
+        pub.categoria?.nombre?.toLowerCase().includes(termino) ||
+        pub.investigador_principal?.nombre?.toLowerCase().includes(termino) ||
+        pub.investigador_principal?.apellidos?.toLowerCase().includes(termino)
+      );
+    }
+
+    this.publicacionesFiltradas = resultado;
+  }
+
+  /** Selecciona o deselecciona una categoría y filtra publicaciones */
+  seleccionarCategoria(cat: Categoria & { color: string; icono: string }) {
+    this.categoriaSeleccionada = this.categoriaSeleccionada?.id === cat.id ? null : cat;
+    this.aplicarFiltro();
+  }
+
+  /** Maneja la búsqueda por texto */
   buscar(event: any) {
     this.searchTerm = event.detail.value;
+    this.aplicarFiltro();
+  }
+
+  /** Convierte un string separado por comas en un array de strings limpios */
+  parseLista(valor: string): string[] {
+    if (!valor) return [];
+    return valor.split(',').map(v => v.trim()).filter(v => v.length > 0);
+  }
+
+  /** Retorna la URL de la imagen de portada de una publicación */
+  getImagenUrl(id: number): string {
+    return `${this.API_URL}/publicacion/${id}/imagen`;
+  }
+
+  /** Formatea una fecha ISO a dd/MM/yyyy */
+  formatearFecha(fechaIso: string): string {
+    if (!fechaIso) return '';
+    const fecha = new Date(fechaIso);
+    return fecha.toLocaleDateString('es-MX', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric'
+    });
   }
 }
