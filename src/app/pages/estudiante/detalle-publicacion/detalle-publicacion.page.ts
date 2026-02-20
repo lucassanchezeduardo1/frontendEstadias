@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PublicacionesService } from '../../../servicios/publicaciones.service';
 import { NavController } from '@ionic/angular';
@@ -9,12 +9,17 @@ import { NavController } from '@ionic/angular';
     styleUrls: ['./detalle-publicacion.page.scss'],
     standalone: false
 })
-export class DetallePublicacionPage implements OnInit {
+export class DetallePublicacionPage implements OnInit, OnDestroy {
 
     publicacion: any = null;
     cargando: boolean = true;
     error: boolean = false;
     readonly API_URL = 'http://localhost:3000';
+
+    // Para la lectura por voz
+    reproduciendo: 'investigador' | 'ia' | null = null;
+    synth = window.speechSynthesis;
+    utterance: SpeechSynthesisUtterance | null = null;
 
     constructor(
         private route: ActivatedRoute,
@@ -78,5 +83,45 @@ export class DetallePublicacionPage implements OnInit {
             month: 'long',
             year: 'numeric'
         });
+    }
+
+    /** Control de lectura por voz */
+    escucharSintesis(texto: string, tipo: 'investigador' | 'ia') {
+        // Si ya se está reproduciendo lo mismo, detenerlo
+        if (this.reproduciendo === tipo) {
+            this.synth.cancel();
+            this.reproduciendo = null;
+            return;
+        }
+
+        // Detener cualquier reproducción anterior
+        this.synth.cancel();
+
+        this.utterance = new SpeechSynthesisUtterance(texto);
+        this.utterance.lang = 'es-MX';
+        this.utterance.rate = 1;
+
+        // Intentar buscar una voz en español
+        const voces = this.synth.getVoices();
+        const vozEspañol = voces.find(v => v.lang.includes('es'));
+        if (vozEspañol) this.utterance.voice = vozEspañol;
+
+        this.utterance.onend = () => {
+            this.reproduciendo = null;
+        };
+
+        this.utterance.onerror = () => {
+            this.reproduciendo = null;
+        };
+
+        this.reproduciendo = tipo;
+        this.synth.speak(this.utterance);
+    }
+
+    ngOnDestroy() {
+        // Asegurar que el audio se detenga al salir de la página
+        if (this.synth) {
+            this.synth.cancel();
+        }
     }
 }

@@ -11,8 +11,8 @@
 
 ion-header {
     ion-toolbar {
-        --background: white;
-        --color: var(--primary-burgundy);
+        --background: var(--primary-burgundy);
+        --color: white;
         padding: 8px 0;
 
         ion-title {
@@ -25,8 +25,8 @@ ion-header {
 }
 
 .btn-back {
-    --color: var(--primary-burgundy);
-    --background: var(--light-burgundy);
+    --color: white;
+    --background: rgba(255, 255, 255, 0.2);
     --border-radius: 12px;
     margin-left: 10px;
     width: 44px;
@@ -35,6 +35,39 @@ ion-header {
 
     &:active {
         transform: scale(0.9);
+    }
+}
+
+.btn-audio {
+    --color: var(--primary-burgundy);
+    --background: var(--light-burgundy);
+    --border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    margin: 0;
+    transition: all 0.3s ease;
+
+    &.playing {
+        --background: var(--primary-burgundy);
+        --color: white;
+        animation: pulse-red 1.5s infinite;
+    }
+}
+
+@keyframes pulse-red {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(128, 0, 32, 0.4);
+    }
+
+    70% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 10px rgba(128, 0, 32, 0);
+    }
+
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(128, 0, 32, 0);
     }
 }
 
