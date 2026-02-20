@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CategoriasService } from '../../../servicios/categorias.service';
 import { PublicacionesService } from '../../../servicios/publicaciones.service';
 import { Categoria } from '../../../modelos/categoria.interface';
+import { NavController } from '@ionic/angular';
 
 // Paleta de colores vibrantes para las tarjetas de categoría
 const CATEGORIA_COLORS = [
@@ -52,12 +53,18 @@ export class InicioPage implements OnInit {
 
   constructor(
     private categoriasService: CategoriasService,
-    private publicacionesService: PublicacionesService
+    private publicacionesService: PublicacionesService,
+    private navCtrl: NavController
   ) { }
 
   ngOnInit() {
     this.cargarCategorias();
     this.cargarPublicaciones();
+  }
+
+  /** Navega al detalle de la publicación */
+  verDetalle(id: number) {
+    this.navCtrl.navigateForward(['/estudiante/detalle-publicacion', id]);
   }
 
   /** Carga las categorías desde el backend */

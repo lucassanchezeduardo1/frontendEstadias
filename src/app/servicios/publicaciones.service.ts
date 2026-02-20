@@ -67,4 +67,18 @@ export class PublicacionesService {
   eliminarPublicacion(id: number): Observable<any> {
     return this.http.delete(`${this.API_URL}/${id}`);
   }
+
+  /**
+   * Incrementar el contador de vistas
+   */
+  incrementarVistas(id: number): Observable<any> {
+    return this.http.patch(`${this.API_URL}/${id}/vistas`, {});
+  }
+
+  /**
+   * Incrementar el contador de descargas
+   */
+  incrementarDescargas(id: number): Observable<any> {
+    return this.http.patch(`${this.API_URL}/${id}/descargas`, {});
+  }
 }

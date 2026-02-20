@@ -32,6 +32,10 @@ const routes: Routes = [
     ]
   },
   {
+    path: 'detalle-publicacion/:id',
+    loadChildren: () => import('./detalle-publicacion/detalle-publicacion.module').then(m => m.DetallePublicacionPageModule)
+  },
+  {
     path: '',
     redirectTo: 'tabs/inicio',
     pathMatch: 'full'
@@ -42,4 +46,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class EstudiantePageRoutingModule {}
+export class EstudiantePageRoutingModule { }

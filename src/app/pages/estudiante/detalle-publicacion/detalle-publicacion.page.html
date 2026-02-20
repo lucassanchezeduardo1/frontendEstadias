@@ -1,0 +1,171 @@
+<ion-header class="ion-no-border">
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button (click)="regresar()" class="btn-back">
+                <ion-icon slot="icon-only" name="chevron-back-outline"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title>Detalle de Publicación</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+    <!-- Estado: Cargando -->
+    <div class="loading-container" *ngIf="cargando">
+        <ion-spinner name="crescent"></ion-spinner>
+        <p>Cargando información...</p>
+    </div>
+
+    <!-- Estado: Error -->
+    <div class="error-container" *ngIf="error && !cargando">
+        <ion-icon name="alert-circle-outline"></ion-icon>
+        <h3>¡Ups! Algo salió mal</h3>
+        <p>No pudimos encontrar la publicación solicitada.</p>
+        <ion-button fill="outline" color="danger" (click)="regresar()">Regresar</ion-button>
+    </div>
+
+    <!-- Contenido de la publicación -->
+    <div class="main-container" *ngIf="!cargando && !error && publicacion">
+
+        <!-- Encabezado de la publicación -->
+        <section class="pub-header">
+            <div class="category-badge">{{ publicacion.categoria?.nombre }}</div>
+            <h1 class="pub-title">{{ publicacion.titulo }}</h1>
+            <div class="pub-meta-top">
+                <span class="meta-item">
+                    <ion-icon name="calendar-outline"></ion-icon>
+                    Publicado el {{ formatearFecha(publicacion.created_at) }}
+                </span>
+                <div class="stats-row">
+                    <span class="stat-pill">
+                        <ion-icon name="eye-outline"></ion-icon>
+                        {{ publicacion.vistas || 0 }} vistas
+                    </span>
+                    <span class="stat-pill">
+                        <ion-icon name="download-outline"></ion-icon>
+                        {{ publicacion.descargas || 0 }} descargas
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Información del Autor -->
+        <section class="info-section">
+            <div class="section-card autor-card">
+                <div class="card-icon">
+                    <ion-icon name="person-circle-outline"></ion-icon>
+                </div>
+                <div class="card-content">
+                    <span class="label">Investigador Principal</span>
+                    <h2 class="value">
+                        {{ publicacion.investigador_principal?.nombre }} {{
+                        publicacion.investigador_principal?.apellidos }}
+                    </h2>
+                    <p class="sub-value" *ngIf="publicacion.investigador_principal?.institucion">
+                        {{ publicacion.investigador_principal.institucion.nombre }}
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Etiquetas y Complementos -->
+        <section class="tags-section">
+            <!-- Subcategorías -->
+            <div class="detail-group" *ngIf="publicacion.sub_categoria">
+                <h3 class="group-title">
+                    <ion-icon name="pricetags-outline"></ion-icon>
+                    Subcategorías
+                </h3>
+                <div class="chips-container">
+                    <span class="custom-chip sub" *ngFor="let item of parseLista(publicacion.sub_categoria)">
+                        {{ item }}
+                    </span>
+                </div>
+            </div>
+
+            <!-- Colaboradores -->
+            <div class="detail-group" *ngIf="publicacion.colaboradores">
+                <h3 class="group-title">
+                    <ion-icon name="people-outline"></ion-icon>
+                    Colaboradores
+                </h3>
+                <div class="chips-container">
+                    <span class="custom-chip colab" *ngFor="let item of parseLista(publicacion.colaboradores)">
+                        {{ item }}
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Síntesis (Las 2) -->
+        <section class="synthesis-section">
+            <div class="synthesis-card">
+                <div class="synthesis-header">
+                    <ion-icon name="document-text-outline"></ion-icon>
+                    <h3>Resumen del Investigador</h3>
+                </div>
+                <div class="synthesis-body">
+                    <p>{{ publicacion.sintesis_investigador }}</p>
+                </div>
+            </div>
+
+            <div class="synthesis-card ai-powered" *ngIf="publicacion.sintesis_ia">
+                <div class="synthesis-header">
+                    <div class="ai-badge">
+                        <ion-icon name="sparkles-outline"></ion-icon>
+                        <span>Generado por IA</span>
+                    </div>
+                    <h3>Síntesis Inteligente</h3>
+                </div>
+                <div class="synthesis-body">
+                    <p>{{ publicacion.sintesis_ia }}</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Documentación -->
+        <section class="docs-section">
+            <div class="download-card" (click)="descargarPdf()">
+                <div class="doc-icon">
+                    <ion-icon name="document-outline"></ion-icon>
+                    <div class="pdf-indicator">PDF</div>
+                </div>
+                <div class="doc-text">
+                    <h3>Documento de la Investigación</h3>
+                    <p>Haz clic para descargar o ver el archivo completo</p>
+                </div>
+                <ion-icon name="download-outline" class="download-chevron"></ion-icon>
+            </div>
+        </section>
+
+        <!-- Enlaces y Videos -->
+        <section class="links-section" *ngIf="publicacion.links_referencia || publicacion.videos_url">
+            <div class="detail-group" *ngIf="publicacion.links_referencia">
+                <h3 class="group-title">
+                    <ion-icon name="link-outline"></ion-icon>
+                    Referencias
+                </h3>
+                <ul class="links-list">
+                    <li *ngFor="let link of parseLista(publicacion.links_referencia)">
+                        <a [href]="link" target="_blank">{{ link }}</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="detail-group" *ngIf="publicacion.videos_url">
+                <h3 class="group-title">
+                    <ion-icon name="videocam-outline"></ion-icon>
+                    Videos Relacionados
+                </h3>
+                <ul class="links-list">
+                    <li *ngFor="let video of parseLista(publicacion.videos_url)">
+                        <a [href]="video" target="_blank">{{ video }}</a>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <div class="bottom-spacer"></div>
+
+    </div>
+</ion-content>
