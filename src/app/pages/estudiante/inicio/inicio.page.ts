@@ -2,7 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { CategoriasService } from '../../../servicios/categorias.service';
 import { PublicacionesService } from '../../../servicios/publicaciones.service';
 import { Categoria } from '../../../modelos/categoria.interface';
-import { NavController } from '@ionic/angular';
+import { NavController, ToastController } from '@ionic/angular';
+import { FavoritosService } from '../../../servicios/favoritos.service';
+import { UsuariosService } from '../../../servicios/usuarios.service';
+import { Router } from '@angular/router';
 
 // Paleta de colores vibrantes para las tarjetas de categoría
 const CATEGORIA_COLORS = [
@@ -48,18 +51,27 @@ export class InicioPage implements OnInit {
   // Publicaciones
   todasLasPublicaciones: any[] = [];
   publicacionesFiltradas: any[] = [];
+  favoritosIds: Set<number> = new Set();
   cargandoPublicaciones: boolean = true;
   errorPublicaciones: boolean = false;
 
   constructor(
     private categoriasService: CategoriasService,
     private publicacionesService: PublicacionesService,
-    private navCtrl: NavController
+    private favoritosService: FavoritosService,
+    private usuariosService: UsuariosService,
+    private navCtrl: NavController,
+    private toastCtrl: ToastController,
+    private router: Router
   ) { }
+
+  ionViewWillEnter() {
+    this.cargarFavoritos();
+  }
 
   ngOnInit() {
     this.cargarCategorias();
-    this.cargarPublicaciones();
+    this.cargarFavoritos();
   }
 
   /** Navega al detalle de la publicación */
@@ -89,6 +101,22 @@ export class InicioPage implements OnInit {
     });
   }
 
+  /** Carga los favoritos del usuario */
+  async cargarFavoritos() {
+    await this.usuariosService.ready;
+    this.favoritosService.getFavoritos().subscribe({
+      next: (res: any) => {
+        const ids = res.favoritos.map((f: any) => f.publicacion.id);
+        this.favoritosIds = new Set(ids);
+        this.cargarPublicaciones();
+      },
+      error: (err) => {
+        console.error('Error al cargar favoritos:', err);
+        this.cargarPublicaciones();
+      }
+    });
+  }
+
   /** Carga todas las publicaciones desde el backend */
   cargarPublicaciones() {
     this.cargandoPublicaciones = true;
@@ -96,7 +124,10 @@ export class InicioPage implements OnInit {
 
     this.publicacionesService.getPublicaciones().subscribe({
       next: (data) => {
-        this.todasLasPublicaciones = data;
+        this.todasLasPublicaciones = data.map(pub => ({
+          ...pub,
+          esFavorito: this.favoritosIds.has(pub.id)
+        }));
         this.aplicarFiltro();
         this.cargandoPublicaciones = false;
       },
@@ -166,5 +197,43 @@ export class InicioPage implements OnInit {
       month: 'short',
       year: 'numeric'
     });
+  }
+
+  /** Agrega una publicación a favoritos */
+  async toggleFavorito(event: Event, pub: any) {
+    event.stopPropagation(); // Evitar navegar al detalle
+
+    this.favoritosService.toggleFavorito(pub.id).subscribe({
+      next: (res: any) => {
+        pub.esFavorito = res.es_favorito;
+        if (pub.esFavorito) {
+          this.favoritosIds.add(pub.id);
+        } else {
+          this.favoritosIds.delete(pub.id);
+        }
+        const mensaje = res.message || 'Operación exitosa';
+        this.showToast(mensaje, 'success');
+      },
+      error: (err) => {
+        console.error('Error al toggle favorito:', err);
+        const msg = err.error?.message || 'Error al procesar favoritos';
+        this.showToast(msg, 'danger');
+      }
+    });
+  }
+
+  /** Navegar a la página de favoritos */
+  irAFavoritos() {
+    this.router.navigate(['/estudiante/tabs/favoritos']);
+  }
+
+  async showToast(message: string, color: string) {
+    const toast = await this.toastCtrl.create({
+      message,
+      duration: 2000,
+      color,
+      position: 'bottom'
+    });
+    await toast.present();
   }
 }

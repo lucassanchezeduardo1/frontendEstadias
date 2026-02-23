@@ -1,0 +1,57 @@
+<ion-header class="ion-no-border">
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="/estudiante/tabs/inicio" color="danger"></ion-back-button>
+        </ion-buttons>
+        <ion-title>Mis Favoritos</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <div class="main-container">
+
+        <!-- Cargando -->
+        <div class="loading-state" *ngIf="cargando">
+            <ion-spinner name="crescent" color="danger"></ion-spinner>
+            <p>Cargando tus favoritos...</p>
+        </div>
+
+        <!-- Vacío -->
+        <div class="empty-state" *ngIf="!cargando && favoritos.length === 0">
+            <div class="empty-icon-wrapper">
+                <ion-icon name="heart-dislike-outline"></ion-icon>
+            </div>
+            <h2>Aún no tienes favoritos</h2>
+            <p>Las publicaciones que marques con un corazón aparecerán aquí.</p>
+            <ion-button fill="solid" color="danger" shape="round" routerLink="/estudiante/tabs/inicio">
+                Explorar publicaciones
+            </ion-button>
+        </div>
+
+        <!-- Lista de favoritos -->
+        <div class="favorites-grid" *ngIf="!cargando && favoritos.length > 0">
+            <div class="fav-card" *ngFor="let pub of favoritos">
+                <div class="card-image" [style.background-image]="'url(' + getImagenUrl(pub.id) + ')'"
+                    (click)="verDetalle(pub.id)">
+                    <div class="overlay"></div>
+                    <div class="category-badge">{{ pub.categoria?.nombre || 'General' }}</div>
+                </div>
+
+                <div class="card-content">
+                    <h3 (click)="verDetalle(pub.id)">{{ pub.titulo }}</h3>
+                    <p class="author">Por: {{ pub.investigador?.nombre }} {{ pub.investigador?.apellidos }}</p>
+
+                    <div class="card-actions">
+                        <ion-button fill="clear" color="danger" (click)="confirmarEliminar(pub.id)">
+                            <ion-icon slot="icon-only" name="heart"></ion-icon>
+                        </ion-button>
+                        <ion-button fill="clear" color="primary" (click)="verDetalle(pub.id)">
+                            Ver más
+                        </ion-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</ion-content>

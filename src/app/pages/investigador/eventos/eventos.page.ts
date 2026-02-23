@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EventosService } from '../../../servicios/eventos.service';
 import { CategoriasService } from '../../../servicios/categorias.service';
+import { InvestigadorService } from '../../../servicios/investigador.service';
 import { ToastController, LoadingController } from '@ionic/angular';
 import { Router } from '@angular/router';
 
@@ -15,6 +16,7 @@ export class EventosPage implements OnInit {
   private fb = inject(FormBuilder);
   private eventosService = inject(EventosService);
   private categoriasService = inject(CategoriasService);
+  private investigadorService = inject(InvestigadorService);
   private toastCtrl = inject(ToastController);
   private loadingCtrl = inject(LoadingController);
   private router = inject(Router);
@@ -30,6 +32,15 @@ export class EventosPage implements OnInit {
 
   ngOnInit() {
     this.cargarCategorias();
+    this.syncUser();
+  }
+
+  async syncUser() {
+    await this.investigadorService.ready;
+    const user = this.investigadorService.getLoggedUser();
+    if (user) {
+      this.eventoForm.patchValue({ investigador_organizador_id: user.id });
+    }
   }
 
   initForm() {
@@ -44,14 +55,8 @@ export class EventosPage implements OnInit {
       categoria_id: ['', [Validators.required]],
       ponentes: ['', [Validators.required, Validators.minLength(5)]],
       publico_objetivo: ['', [Validators.required, Validators.maxLength(255)]],
-      investigador_organizador_id: [null]
+      investigador_organizador_id: [null, [Validators.required]]
     });
-
-    const invUser = localStorage.getItem('inv_user');
-    if (invUser) {
-      const user = JSON.parse(invUser);
-      this.eventoForm.patchValue({ investigador_organizador_id: user.id });
-    }
   }
 
   cargarCategorias() {
@@ -110,6 +115,7 @@ export class EventosPage implements OnInit {
 
   resetForm() {
     this.initForm();
+    this.syncUser();
     this.selectedImg = null;
     this.imgPreview = null;
   }

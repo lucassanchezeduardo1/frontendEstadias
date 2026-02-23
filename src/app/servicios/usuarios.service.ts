@@ -1,15 +1,26 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { StorageService } from './storage.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class UsuariosService {
     private http = inject(HttpClient);
-    private readonly API_URL = 'http://localhost:3000';
+    private storage = inject(StorageService);
 
-    constructor() { }
+    private readonly API_URL = 'http://localhost:3000';
+    private currentUser: any = null;
+    public ready: Promise<void>;
+
+    constructor() {
+        this.ready = this.init();
+    }
+
+    private async init() {
+        this.currentUser = await this.storage.get('student_user');
+    }
 
     /**
      * Registrar un nuevo estudiante (Usuario)
@@ -21,7 +32,7 @@ export class UsuariosService {
 
         // Agregar los campos del usuario al FormData
         Object.keys(usuario).forEach(key => {
-            formData.append(key, usuario[key]);
+            formData.append(key, usuario[key as string]);
         });
 
         // Agregar la foto
@@ -39,25 +50,35 @@ export class UsuariosService {
     }
 
     /**
-     * Guardar sesión en localStorage
+     * Guardar sesión de forma persistente (Compatible con APK)
      */
-    saveSession(usuario: any, token?: string) {
+    async saveSession(usuario: any, token?: string) {
+        this.currentUser = usuario;
+        await this.storage.set('student_user', usuario);
+        if (token) await this.storage.set('student_token', token);
+
+        // Mantenemos fallback temporal
         localStorage.setItem('student_user', JSON.stringify(usuario));
-        if (token) localStorage.setItem('student_token', token);
     }
 
     /**
-     * Obtener datos del usuario logueado
+     * Obtener datos del usuario logueado (Síncrono desde memoria)
      */
     getUser() {
-        const user = localStorage.getItem('student_user');
-        return user ? JSON.parse(user) : null;
+        if (!this.currentUser) {
+            const local = localStorage.getItem('student_user');
+            if (local) this.currentUser = JSON.parse(local);
+        }
+        return this.currentUser;
     }
 
     /**
      * Cerrar sesión
      */
-    logout() {
+    async logout() {
+        this.currentUser = null;
+        await this.storage.remove('student_user');
+        await this.storage.remove('student_token');
         localStorage.removeItem('student_user');
         localStorage.removeItem('student_token');
     }
@@ -70,8 +91,8 @@ export class UsuariosService {
 
         // Agregar los campos del usuario al FormData
         Object.keys(usuario).forEach(key => {
-            if (usuario[key] !== null && usuario[key] !== undefined) {
-                formData.append(key, usuario[key]);
+            if (usuario[key as string] !== null && usuario[key as string] !== undefined) {
+                formData.append(key, usuario[key as string]);
             }
         });
 

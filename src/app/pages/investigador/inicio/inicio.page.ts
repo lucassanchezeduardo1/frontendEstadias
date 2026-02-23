@@ -1,6 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { PublicacionesService } from '../../../servicios/publicaciones.service';
 import { EventosService } from '../../../servicios/eventos.service';
+import { InvestigadorService } from '../../../servicios/investigador.service';
 import { AlertController, ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
 
@@ -13,39 +14,64 @@ import { Router } from '@angular/router';
 export class InicioPage implements OnInit {
   private publicacionesService = inject(PublicacionesService);
   private eventosService = inject(EventosService);
+  private investigadorService = inject(InvestigadorService);
   private alertCtrl = inject(AlertController);
   private toastCtrl = inject(ToastController);
   private router = inject(Router);
 
   publications: any[] = [];
   events: any[] = [];
-  investigadorId: number | null = null;
+  investigadorId: number | undefined = undefined;
 
   constructor() { }
 
-  ngOnInit() {
-    const invUser = localStorage.getItem('inv_user');
-    if (invUser) {
-      const user = JSON.parse(invUser);
+  async ngOnInit() {
+    await this.investigadorService.ready;
+    const user = this.investigadorService.getLoggedUser();
+    console.log('Investigador cargado en ngOnInit:', user);
+
+    if (user) {
+      this.investigadorId = user.id;
+      this.cargarDatos();
+    }
+  }
+
+  async ionViewWillEnter() {
+    await this.investigadorService.ready;
+    const user = this.investigadorService.getLoggedUser();
+    console.log('Investigador en ionViewWillEnter:', user);
+
+    if (user) {
       this.investigadorId = user.id;
       this.cargarDatos();
     }
   }
 
   cargarDatos() {
-    if (this.investigadorId) {
-      // Cargar mis publicaciones
-      this.publicacionesService.getMisPublicaciones(this.investigadorId).subscribe({
-        next: (res) => this.publications = res,
-        error: (err) => console.error('Error al cargar publicaciones', err)
-      });
-
-      // Cargar mis eventos
-      this.eventosService.getMisEventosById(this.investigadorId).subscribe({
-        next: (res) => this.events = res.eventos || [],
-        error: (err) => console.error('Error al cargar eventos', err)
-      });
+    if (!this.investigadorId) {
+      console.warn('No se pueden cargar datos: investigadorId es nulo');
+      return;
     }
+
+    console.log('Cargando publicaciones y eventos para ID:', this.investigadorId);
+
+    // Cargar mis publicaciones
+    this.publicacionesService.getMisPublicaciones(this.investigadorId).subscribe({
+      next: (res) => {
+        console.log('Publicaciones recibidas:', res);
+        this.publications = res;
+      },
+      error: (err) => console.error('Error al cargar publicaciones', err)
+    });
+
+    // Cargar mis eventos
+    this.eventosService.getMisEventosById(this.investigadorId).subscribe({
+      next: (res) => {
+        console.log('Eventos recibidos:', res);
+        this.events = res.eventos || [];
+      },
+      error: (err) => console.error('Error al cargar eventos', err)
+    });
   }
 
   getImagenUrl(pubId: number) {

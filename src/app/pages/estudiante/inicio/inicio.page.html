@@ -67,6 +67,14 @@
         <ion-icon name="folder-open-outline"></ion-icon>
         <p>No hay categorías disponibles.</p>
       </div>
+
+      <!-- Botón de Favoritos -->
+      <div class="actions-row" *ngIf="!cargandoCategorias">
+        <button class="fav-nav-btn" (click)="irAFavoritos()">
+          <ion-icon name="heart"></ion-icon>
+          Mis Favoritos
+        </button>
+      </div>
     </div>
 
     <!-- Filtro activo de categoría -->
@@ -117,10 +125,16 @@
         <div class="publication-card" *ngFor="let pub of publicacionesFiltradas">
 
           <!-- Imagen de portada -->
-          <div class="card-image" [style.background-image]="'url(' + getImagenUrl(pub.id) + ')'">
+          <div class="card-image" [style.background-image]="'url(' + getImagenUrl(pub.id) + ')'"
+            (click)="verDetalle(pub.id)">
             <div class="image-overlay"></div>
             <div class="card-badge">{{ pub.categoria?.nombre || 'General' }}</div>
             <div class="card-date-overlay">{{ formatearFecha(pub.created_at) }}</div>
+
+            <!-- Icono de Favorito -->
+            <button class="heart-btn" [class.is-favorite]="pub.esFavorito" (click)="toggleFavorito($event, pub)">
+              <ion-icon [name]="pub.esFavorito ? 'heart' : 'heart-outline'"></ion-icon>
+            </button>
           </div>
 
           <!-- Cuerpo de la card -->

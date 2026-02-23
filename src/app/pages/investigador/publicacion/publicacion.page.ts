@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PublicacionesService } from '../../../servicios/publicaciones.service';
 import { AiService } from '../../../servicios/ai.service';
 import { CategoriasService } from '../../../servicios/categorias.service';
+import { InvestigadorService } from '../../../servicios/investigador.service';
 import { ToastController, LoadingController } from '@ionic/angular';
 import { Router } from '@angular/router';
 
@@ -17,6 +18,7 @@ export class PublicacionPage implements OnInit {
   private publicacionesService = inject(PublicacionesService);
   private aiService = inject(AiService);
   private categoriasService = inject(CategoriasService);
+  private investigadorService = inject(InvestigadorService);
   private toastCtrl = inject(ToastController);
   private loadingCtrl = inject(LoadingController);
   private router = inject(Router);
@@ -38,6 +40,15 @@ export class PublicacionPage implements OnInit {
 
   ngOnInit() {
     this.cargarCategorias();
+    this.syncUser();
+  }
+
+  async syncUser() {
+    await this.investigadorService.ready;
+    const user = this.investigadorService.getLoggedUser();
+    if (user) {
+      this.publicacionForm.patchValue({ investigador_principal_id: user.id });
+    }
   }
 
   initForm() {
@@ -50,18 +61,13 @@ export class PublicacionPage implements OnInit {
       sintesis_ia: [''],
       links_referencia: [''],
       videos_url: [''],
-      investigador_principal_id: [1]
+      investigador_principal_id: [null, [Validators.required]]
     });
-
-    const invUser = localStorage.getItem('inv_user');
-    if (invUser) {
-      const user = JSON.parse(invUser);
-      this.publicacionForm.patchValue({ investigador_principal_id: user.id });
-    }
   }
 
   resetForm() {
     this.initForm();
+    this.syncUser();
     this.selectedPdf = null;
     this.selectedImg = null;
     this.selectedImgContenido = null;
@@ -117,7 +123,6 @@ export class PublicacionPage implements OnInit {
     }
   }
 
-  /** Cuenta las palabras en un texto */
   contarPalabras(texto: string): number {
     if (!texto) return 0;
     return texto.trim().split(/\s+/).filter(word => word.length > 0).length;

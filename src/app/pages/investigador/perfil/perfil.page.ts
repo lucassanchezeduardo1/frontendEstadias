@@ -29,7 +29,13 @@ export class PerfilPage implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    await this.invService.ready;
+    this.loadUserData();
+  }
+
+  async ionViewWillEnter() {
+    await this.invService.ready;
     this.loadUserData();
   }
 
@@ -37,9 +43,7 @@ export class PerfilPage implements OnInit {
     const loggedUser = this.invService.getLoggedUser();
 
     if (!loggedUser || !loggedUser.id) {
-      console.error('No hay usuario logueado o el ID es indefinido');
-      this.showToast('No se pudo identificar la sesión. Por favor inicia sesión de nuevo.', 'danger');
-      this.router.navigate(['/login']);
+      console.warn('No hay usuario logueado en PerfilPage');
       return;
     }
 
@@ -109,10 +113,9 @@ export class PerfilPage implements OnInit {
         this.showToast('Perfil actualizado con éxito', 'success');
         this.isEditing = false;
 
-        // Actualizar localmente
-        const updatedUser = { ...this.user, ...res.investigador };
-        localStorage.setItem('inv_user', JSON.stringify(updatedUser));
-        this.user = updatedUser;
+        // Actualizar localmente la sesión
+        this.invService.saveSession(res.investigador || res, 'TOKEN_INV'); // Rescatamos el token o mantenemos el actual si fuera necesario
+        this.user = res.investigador || res;
         this.imgPreview = null;
       },
       error: (err) => {
@@ -151,4 +154,3 @@ export class PerfilPage implements OnInit {
     await toast.present();
   }
 }
-
