@@ -100,7 +100,7 @@ export class EventosEditPage implements OnInit {
       error: (err) => {
         console.error('Error al cargar evento', err);
         this.showToast('No se encontró el evento', 'danger');
-        this.router.navigate(['/investigador/inicio']);
+        this.router.navigate(['/investigador/tabs/inicio']);
       }
     });
   }
@@ -121,7 +121,7 @@ export class EventosEditPage implements OnInit {
       next: () => {
         loading.dismiss();
         this.showToast('¡Evento actualizado con éxito!', 'success');
-        this.router.navigate(['/investigador/inicio']);
+        this.router.navigate(['/investigador/tabs/inicio']);
       },
       error: (err) => {
         loading.dismiss();

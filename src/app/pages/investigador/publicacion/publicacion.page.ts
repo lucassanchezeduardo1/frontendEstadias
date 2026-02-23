@@ -195,7 +195,7 @@ export class PublicacionPage implements OnInit {
         loading.dismiss();
         this.showToast('¡Investigación publicada con éxito!', 'success');
         this.resetForm();
-        this.router.navigate(['/investigador/inicio']);
+        this.router.navigate(['/investigador/tabs/inicio']);
       },
       error: (err) => {
         loading.dismiss();

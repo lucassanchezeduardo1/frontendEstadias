@@ -1,0 +1,21 @@
+.admin-container {
+    padding: 20px;
+    background: #f8f9fc;
+    min-height: 100%;
+}
+
+.logout-btn {
+    --border-radius: 15px;
+    --border-width: 2px;
+    height: 55px;
+    font-weight: 700;
+    margin: 0;
+    margin-top: 30px;
+}
+
+.outline-btn {
+    --border-radius: 15px;
+    --border-width: 2px;
+    height: 55px;
+    font-weight: 700;
+}

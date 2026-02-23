@@ -1,11 +1,6 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
     <ion-title>Mi Perfil</ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="logout()" color="danger">
-        <ion-icon slot="icon-only" name="log-out"></ion-icon>
-      </ion-button>
-    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -80,6 +75,12 @@
     <ion-button expand="block" fill="outline" class="outline-btn" style="margin-top: 30px;">
       <ion-icon name="settings-outline" slot="start"></ion-icon>
       Configuración de Cuenta
+    </ion-button>
+
+    <ion-button expand="block" fill="outline" color="danger" class="logout-btn" style="margin-top: 20px;"
+      (click)="logout()">
+      <ion-icon name="log-out-outline" slot="start"></ion-icon>
+      Cerrar Sesión
     </ion-button>
 
   </div>

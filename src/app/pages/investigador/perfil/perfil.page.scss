@@ -263,3 +263,17 @@ ion-toolbar {
         }
     }
 }
+
+.actions-section {
+    margin-top: 30px;
+    margin-bottom: 20px;
+    padding: 0;
+
+    .logout-btn {
+        --border-radius: 15px;
+        --border-width: 2px;
+        height: 55px;
+        font-weight: 700;
+        margin: 0;
+    }
+}

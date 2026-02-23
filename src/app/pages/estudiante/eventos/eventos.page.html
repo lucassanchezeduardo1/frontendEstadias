@@ -1,17 +1,32 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title>Proximos Eventos</ion-title>
+    <ion-title>Eventos Disponibles</ion-title>
   </ion-toolbar>
 </ion-header>
+
 <ion-content>
   <div class="main-container">
 
-    <div class="events-list">
+    <!-- Skeleton loading -->
+    <div class="events-list" *ngIf="cargando">
+      <div class="event-card skeleton" *ngFor="let i of [1,2,3]">
+        <div class="event-image-skeleton"></div>
+        <div class="event-details">
+          <ion-skeleton-text animated style="width: 30%"></ion-skeleton-text>
+          <ion-skeleton-text animated style="width: 80%; height: 20px;"></ion-skeleton-text>
+          <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
+          <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lista de Eventos -->
+    <div class="events-list" *ngIf="!cargando && eventos.length > 0">
       <div class="event-card" *ngFor="let ev of eventos">
-        <div class="event-image" [style.background-image]="'url(' + ev.imagen + ')'">
+        <div class="event-image" [style.background-image]="'url(' + getImagenUrl(ev.id) + ')'">
           <div class="date-tag">
-            <span class="day">{{ ev.fecha.split(' ')[0] }}</span>
-            <span class="month">{{ ev.fecha.split(' ')[1] }}</span>
+            <span class="day">{{ getDia(ev.fecha) }}</span>
+            <span class="month">{{ getMes(ev.fecha) }}</span>
           </div>
           <div class="mode-badge" [ngClass]="ev.modalidad.toLowerCase()">
             {{ ev.modalidad }}
@@ -19,24 +34,51 @@
         </div>
 
         <div class="event-details">
-          <span class="category">{{ ev.categoria }}</span>
-          <h3>{{ ev.titulo }}</h3>
-
-          <div class="info-row">
-            <ion-icon name="time-outline"></ion-icon>
-            <span>{{ ev.hora }}</span>
+          <div class="top-info">
+            <span class="category">{{ ev.categoria?.nombre || 'General' }}</span>
+            <span class="type">{{ ev.tipo_evento }}</span>
           </div>
 
-          <div class="info-row">
-            <ion-icon name="location-outline"></ion-icon>
-            <span class="truncate">{{ ev.lugar }}</span>
+          <h3 class="event-title">{{ ev.titulo }}</h3>
+
+          <p class="description">{{ ev.descripcion }}</p>
+
+          <div class="info-grid">
+            <div class="info-item">
+              <ion-icon name="time-outline"></ion-icon>
+              <span>{{ ev.hora.substring(0,5) }} hrs</span>
+            </div>
+
+            <div class="info-item">
+              <ion-icon name="location-outline"></ion-icon>
+              <span>{{ ev.lugar_enlace }}</span>
+            </div>
+
+            <div class="info-item full">
+              <ion-icon name="people-outline"></ion-icon>
+              <span><strong>Ponentes:</strong> {{ ev.ponentes }}</span>
+            </div>
+
+            <div class="info-item full">
+              <ion-icon name="eye-outline"></ion-icon>
+              <span><strong>Público:</strong> {{ ev.publico_objetivo }}</span>
+            </div>
           </div>
 
-          <ion-button expand="block" class="register-btn">
-            Inscribirse al Evento
-          </ion-button>
+          <div class="organizer-info">
+            <ion-icon name="person-circle-outline"></ion-icon>
+            <span>Organizado por: {{ ev.investigador_organizador?.nombre }} {{ ev.investigador_organizador?.apellidos
+              }}</span>
+          </div>
         </div>
       </div>
+    </div>
+
+    <!-- Si no hay eventos -->
+    <div class="empty-state" *ngIf="!cargando && eventos.length === 0">
+      <ion-icon name="calendar-clear-outline"></ion-icon>
+      <h3>No hay eventos disponibles</h3>
+      <p>Vuelve más tarde para ver nuevas actividades.</p>
     </div>
 
   </div>

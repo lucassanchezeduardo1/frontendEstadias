@@ -98,7 +98,7 @@ export class EventosPage implements OnInit {
         loading.dismiss();
         this.showToast('¡Evento publicado con éxito!', 'success');
         this.resetForm();
-        this.router.navigate(['/investigador/inicio']);
+        this.router.navigate(['/investigador/tabs/inicio']);
       },
       error: (err) => {
         loading.dismiss();

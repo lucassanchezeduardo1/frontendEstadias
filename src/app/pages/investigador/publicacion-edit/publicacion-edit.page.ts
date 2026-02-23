@@ -102,7 +102,7 @@ export class PublicacionEditPage implements OnInit {
       next: () => {
         loading.dismiss();
         this.showToast('¡Investigación actualizada con éxito!', 'success');
-        this.router.navigate(['/investigador/inicio']);
+        this.router.navigate(['/investigador/tabs/inicio']);
       },
       error: (err) => {
         loading.dismiss();
