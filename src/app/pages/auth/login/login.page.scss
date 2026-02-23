@@ -145,9 +145,25 @@
     z-index: 1;
 }
 
+.password-toggle {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: var(--app-text-secondary);
+    cursor: pointer;
+    z-index: 2;
+    transition: color 0.3s ease;
+
+    &:hover {
+        color: var(--ion-color-primary);
+    }
+}
+
 .custom-input {
     width: 100%;
-    padding: 16px 16px 16px 48px;
+    padding: 16px 48px 16px 48px;
     border: 1px solid var(--app-border-color);
     border-radius: 12px;
     font-size: 15px;
@@ -314,7 +330,7 @@
     }
 
     .custom-input {
-        padding: 14px 14px 14px 44px;
+        padding: 14px 44px 14px 44px;
         font-size: 14px;
     }
 

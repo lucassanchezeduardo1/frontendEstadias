@@ -35,6 +35,14 @@ export class LoginPage implements OnInit {
     }
 
     /**
+     * Se ejecuta cada vez que la vista entra (útil al regresar tras logout)
+     */
+    ionViewDidEnter() {
+        this.usernameOrEmail = '';
+        this.password = '';
+    }
+
+    /**
      * Seleccionar tipo de usuario
      */
     selectUserType(type: 'student' | 'researcher' | 'admin') {
@@ -72,6 +80,8 @@ export class LoginPage implements OnInit {
                         this.showToast('Error de conexión', 'danger');
                     } else {
                         this.showToast('Credenciales incorrectas o error en el servidor', 'danger');
+                        // Limpiar formulario en caso de error
+                        this.password = '';
                     }
                 }
             });
@@ -95,8 +105,10 @@ export class LoginPage implements OnInit {
                         this.showToast(err.error.message, 'warning');
                     } else if (err.status === 401 || err.status === 403) {
                         this.showToast('Credenciales incorrectas', 'danger');
+                        this.password = '';
                     } else {
                         this.showToast('Error al iniciar sesión', 'danger');
+                        this.password = '';
                     }
                 }
             });
@@ -114,8 +126,10 @@ export class LoginPage implements OnInit {
                     if (err.status === 400 || err.status === 401) {
                         const msg = err.error?.message || 'Credenciales incorrectas';
                         this.showToast(msg, 'danger');
+                        this.password = '';
                     } else {
                         this.showToast('Error al conectar con el servidor', 'danger');
+                        this.password = '';
                     }
                 }
             });

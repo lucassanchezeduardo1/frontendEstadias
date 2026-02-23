@@ -14,6 +14,55 @@
     margin-bottom: 0;
 }
 
+.input-group {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.custom-input {
+    width: 100%;
+    padding: 16px 48px 16px 48px; // Padding derecho para el ojo
+    border: 1px solid #eee;
+    border-radius: 12px;
+    font-size: 15px;
+    color: #333;
+    background: #fdfdfd;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+    outline: none;
+
+    &:focus {
+        border-color: var(--ion-color-secondary);
+        box-shadow: 0 0 0 3px rgba(130, 38, 89, 0.1);
+    }
+}
+
+.password-toggle {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: #999;
+    cursor: pointer;
+    z-index: 2;
+    transition: color 0.3s ease;
+
+    &:hover {
+        color: var(--ion-color-primary);
+    }
+}
+
+.input-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: #999;
+    z-index: 1;
+}
+
 .custom-textarea {
     width: 100%;
     padding: 15px 15px 15px 50px;
@@ -25,6 +74,7 @@
     transition: all 0.3s ease;
     resize: none;
     font-family: inherit;
+    box-sizing: border-box;
 
     &:focus {
         outline: none;
@@ -44,6 +94,7 @@
     color: #333;
     appearance: none;
     cursor: pointer;
+    box-sizing: border-box;
 
     &:focus {
         outline: none;
@@ -61,6 +112,7 @@
         display: block;
         color: #999;
         font-size: 0.9rem;
+        box-sizing: border-box;
     }
 
     .hidden-file-input {
@@ -99,5 +151,9 @@
     .input-grid {
         grid-template-columns: 1fr;
         gap: 0;
+    }
+
+    .custom-input {
+        padding: 14px 44px 14px 44px;
     }
 }
