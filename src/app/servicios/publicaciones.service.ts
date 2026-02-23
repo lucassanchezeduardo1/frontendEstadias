@@ -15,10 +15,11 @@ export class PublicacionesService {
    * Crear una nueva publicación
    * @param datos Objeto con los datos de la publicación
    * @param pdf Archivo PDF
-   * @param imagen Archivo de imagen de portada
+   * @param imagenPortada Archivo de imagen de portada
+   * @param imagenContenido Archivo opcional de imagen de contenido (infografía, etc)
    * @returns Observable con la respuesta del servidor
    */
-  crearPublicacion(datos: any, pdf: File, imagen: File): Observable<any> {
+  crearPublicacion(datos: any, pdf: File, imagenPortada: File, imagenContenido?: File): Observable<any> {
     const formData = new FormData();
 
     // Agregamos los campos del DTO
@@ -28,7 +29,11 @@ export class PublicacionesService {
 
     // Agregamos los archivos con los nombres que espera el backend
     formData.append('pdf', pdf);
-    formData.append('img_portada', imagen);
+    formData.append('img_portada', imagenPortada);
+
+    if (imagenContenido) {
+      formData.append('img_contenido', imagenContenido);
+    }
 
     return this.http.post(this.API_URL, formData);
   }

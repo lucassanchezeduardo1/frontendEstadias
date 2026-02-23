@@ -25,8 +25,10 @@ export class PublicacionPage implements OnInit {
   categorias: any[] = [];
   selectedPdf: File | null = null;
   selectedImg: File | null = null;
+  selectedImgContenido: File | null = null;
   pdfPreview: string | null = null;
   imgPreview: string | null = null;
+  imgContenidoPreview: string | null = null;
 
   isGeneratingAiSummary = false;
 
@@ -44,7 +46,7 @@ export class PublicacionPage implements OnInit {
       categoria_id: ['', [Validators.required]],
       sub_categoria: ['', [Validators.required, Validators.minLength(3)]],
       colaboradores: [''],
-      sintesis_investigador: ['', [Validators.required, Validators.minLength(500)]],
+      descripcion_investigacion: ['', [Validators.required]],
       sintesis_ia: [''],
       links_referencia: [''],
       videos_url: [''],
@@ -62,8 +64,10 @@ export class PublicacionPage implements OnInit {
     this.initForm();
     this.selectedPdf = null;
     this.selectedImg = null;
+    this.selectedImgContenido = null;
     this.pdfPreview = null;
     this.imgPreview = null;
+    this.imgContenidoPreview = null;
     this.isGeneratingAiSummary = false;
   }
 
@@ -97,6 +101,26 @@ export class PublicacionPage implements OnInit {
     } else {
       this.showToast('Por favor selecciona una imagen válida', 'warning');
     }
+  }
+
+  onImgContenidoSelected(event: any) {
+    const file = event.target.files[0];
+    if (file && file.type.startsWith('image/')) {
+      this.selectedImgContenido = file;
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imgContenidoPreview = reader.result as string;
+      };
+      reader.readAsDataURL(file);
+    } else {
+      this.showToast('Por favor selecciona una imagen válida para el contenido', 'warning');
+    }
+  }
+
+  /** Cuenta las palabras en un texto */
+  contarPalabras(texto: string): number {
+    if (!texto) return 0;
+    return texto.trim().split(/\s+/).filter(word => word.length > 0).length;
   }
 
   async generarSintesisIA(file: File) {
@@ -143,8 +167,16 @@ export class PublicacionPage implements OnInit {
   }
 
   async onSubmit() {
+    const desc = this.publicacionForm.get('descripcion_investigacion')?.value || '';
+    const wordCount = this.contarPalabras(desc);
+
     if (this.publicacionForm.invalid || !this.selectedPdf || !this.selectedImg) {
       this.showToast('Por favor completa todos los campos requeridos', 'warning');
+      return;
+    }
+
+    if (wordCount < 30) {
+      this.showToast('La descripción de la investigación debe tener al menos 30 palabras. (Tienes ' + wordCount + ')', 'warning');
       return;
     }
 
@@ -156,7 +188,8 @@ export class PublicacionPage implements OnInit {
     this.publicacionesService.crearPublicacion(
       this.publicacionForm.value,
       this.selectedPdf!,
-      this.selectedImg!
+      this.selectedImg!,
+      this.selectedImgContenido || undefined
     ).subscribe({
       next: (res) => {
         loading.dismiss();

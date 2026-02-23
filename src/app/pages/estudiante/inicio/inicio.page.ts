@@ -124,7 +124,7 @@ export class InicioPage implements OnInit {
       const termino = this.searchTerm.toLowerCase();
       resultado = resultado.filter(pub =>
         pub.titulo?.toLowerCase().includes(termino) ||
-        pub.sintesis_investigador?.toLowerCase().includes(termino) ||
+        pub.descripcion_investigacion?.toLowerCase().includes(termino) ||
         pub.categoria?.nombre?.toLowerCase().includes(termino) ||
         pub.investigador_principal?.nombre?.toLowerCase().includes(termino) ||
         pub.investigador_principal?.apellidos?.toLowerCase().includes(termino)

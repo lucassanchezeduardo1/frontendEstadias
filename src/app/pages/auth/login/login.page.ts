@@ -69,7 +69,7 @@ export class LoginPage implements OnInit {
                     loading.dismiss();
                     console.error('Error detallado:', err);
                     if (err.status === 0) {
-                        this.showToast('Error de conexión: Verifica que tu backend NestJS esté encendido y tenga CORS habilitado.', 'danger');
+                        this.showToast('Error de conexión', 'danger');
                     } else {
                         this.showToast('Credenciales incorrectas o error en el servidor', 'danger');
                     }

@@ -104,17 +104,32 @@
                     <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <ion-icon name="document-text-outline"></ion-icon>
-                            <h3 style="margin: 0;">Resumen del Investigador</h3>
+                            <h3 style="margin: 0;">Descripción de la Investigación</h3>
                         </div>
                         <ion-button fill="clear" class="btn-audio" [class.playing]="reproduciendo === 'investigador'"
-                            (click)="escucharSintesis(publicacion.sintesis_investigador, 'investigador')">
+                            (click)="escucharSintesis(publicacion.descripcion_investigacion, 'investigador')">
                             <ion-icon slot="icon-only"
                                 [name]="reproduciendo === 'investigador' ? 'stop-circle-outline' : 'volume-high-outline'"></ion-icon>
                         </ion-button>
                     </div>
                 </div>
                 <div class="synthesis-body">
-                    <p>{{ publicacion.sintesis_investigador }}</p>
+                    <p>{{ publicacion.descripcion_investigacion }}</p>
+                </div>
+            </div>
+
+            <!-- Imagen de apoyo / Infografía -->
+            <div class="synthesis-card" *ngIf="publicacion.img_contenido">
+                <div class="synthesis-header">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <ion-icon name="analytics-outline"></ion-icon>
+                        <h3 style="margin: 0;">Material Visual de Apoyo</h3>
+                    </div>
+                </div>
+                <div class="synthesis-body" style="padding: 0;">
+                    <img [src]="getImagenContenidoUrl(publicacion.id)"
+                        style="width: 100%; height: auto; display: block; border-radius: 0 0 12px 12px;"
+                        alt="Infografía o gráfica de la investigación">
                 </div>
             </div>
 

@@ -61,6 +61,18 @@
         </div>
       </div>
 
+      <div class="form-group">
+        <ion-label position="stacked">Imagen de Contenido (Infografía, gráficas, etc.)</ion-label>
+        <input type="file" #imgContInput (change)="onImgContenidoSelected($event)" accept="image/*" hidden>
+        <div class="upload-box dashed" (click)="imgContInput.click()" [class.has-preview]="imgContenidoPreview">
+          <div *ngIf="!imgContenidoPreview" class="upload-content">
+            <ion-icon name="analytics-outline"></ion-icon>
+            <span>Seleccionar Imagen de Apoyo</span>
+          </div>
+          <img *ngIf="imgContenidoPreview" [src]="imgContenidoPreview" class="preview-img">
+        </div>
+      </div>
+
       <div class="section-title">
         <ion-icon name="document-text-outline"></ion-icon>
         <span>Contenido y Síntesis</span>
@@ -76,12 +88,12 @@
       </div>
 
       <div class="form-group">
-        <ion-label position="stacked">Síntesis del Investigador <span class="required">*</span></ion-label>
-        <ion-textarea rows="6" formControlName="sintesis_investigador"
-          placeholder="Escribe aquí un resumen detallado de tu investigación (mínimo 500 caracteres)...">
+        <ion-label position="stacked">Descripción de la Investigación <span class="required">*</span></ion-label>
+        <ion-textarea rows="6" formControlName="descripcion_investigacion"
+          placeholder="Escribe aquí una descripción detallada de tu investigación (mínimo 30 palabras)...">
         </ion-textarea>
-        <div class="char-count" [class.error]="publicacionForm.get('sintesis_investigador')?.value?.length < 500">
-          {{ publicacionForm.get('sintesis_investigador')?.value?.length || 0 }}/500 mínimo
+        <div class="char-count" [class.error]="contarPalabras(publicacionForm.get('descripcion_investigacion')?.value) < 30">
+          {{ contarPalabras(publicacionForm.get('descripcion_investigacion')?.value) }}/30 palabras mínimo
         </div>
       </div>
 

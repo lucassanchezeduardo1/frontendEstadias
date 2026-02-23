@@ -85,6 +85,10 @@ export class DetallePublicacionPage implements OnInit, OnDestroy {
         });
     }
 
+    getImagenContenidoUrl(id: number): string {
+        return `${this.API_URL}/publicacion/${id}/imagen-contenido`;
+    }
+
     /** Control de lectura por voz */
     escucharSintesis(texto: string, tipo: 'investigador' | 'ia') {
         // Si ya se está reproduciendo lo mismo, detenerlo

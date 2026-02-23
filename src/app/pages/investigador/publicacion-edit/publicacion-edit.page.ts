@@ -46,7 +46,7 @@ export class PublicacionEditPage implements OnInit {
       categoria_id: [''],
       sub_categoria: ['', [Validators.minLength(3)]],
       colaboradores: [''],
-      sintesis_investigador: ['', [Validators.minLength(500)]],
+      descripcion_investigacion: ['', [Validators.minLength(150)]],
       sintesis_ia: [''],
       links_referencia: [''],
       videos_url: ['']
@@ -68,7 +68,7 @@ export class PublicacionEditPage implements OnInit {
           categoria_id: pub.categoria_id,
           sub_categoria: pub.sub_categoria,
           colaboradores: pub.colaboradores,
-          sintesis_investigador: pub.sintesis_investigador,
+          descripcion_investigacion: pub.descripcion_investigacion,
           sintesis_ia: pub.sintesis_ia,
           links_referencia: pub.links_referencia,
           videos_url: pub.videos_url
@@ -86,7 +86,7 @@ export class PublicacionEditPage implements OnInit {
 
   async onSubmit() {
     if (this.publicacionForm.invalid) {
-      this.showToast('Por favor verifica los requisitos (Título min 5, Síntesis min 500)', 'warning');
+      this.showToast('Por favor verifica los requisitos (Título min 5, Descripción min 30 palabras)', 'warning');
       return;
     }
 
