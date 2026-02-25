@@ -1,0 +1,63 @@
+<ion-header class="ion-no-border">
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button (click)="regresar()" class="btn-back">
+                <ion-icon slot="icon-only" name="chevron-back-outline"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title>Investigadores</ion-title>
+        <ion-buttons slot="end">
+            <ion-badge class="count-badge" *ngIf="!cargando">{{ investigadoresFiltrados.length }}</ion-badge>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <div class="page-container">
+
+        <!-- Barra de búsqueda -->
+        <div class="search-bar">
+            <ion-searchbar placeholder="Buscar por nombre o email..." [(ngModel)]="termino" (ionInput)="filtrar($event)"
+                animated></ion-searchbar>
+        </div>
+
+        <!-- Cargando -->
+        <div class="loading-state" *ngIf="cargando">
+            <ion-spinner name="crescent"></ion-spinner>
+            <p>Cargando investigadores...</p>
+        </div>
+
+        <!-- Lista -->
+        <div class="users-list" *ngIf="!cargando">
+
+            <div class="empty-state" *ngIf="investigadoresFiltrados.length === 0">
+                <ion-icon name="people-outline"></ion-icon>
+                <h3>Sin resultados</h3>
+                <p>No se encontraron investigadores con ese criterio.</p>
+            </div>
+
+            <div class="user-card" *ngFor="let inv of investigadoresFiltrados">
+                <div class="user-avatar">
+                    <img [src]="getFotoUrl(inv.id)" [alt]="inv.nombre" onerror="this.src='assets/icon/favicon.png'">
+                </div>
+
+                <div class="user-info">
+                    <h3 class="user-name">{{ inv.nombre }} {{ inv.apellidos }}</h3>
+                    <p class="user-email">{{ inv.email }}</p>
+                    <span class="estado-badge" [class.aprobado]="inv.estadoLabel === 'Aprobado'"
+                        [class.pendiente]="inv.estadoLabel === 'Pendiente'"
+                        [class.rechazado]="inv.estadoLabel === 'Rechazado'">
+                        <ion-icon
+                            [name]="inv.estadoLabel === 'Aprobado' ? 'checkmark-circle' : inv.estadoLabel === 'Rechazado' ? 'close-circle' : 'time'"></ion-icon>
+                        {{ inv.estadoLabel }}
+                    </span>
+                </div>
+
+                <ion-button fill="clear" class="btn-delete" (click)="eliminarInvestigador(inv)">
+                    <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+                </ion-button>
+            </div>
+
+        </div>
+    </div>
+</ion-content>

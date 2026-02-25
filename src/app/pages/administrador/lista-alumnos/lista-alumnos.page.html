@@ -1,0 +1,60 @@
+<ion-header class="ion-no-border">
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button (click)="regresar()" class="btn-back">
+                <ion-icon slot="icon-only" name="chevron-back-outline"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title>Alumnos</ion-title>
+        <ion-buttons slot="end">
+            <ion-badge class="count-badge" *ngIf="!cargando">{{ alumnosFiltrados.length }}</ion-badge>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <div class="page-container">
+
+        <!-- Barra de búsqueda -->
+        <div class="search-bar">
+            <ion-searchbar placeholder="Buscar por nombre o email..." [(ngModel)]="termino" (ionInput)="filtrar($event)"
+                animated></ion-searchbar>
+        </div>
+
+        <!-- Cargando -->
+        <div class="loading-state" *ngIf="cargando">
+            <ion-spinner name="crescent"></ion-spinner>
+            <p>Cargando alumnos...</p>
+        </div>
+
+        <!-- Lista -->
+        <div class="users-list" *ngIf="!cargando">
+
+            <div class="empty-state" *ngIf="alumnosFiltrados.length === 0">
+                <ion-icon name="school-outline"></ion-icon>
+                <h3>Sin resultados</h3>
+                <p>No se encontraron alumnos con ese criterio.</p>
+            </div>
+
+            <div class="user-card" *ngFor="let al of alumnosFiltrados">
+                <div class="user-avatar">
+                    <img [src]="getFotoUrl(al.id)" [alt]="al.nombre" onerror="this.src='assets/icon/favicon.png'">
+                </div>
+
+                <div class="user-info">
+                    <h3 class="user-name">{{ al.nombre }} {{ al.apellidos }}</h3>
+                    <p class="user-email">{{ al.email }}</p>
+                    <span class="estado-badge activo">
+                        <ion-icon name="school"></ion-icon>
+                        Alumno Activo
+                    </span>
+                </div>
+
+                <ion-button fill="clear" class="btn-delete" (click)="eliminarAlumno(al)">
+                    <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+                </ion-button>
+            </div>
+
+        </div>
+    </div>
+</ion-content>

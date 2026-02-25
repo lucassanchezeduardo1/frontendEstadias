@@ -103,4 +103,18 @@ export class UsuariosService {
 
         return this.http.patch(`${this.API_URL}/usuarios/${id}`, formData);
     }
+
+    /**
+     * Obtener todos los usuarios/alumnos (para el administrador)
+     */
+    getTodos(): Observable<any[]> {
+        return this.http.get<any[]>(`${this.API_URL}/usuarios/all`);
+    }
+
+    /**
+     * Eliminar un alumno (para el administrador)
+     */
+    eliminar(id: number): Observable<any> {
+        return this.http.delete(`${this.API_URL}/usuarios/${id}`);
+    }
 }

@@ -2,8 +2,10 @@ import { Component, OnInit, inject } from '@angular/core';
 import { InvestigadorService } from '../../../servicios/investigador.service';
 import { InstitucionesService } from '../../../servicios/instituciones.service';
 import { CategoriasService } from '../../../servicios/categorias.service';
+import { UsuariosService } from '../../../servicios/usuarios.service';
 import { Investigador } from '../../../modelos/investigador.interface';
 import { ToastController, AlertController, LoadingController } from '@ionic/angular';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-inicio',
@@ -16,15 +18,18 @@ export class InicioPage implements OnInit {
   private invService = inject(InvestigadorService);
   private instService = inject(InstitucionesService);
   private catService = inject(CategoriasService);
+  private usuariosService = inject(UsuariosService);
   private toastCtrl = inject(ToastController);
   private alertCtrl = inject(AlertController);
   private loadingCtrl = inject(LoadingController);
+  private router = inject(Router);
 
   // Estadísticas rápidas
   stats = {
     totalResearchers: 0,
     totalInstitutions: 0,
-    totalCategories: 0
+    totalCategories: 0,
+    totalStudents: 0
   };
 
   // Solicitudes pendientes reales
@@ -118,6 +123,10 @@ export class InicioPage implements OnInit {
     });
     this.catService.getCategorias().subscribe(data => this.stats.totalCategories = data.length);
     this.invService.getAprobados().subscribe(data => this.stats.totalResearchers = data.length);
+    this.usuariosService.getTodos().subscribe({
+      next: (data) => this.stats.totalStudents = data.length,
+      error: () => this.stats.totalStudents = 0
+    });
   }
 
   /**
@@ -176,5 +185,9 @@ export class InicioPage implements OnInit {
       position: 'bottom'
     });
     await toast.present();
+  }
+
+  navegarA(tab: string) {
+    this.router.navigate(['/administrador', tab]);
   }
 }

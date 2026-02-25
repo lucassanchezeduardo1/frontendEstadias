@@ -24,6 +24,11 @@
         <span class="stat-value">{{ stats.totalInstitutions }}</span>
         <span class="stat-label">Instituciones</span>
       </div>
+      <div class="stat-card">
+        <ion-icon name="pricetag" class="stat-icon categories"></ion-icon>
+        <span class="stat-value">{{ stats.totalCategories }}</span>
+        <span class="stat-label">Categorías</span>
+      </div>
     </div>
 
     <!-- Solicitudes Section -->
@@ -65,26 +70,49 @@
 
     <!-- Acceso rápido a otras áreas -->
     <h2 class="section-title">Resumen de Contenido</h2>
-    <div class="active-item">
-      <div class="mini-avatar" style="background: var(--ion-color-secondary);">
+
+    <div class="active-item" (click)="navegarA('instituciones')">
+      <div class="mini-avatar" style="background: #0d6efd;">
         <ion-icon name="business" style="color: white;"></ion-icon>
       </div>
       <div class="info">
         <h4>{{ stats.totalInstitutions }} Instituciones</h4>
         <p>Registradas en el sistema</p>
       </div>
-      <ion-icon name="chevron-forward-outline"></ion-icon>
+      <ion-icon name="chevron-forward-outline" class="nav-arrow"></ion-icon>
     </div>
 
-    <div class="active-item">
-      <div class="mini-avatar" style="background: var(--ion-color-tertiary);">
-        <ion-icon name="list" style="color: white;"></ion-icon>
+    <div class="active-item" (click)="navegarA('categorias')">
+      <div class="mini-avatar" style="background: #6f42c1;">
+        <ion-icon name="pricetag" style="color: white;"></ion-icon>
       </div>
       <div class="info">
         <h4>{{ stats.totalCategories }} Categorías</h4>
         <p>Áreas científicas configuradas</p>
       </div>
-      <ion-icon name="chevron-forward-outline"></ion-icon>
+      <ion-icon name="chevron-forward-outline" class="nav-arrow"></ion-icon>
+    </div>
+
+    <div class="active-item" (click)="navegarA('lista-investigadores')">
+      <div class="mini-avatar" style="background: #198754;">
+        <ion-icon name="flask" style="color: white;"></ion-icon>
+      </div>
+      <div class="info">
+        <h4>{{ stats.totalResearchers }} Investigadores</h4>
+        <p>Investigadores activos aprobados</p>
+      </div>
+      <ion-icon name="chevron-forward-outline" class="nav-arrow"></ion-icon>
+    </div>
+
+    <div class="active-item" (click)="navegarA('lista-alumnos')">
+      <div class="mini-avatar" style="background: #fd7e14;">
+        <ion-icon name="school" style="color: white;"></ion-icon>
+      </div>
+      <div class="info">
+        <h4>{{ stats.totalStudents }} Alumnos</h4>
+        <p>Estudiantes registrados</p>
+      </div>
+      <ion-icon name="chevron-forward-outline" class="nav-arrow"></ion-icon>
     </div>
 
   </div>

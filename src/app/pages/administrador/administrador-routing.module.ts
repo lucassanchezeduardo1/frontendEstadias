@@ -30,8 +30,17 @@ const routes: Routes = [
         pathMatch: 'full'
       }
     ]
+  },
+  {
+    path: 'lista-investigadores',
+    loadChildren: () => import('./lista-investigadores/lista-investigadores.module').then(m => m.ListaInvestigadoresPageModule)
+  },
+  {
+    path: 'lista-alumnos',
+    loadChildren: () => import('./lista-alumnos/lista-alumnos.module').then(m => m.ListaAlumnosPageModule)
   }
 ];
+
 
 
 @NgModule({

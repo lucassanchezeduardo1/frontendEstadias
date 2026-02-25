@@ -89,6 +89,13 @@ export class InvestigadorService {
     }
 
     /**
+     * Obtener todos los investigadores (aprobados, pendientes, etc.)
+     */
+    getTodos(): Observable<Investigador[]> {
+        return this.http.get<Investigador[]>(`${this.API_URL}/all`);
+    }
+
+    /**
      * Actualizar datos del investigador
      */
     update(id: number, datos: any, foto?: File): Observable<any> {
