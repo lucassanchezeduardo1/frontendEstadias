@@ -2,8 +2,9 @@ import { Component, OnInit, inject } from '@angular/core';
 import { PublicacionesService } from '../../../servicios/publicaciones.service';
 import { EventosService } from '../../../servicios/eventos.service';
 import { InvestigadorService } from '../../../servicios/investigador.service';
-import { AlertController, ToastController } from '@ionic/angular';
+import { AlertController, ToastController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { ModalComentariosComponent } from './componentes/modal-comentarios/modal-comentarios.component';
 
 @Component({
   selector: 'app-inicio',
@@ -17,6 +18,7 @@ export class InicioPage implements OnInit {
   private investigadorService = inject(InvestigadorService);
   private alertCtrl = inject(AlertController);
   private toastCtrl = inject(ToastController);
+  private modalCtrl = inject(ModalController);
   private router = inject(Router);
 
   publications: any[] = [];
@@ -152,5 +154,18 @@ export class InicioPage implements OnInit {
       position: 'bottom'
     });
     await toast.present();
+  }
+
+  async verComentarios(pub: any) {
+    const modal = await this.modalCtrl.create({
+      component: ModalComentariosComponent,
+      componentProps: {
+        publicacion: pub,
+        investigadorId: this.investigadorId
+      },
+      breakpoints: [0, 0.5, 0.8, 1],
+      initialBreakpoint: 0.8
+    });
+    return await modal.present();
   }
 }

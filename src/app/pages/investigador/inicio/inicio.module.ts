@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { InicioPageRoutingModule } from './inicio-routing.module';
 
 import { InicioPage } from './inicio.page';
+import { ModalComentariosComponent } from './componentes/modal-comentarios/modal-comentarios.component';
 
 @NgModule({
   imports: [
@@ -15,6 +16,6 @@ import { InicioPage } from './inicio.page';
     IonicModule,
     InicioPageRoutingModule
   ],
-  declarations: [InicioPage]
+  declarations: [InicioPage, ModalComentariosComponent]
 })
-export class InicioPageModule {}
+export class InicioPageModule { }

@@ -1,7 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PublicacionesService } from '../../../servicios/publicaciones.service';
-import { NavController } from '@ionic/angular';
+import { ComentarioService } from '../../../servicios/comentarios.service';
+import { UsuariosService } from '../../../servicios/usuarios.service';
+import { NavController, ToastController } from '@ionic/angular';
 
 @Component({
     selector: 'app-detalle-publicacion',
@@ -12,7 +14,10 @@ import { NavController } from '@ionic/angular';
 export class DetallePublicacionPage implements OnInit, OnDestroy {
 
     publicacion: any = null;
+    nuevoComentario: string = '';
+    usuarioActual: any = null;
     cargando: boolean = true;
+    enviando: boolean = false;
     error: boolean = false;
     readonly API_URL = 'http://localhost:3000';
 
@@ -24,13 +29,19 @@ export class DetallePublicacionPage implements OnInit, OnDestroy {
     constructor(
         private route: ActivatedRoute,
         private publicacionesService: PublicacionesService,
-        private navCtrl: NavController
+        private comentarioService: ComentarioService,
+        private usuariosService: UsuariosService,
+        private navCtrl: NavController,
+        private toastCtrl: ToastController
     ) { }
 
-    ngOnInit() {
+    async ngOnInit() {
         const id = this.route.snapshot.paramMap.get('id');
+        this.usuarioActual = this.usuariosService.getUser();
+
         if (id) {
-            this.cargarDetalle(Number(id));
+            const pubId = Number(id);
+            this.cargarDetalle(pubId);
         } else {
             this.error = true;
             this.cargando = false;
@@ -53,6 +64,45 @@ export class DetallePublicacionPage implements OnInit, OnDestroy {
                 this.cargando = false;
             }
         });
+    }
+
+
+    async enviarComentario() {
+        if (!this.nuevoComentario.trim()) return;
+        if (!this.usuarioActual) {
+            this.mostrarToast('Debes iniciar sesión para comentar', 'warning');
+            return;
+        }
+
+        this.enviando = true;
+        const datos = {
+            contenido: this.nuevoComentario,
+            publicacion_id: this.publicacion.id,
+            usuario_id: this.usuarioActual.id
+        };
+
+        this.comentarioService.crearComentario(datos).subscribe({
+            next: (res) => {
+                this.nuevoComentario = '';
+                this.mostrarToast('Comentario enviado con éxito', 'success');
+                this.enviando = false;
+            },
+            error: (err) => {
+                console.error('Error al enviar comentario:', err);
+                this.mostrarToast('Error al enviar el comentario', 'danger');
+                this.enviando = false;
+            }
+        });
+    }
+
+    async mostrarToast(mensaje: string, color: string) {
+        const toast = await this.toastCtrl.create({
+            message: mensaje,
+            duration: 2000,
+            color: color,
+            position: 'bottom'
+        });
+        toast.present();
     }
 
     regresar() {

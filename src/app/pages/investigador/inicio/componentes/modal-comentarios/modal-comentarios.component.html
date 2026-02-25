@@ -1,0 +1,52 @@
+<ion-header class="ion-no-border">
+    <ion-toolbar>
+        <ion-title>Comentarios</ion-title>
+        <ion-buttons slot="end">
+            <ion-button (click)="cerrar()">
+                <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+    <div class="modal-container">
+        <div class="pub-info">
+            <h3 class="pub-title">{{ publicacion?.titulo }}</h3>
+            <p class="pub-subtitle">Mostrando comentarios de estudiantes</p>
+        </div>
+
+        <!-- Cargando -->
+        <div class="loading-state" *ngIf="cargando">
+            <ion-spinner name="crescent"></ion-spinner>
+            <p>Buscando comentarios...</p>
+        </div>
+
+        <!-- Lista de Comentarios -->
+        <div class="comments-list" *ngIf="!cargando && comentarios.length > 0">
+            <div class="comment-card" *ngFor="let comment of comentarios">
+                <div class="comment-header">
+                    <div class="user-avatar">
+                        <ion-icon name="person-outline"></ion-icon>
+                    </div>
+                    <div class="user-details">
+                        <span class="user-name">{{ comment.usuario?.nombre }} {{ comment.usuario?.apellidos }}</span>
+                        <span class="comment-date">{{ formatearFecha(comment.created_at) }}</span>
+                    </div>
+                </div>
+                <div class="comment-body">
+                    <p>{{ comment.contenido }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estado Vacío -->
+        <div class="empty-state" *ngIf="!cargando && comentarios.length === 0">
+            <div class="empty-icon">
+                <ion-icon name="chatbubble-ellipses-outline"></ion-icon>
+            </div>
+            <h3>Sin comentarios</h3>
+            <p>Aún no hay interacciones de estudiantes en esta publicación.</p>
+        </div>
+    </div>
+</ion-content>

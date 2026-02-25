@@ -198,6 +198,36 @@
             </div>
         </section>
 
+        <!-- Sección de Comentarios -->
+        <section class="comments-section">
+            <h3 class="group-title">
+                <ion-icon name="chatbubbles-outline"></ion-icon>
+                Comentarios
+            </h3>
+
+            <p class="comment-notice">Tus comentarios serán revisados por el investigador principal.</p>
+
+            <!-- Recuadro para agregar comentario -->
+            <div class="add-comment-container" *ngIf="usuarioActual">
+                <h4 class="add-title">Deja tu aporte</h4>
+                <div class="comment-input-box">
+                    <ion-textarea placeholder="Escribe un comentario sobre esta investigación..."
+                        [(ngModel)]="nuevoComentario" [autoGrow]="true" rows="3" class="custom-textarea"></ion-textarea>
+
+                    <ion-button expand="block" class="btn-publish" (click)="enviarComentario()"
+                        [disabled]="enviando || !nuevoComentario.trim()">
+                        <ion-spinner name="crescent" *ngIf="enviando" slot="start"></ion-spinner>
+                        <span *ngIf="!enviando">Publicar Comentario</span>
+                        <span *ngIf="enviando">Publicando...</span>
+                    </ion-button>
+                </div>
+            </div>
+
+            <div class="login-prompt" *ngIf="!usuarioActual">
+                <p>Debes iniciar sesión para poder dejar un comentario.</p>
+            </div>
+        </section>
+
         <div class="bottom-spacer"></div>
 
     </div>

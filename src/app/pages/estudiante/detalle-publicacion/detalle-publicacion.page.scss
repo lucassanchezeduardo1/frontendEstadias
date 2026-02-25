@@ -477,3 +477,115 @@ ion-content {
         margin: 0;
     }
 }
+
+/* Comments Section */
+.comments-section {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    .group-title {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0;
+
+        ion-icon {
+            color: var(--primary-burgundy);
+            font-size: 1.3rem;
+        }
+    }
+}
+
+.comment-notice {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin: 0;
+    padding: 12px 16px;
+    background: rgba(128, 0, 32, 0.04);
+    border-left: 3px solid var(--primary-burgundy);
+    border-radius: 0 12px 12px 0;
+}
+
+.add-comment-container {
+    background: white;
+    padding: 24px;
+    border-radius: 24px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(128, 0, 32, 0.05);
+
+    .add-title {
+        font-size: 1.1rem;
+        font-weight: 800;
+        color: var(--primary-burgundy);
+        margin: 0 0 16px 0;
+    }
+
+    .comment-input-box {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+
+        .custom-textarea {
+            --background: #fdfdfd;
+            --padding-start: 16px;
+            --padding-end: 16px;
+            --padding-top: 16px;
+            --padding-bottom: 16px;
+            --border-radius: 16px;
+            --border-color: #eee;
+            border: 1px solid #eee;
+            border-radius: 16px;
+            font-size: 0.95rem;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+            --placeholder-color: #a0a0a0;
+        }
+
+        .btn-publish {
+            --background: var(--primary-burgundy);
+            --background-activated: var(--secondary-burgundy);
+            --border-radius: 16px;
+            margin: 0;
+            font-weight: 700;
+            height: 54px;
+            --box-shadow: 0 8px 20px rgba(128, 0, 32, 0.2);
+            transition: all 0.3s ease;
+
+            &:active {
+                transform: scale(0.98);
+            }
+        }
+    }
+}
+
+.login-prompt {
+    padding: 20px;
+    background: #fff3f3;
+    border-radius: 16px;
+    border: 1px solid #ffebeb;
+    text-align: center;
+
+    p {
+        color: var(--primary-burgundy);
+        font-weight: 600;
+        margin: 0;
+        font-size: 0.9rem;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
