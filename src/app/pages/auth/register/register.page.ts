@@ -24,7 +24,7 @@ export class RegisterPage implements OnInit {
     selectedUserType: 'student' | 'researcher' = 'student';
     showPassword: boolean = false;
 
-    // Lista de instituciones reales
+    // Lista de instituciones
     institutions: Institucion[] = [];
 
     // Objeto para registro de investigador
@@ -73,7 +73,7 @@ export class RegisterPage implements OnInit {
 
     selectUserType(type: 'student' | 'researcher') {
         this.selectedUserType = type;
-        this.selectedFile = null; // Reset file when switching
+        this.selectedFile = null;
     }
 
     goToLogin() {
@@ -96,7 +96,6 @@ export class RegisterPage implements OnInit {
     }
 
     async registerEstudiante() {
-        // Validación básica
         if (!this.selectedFile) {
             this.showToast('Debes subir una foto de perfil', 'warning');
             return;
@@ -126,13 +125,11 @@ export class RegisterPage implements OnInit {
     }
 
     async registerInvestigador() {
-        // Validación básica
         if (!this.selectedFile) {
             this.showToast('Debes subir una foto de perfil', 'warning');
             return;
         }
 
-        // Validar campos obligatorios (simplificado)
         if (!this.newInvestigador.nombre || !this.newInvestigador.email || !this.newInvestigador.password) {
             this.showToast('Por favor completa los campos obligatorios', 'warning');
             return;

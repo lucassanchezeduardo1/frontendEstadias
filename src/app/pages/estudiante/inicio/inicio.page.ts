@@ -74,12 +74,10 @@ export class InicioPage implements OnInit {
     this.cargarFavoritos();
   }
 
-  /** Navega al detalle de la publicación */
   verDetalle(id: number) {
     this.navCtrl.navigateForward(['/estudiante/detalle-publicacion', id]);
   }
 
-  /** Carga las categorías desde el backend */
   cargarCategorias() {
     this.cargandoCategorias = true;
     this.errorCategorias = false;
@@ -117,7 +115,6 @@ export class InicioPage implements OnInit {
     });
   }
 
-  /** Carga todas las publicaciones desde el backend */
   cargarPublicaciones() {
     this.cargandoPublicaciones = true;
     this.errorPublicaciones = false;
@@ -139,7 +136,6 @@ export class InicioPage implements OnInit {
     });
   }
 
-  /** Aplica el filtro de categoría y búsqueda */
   aplicarFiltro() {
     let resultado = [...this.todasLasPublicaciones];
 
@@ -201,7 +197,7 @@ export class InicioPage implements OnInit {
 
   /** Agrega una publicación a favoritos */
   async toggleFavorito(event: Event, pub: any) {
-    event.stopPropagation(); // Evitar navegar al detalle
+    event.stopPropagation();
 
     this.favoritosService.toggleFavorito(pub.id).subscribe({
       next: (res: any) => {
@@ -222,7 +218,7 @@ export class InicioPage implements OnInit {
     });
   }
 
-  /** Navegar a la página de favoritos */
+
   irAFavoritos() {
     this.router.navigate(['/estudiante/tabs/favoritos']);
   }

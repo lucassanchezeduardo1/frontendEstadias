@@ -80,8 +80,6 @@ export class PerfilPage implements OnInit {
     const loading = await this.loadingCtrl.create({ message: 'Guardando cambios...' });
     await loading.present();
 
-    // Filtramos los campos que NO queremos enviar al backend para evitar el error 500
-    // Eliminamos relaciones y metadatos que TypeORM no espera en el DTO de actualización
     const { id, password, created_at, updated_at, favoritos, comentarios, ...datosAEnviar } = this.usuario;
 
     // Asegurarse de que edad sea número

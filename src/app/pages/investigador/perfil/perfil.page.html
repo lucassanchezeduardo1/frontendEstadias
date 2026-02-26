@@ -12,7 +12,6 @@
     <div class="profile-card">
       <div class="photo-section">
         <div class="avatar-wrapper">
-          <!-- Usamos una URL de respaldo si la imagen falla o no existe -->
           <img [src]="imgPreview || (user.id ? apiUrl + '/' + user.id + '/foto' : defaultAvatar)" class="profile-img"
             alt="Foto de Perfil" (error)="$any($event.target).src = defaultAvatar">
 
@@ -103,7 +102,6 @@
       </div>
     </form>
 
-    <!-- Modo Visualización -->
     <div class="info-content" *ngIf="!isEditing">
       <div class="info-section">
         <div class="section-title">Sobre mí</div>
@@ -150,7 +148,6 @@
         </div>
       </div>
 
-      <!-- Resumen de Actividad -->
       <div class="info-section activity-section" *ngIf="user.num_publicaciones !== undefined">
         <div class="section-title">Mi Actividad</div>
         <div class="stats-row">

@@ -38,51 +38,30 @@ export class PublicacionesService {
     return this.http.post(this.API_URL, formData);
   }
 
-  /**
-   * Obtener publicaciones de un investigador específico
-   */
   getMisPublicaciones(investigadorId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.API_URL}/investigador/${investigadorId}`);
   }
 
-  /**
-   * Obtener todas las publicaciones
-   */
   getPublicaciones(): Observable<any[]> {
     return this.http.get<any[]>(this.API_URL);
   }
 
-  /**
-   * Obtener una publicación por ID
-   */
   getPublicacion(id: number): Observable<any> {
     return this.http.get<any>(`${this.API_URL}/${id}`);
   }
 
-  /**
-   * Actualizar una publicación (solo campos de texto)
-   */
   actualizarPublicacion(id: number, datos: any): Observable<any> {
     return this.http.patch(`${this.API_URL}/${id}`, datos);
   }
 
-  /**
-   * Eliminar una publicación
-   */
   eliminarPublicacion(id: number): Observable<any> {
     return this.http.delete(`${this.API_URL}/${id}`);
   }
 
-  /**
-   * Incrementar el contador de vistas
-   */
   incrementarVistas(id: number): Observable<any> {
     return this.http.patch(`${this.API_URL}/${id}/vistas`, {});
   }
 
-  /**
-   * Incrementar el contador de descargas
-   */
   incrementarDescargas(id: number): Observable<any> {
     return this.http.patch(`${this.API_URL}/${id}/descargas`, {});
   }

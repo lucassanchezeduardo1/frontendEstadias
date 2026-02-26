@@ -61,9 +61,6 @@ export class UsuariosService {
         localStorage.setItem('student_user', JSON.stringify(usuario));
     }
 
-    /**
-     * Obtener datos del usuario logueado (Síncrono desde memoria)
-     */
     getUser() {
         if (!this.currentUser) {
             const local = localStorage.getItem('student_user');
@@ -72,9 +69,6 @@ export class UsuariosService {
         return this.currentUser;
     }
 
-    /**
-     * Cerrar sesión
-     */
     async logout() {
         this.currentUser = null;
         await this.storage.remove('student_user');
@@ -83,9 +77,7 @@ export class UsuariosService {
         localStorage.removeItem('student_token');
     }
 
-    /**
-     * Actualizar perfil de usuario
-     */
+
     actualizar(id: number, usuario: any, foto?: File): Observable<any> {
         const formData = new FormData();
 
@@ -104,16 +96,10 @@ export class UsuariosService {
         return this.http.patch(`${this.API_URL}/usuarios/${id}`, formData);
     }
 
-    /**
-     * Obtener todos los usuarios/alumnos (para el administrador)
-     */
     getTodos(): Observable<any[]> {
         return this.http.get<any[]>(`${this.API_URL}/usuarios/all`);
     }
 
-    /**
-     * Eliminar un alumno (para el administrador)
-     */
     eliminar(id: number): Observable<any> {
         return this.http.delete(`${this.API_URL}/usuarios/${id}`);
     }

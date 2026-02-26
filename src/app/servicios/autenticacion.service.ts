@@ -11,7 +11,6 @@ export class AutenticacionService {
     private http = inject(HttpClient);
     private storage = inject(StorageService);
 
-    // URL base de tu backend NestJS
     private readonly API_URL = 'http://localhost:3000';
     private currentAdmin: Administrador | null = null;
     private currentToken: string | null = null;
@@ -37,27 +36,19 @@ export class AutenticacionService {
         });
     }
 
-    /**
-     * Guardar el token de sesión persistente
-     */
+
     async saveToken(token: string) {
         this.currentToken = token;
         await this.storage.set('admin_token', token);
         localStorage.setItem('admin_token', token);
     }
 
-    /**
-     * Guardar los datos del usuario persistente
-     */
     async saveUser(user: Administrador) {
         this.currentAdmin = user;
         await this.storage.set('admin_user', user);
         localStorage.setItem('admin_user', JSON.stringify(user));
     }
 
-    /**
-     * Obtener los datos del usuario logueado (Síncrono)
-     */
     getUser(): Administrador | null {
         if (!this.currentAdmin) {
             const local = localStorage.getItem('admin_user');
@@ -66,9 +57,7 @@ export class AutenticacionService {
         return this.currentAdmin;
     }
 
-    /**
-     * Obtener el token de sesión (Síncrono)
-     */
+
     getToken(): string | null {
         if (!this.currentToken) {
             this.currentToken = localStorage.getItem('admin_token');

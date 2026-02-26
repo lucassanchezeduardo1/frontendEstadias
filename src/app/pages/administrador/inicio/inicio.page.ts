@@ -48,17 +48,13 @@ export class InicioPage implements OnInit {
     this.cargarDatosDashboard();
   }
 
-  /**
-   * Obtener nombre de la institución por ID
-   */
+
   getInstitutionName(id: number): string {
     const inst = this.instituciones.find(i => i.id === id);
     return inst ? inst.nombre : `ID: ${id}`;
   }
 
-  /**
-   * Abrir modal con detalles COMPLETOS del investigador
-   */
+
   async viewDetails(investigador: Investigador) {
     if (!investigador.id) return;
 
@@ -91,9 +87,7 @@ export class InicioPage implements OnInit {
     this.selectedResearcher = null;
   }
 
-  /**
-   * Convertir Buffer a Imagen Base64 para mostrar en HTML
-   */
+
   getProfileImage(buffer: any): string {
     if (!buffer) return 'assets/images/default-avatar.png'; // Imagen por defecto
     // Si viene como buffer byte array e.g. { type: 'Buffer', data: [...] }
@@ -106,7 +100,7 @@ export class InicioPage implements OnInit {
   }
 
   async cargarDatosDashboard() {
-    // 1. Cargar Investigadores Pendientes
+    // Cargar Investigadores Pendientes
     this.invService.getPendientes().subscribe({
       next: (data) => {
         this.researcherRequests = data;
@@ -116,7 +110,7 @@ export class InicioPage implements OnInit {
       }
     });
 
-    // 2. Cargar Estadísticas
+    // Cargar Estadísticas
     this.instService.getInstituciones().subscribe(data => {
       this.instituciones = data;
       this.stats.totalInstitutions = data.length;
@@ -129,9 +123,7 @@ export class InicioPage implements OnInit {
     });
   }
 
-  /**
-   * Aprobar solicitud
-   */
+  //Aprobar solicitud
   async approveRequest(id: number | undefined) {
     if (!id) return;
 
@@ -151,9 +143,7 @@ export class InicioPage implements OnInit {
     });
   }
 
-  /**
-   * Rechazar solicitud
-   */
+  //Rechazar solicitud
   async rejectRequest(id: number | undefined) {
     if (!id) return;
 

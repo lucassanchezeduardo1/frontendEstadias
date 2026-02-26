@@ -12,30 +12,18 @@ export class CategoriasService {
 
     constructor() { }
 
-    /**
-     * Obtener todas las categorías
-     */
     getCategorias(): Observable<Categoria[]> {
         return this.http.get<Categoria[]>(`${this.API_URL}/all`);
     }
 
-    /**
-     * Registrar una nueva categoría
-     */
     createCategoria(categoria: Categoria): Observable<Categoria> {
         return this.http.post<Categoria>(this.API_URL, categoria);
     }
 
-    /**
-     * Eliminar una categoría
-     */
     deleteCategoria(id: number): Observable<any> {
         return this.http.delete(`${this.API_URL}/${id}`);
     }
 
-    /**
-     * Actualizar una categoría
-     */
     updateCategoria(id: number, categoria: Partial<Categoria>): Observable<Categoria> {
         return this.http.patch<Categoria>(`${this.API_URL}/${id}`, categoria);
     }

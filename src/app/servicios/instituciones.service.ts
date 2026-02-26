@@ -12,30 +12,18 @@ export class InstitucionesService {
 
     constructor() { }
 
-    /**
-     * Obtener todas las instituciones
-     */
     getInstituciones(): Observable<Institucion[]> {
         return this.http.get<Institucion[]>(`${this.API_URL}/all`);
     }
 
-    /**
-     * Registrar una nueva institución
-     */
     createInstitucion(institucion: Institucion): Observable<Institucion> {
         return this.http.post<Institucion>(this.API_URL, institucion);
     }
 
-    /**
-     * Eliminar una institución
-     */
     deleteInstitution(id: number): Observable<any> {
         return this.http.delete(`${this.API_URL}/${id}`);
     }
 
-    /**
-     * Actualizar una institución
-     */
     updateInstitucion(id: number, institucion: Partial<Institucion>): Observable<Institucion> {
         return this.http.patch<Institucion>(`${this.API_URL}/${id}`, institucion);
     }

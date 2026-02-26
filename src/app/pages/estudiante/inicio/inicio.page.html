@@ -14,9 +14,6 @@
       </ion-searchbar>
     </div>
 
-    <!-- ============================================
-         SECCIÓN DE CATEGORÍAS
-    ============================================ -->
     <div class="section-block">
       <div class="section-header">
         <div class="section-title-group">
@@ -24,12 +21,10 @@
         </div>
       </div>
 
-      <!-- Estado: Cargando -->
       <div class="skeleton-row" *ngIf="cargandoCategorias">
         <div class="skeleton-card" *ngFor="let s of [1,2,3,4]"></div>
       </div>
 
-      <!-- Estado: Error -->
       <div class="error-state" *ngIf="errorCategorias && !cargandoCategorias">
         <ion-icon name="cloud-offline-outline"></ion-icon>
         <p>No se pudieron cargar las categorías.</p>
@@ -38,7 +33,6 @@
         </ion-button>
       </div>
 
-      <!-- Categorías desde el backend -->
       <div class="horizontal-scroll" *ngIf="!cargandoCategorias && !errorCategorias">
         <!-- Chip "Todas" -->
         <div class="category-card all-card" [class.selected]="!categoriaSeleccionada"
@@ -86,9 +80,7 @@
       </ion-chip>
     </div>
 
-    <!-- ============================================
-         SECCIÓN DE PUBLICACIONES
-    ============================================ -->
+
     <div class="section-block">
       <div class="section-header">
         <div class="section-title-group">
@@ -99,12 +91,10 @@
         <span class="count-badge">{{ publicacionesFiltradas.length }}</span>
       </div>
 
-      <!-- Estado: Cargando publicaciones -->
       <div class="pub-skeleton" *ngIf="cargandoPublicaciones">
         <div class="skeleton-pub-card" *ngFor="let s of [1,2,3]"></div>
       </div>
 
-      <!-- Estado: Error publicaciones -->
       <div class="error-state" *ngIf="errorPublicaciones && !cargandoPublicaciones">
         <ion-icon name="cloud-offline-outline"></ion-icon>
         <p>No se pudieron cargar las publicaciones.</p>
@@ -120,7 +110,6 @@
         <p>No se encontraron publicaciones{{ categoriaSeleccionada ? ' en esta categoría' : '' }}.</p>
       </div>
 
-      <!-- Feed de publicaciones reales -->
       <div class="publications-feed" *ngIf="!cargandoPublicaciones && !errorPublicaciones">
         <div class="publication-card" *ngFor="let pub of publicacionesFiltradas">
 
@@ -139,11 +128,8 @@
 
           <!-- Cuerpo de la card -->
           <div class="card-body">
-
-            <!-- Título -->
             <h3 class="card-titulo">{{ pub.titulo }}</h3>
 
-            <!-- Investigador principal -->
             <div class="card-autor">
               <div class="autor-avatar">
                 <ion-icon name="person-outline"></ion-icon>

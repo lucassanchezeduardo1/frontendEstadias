@@ -35,9 +35,6 @@ export class CategoriasPage implements OnInit {
     this.cargarCategorias();
   }
 
-  /**
-   * Cargar lista de categorías desde el backend
-   */
   async cargarCategorias() {
     this.catService.getCategorias().subscribe({
       next: (data) => {
@@ -50,9 +47,6 @@ export class CategoriasPage implements OnInit {
     });
   }
 
-  /**
-   * Cargar datos en el formulario para editar
-   */
   editCategory(cat: Categoria) {
     this.isEditing = true;
     this.selectedId = cat.id || null;
@@ -66,9 +60,6 @@ export class CategoriasPage implements OnInit {
     this.resetForm();
   }
 
-  /**
-   * Guardar (Crear o Actualizar)
-   */
   async saveCategory() {
     if (!this.newCategory.nombre || !this.newCategory.descripcion) {
       this.showToast('Todos los campos son obligatorios', 'warning');
@@ -111,9 +102,7 @@ export class CategoriasPage implements OnInit {
     }
   }
 
-  /**
-   * Eliminar categoría con confirmación
-   */
+
   async deleteCategory(id: number | undefined) {
     if (!id) return;
 

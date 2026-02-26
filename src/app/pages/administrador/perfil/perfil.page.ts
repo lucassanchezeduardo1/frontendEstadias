@@ -14,7 +14,6 @@ export class PerfilPage implements OnInit {
   private router = inject(Router);
   private authService = inject(AutenticacionService);
 
-  // Almacenar datos del administrador real
   admin: Administrador | null = null;
 
   constructor() { }

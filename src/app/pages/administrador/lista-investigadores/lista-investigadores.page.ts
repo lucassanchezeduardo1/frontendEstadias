@@ -29,7 +29,6 @@ export class ListaInvestigadoresPage implements OnInit {
 
     cargarInvestigadores() {
         this.cargando = true;
-        // Usamos el endpoint /all que trae todos, filtramos rechazados en frontend
         this.invService.getTodos().subscribe({
             next: (data: any[]) => {
                 // Todos los investigadores

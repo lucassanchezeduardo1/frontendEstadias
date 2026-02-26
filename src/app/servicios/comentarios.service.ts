@@ -11,9 +11,6 @@ export class ComentarioService {
 
     constructor() { }
 
-    /**
-     * Obtener todos los comentarios de una publicación específica
-     */
     getComentariosPorPublicacion(publicacionId: number, investigadorId?: number): Observable<any[]> {
         // Si viene investigadorId, lo pasamos para el permiso, si no, intentamos obtenerlos (el backend puede restringirlos)
         const url = investigadorId
@@ -22,9 +19,6 @@ export class ComentarioService {
         return this.http.get<any[]>(url);
     }
 
-    /**
-     * Crear un nuevo comentario
-     */
     crearComentario(datos: { contenido: string; publicacion_id: number; usuario_id: number }): Observable<any> {
         // El backend espera usuarioId por query si no hay JWT
         return this.http.post(`${this.API_URL}?usuarioId=${datos.usuario_id}`, {
@@ -33,9 +27,6 @@ export class ComentarioService {
         });
     }
 
-    /**
-     * Eliminar un comentario (opcional, pero útil)
-     */
     eliminarComentario(id: number): Observable<any> {
         return this.http.delete(`${this.API_URL}/${id}`);
     }

@@ -17,9 +17,6 @@ export class FavoritosService {
         return this.usuariosService.getUser()?.id || 0;
     }
 
-    /**
-   * Obtener todos los favoritos del usuario actual
-   */
     getFavoritos(): Observable<any[]> {
         const params = new HttpParams().set('usuarioId', this.userId.toString());
         return this.http.get<any[]>(this.API_URL, { params });
@@ -41,9 +38,6 @@ export class FavoritosService {
         return this.http.post<any>(`${this.API_URL}/toggle/${publicacionId}`, {}, { params });
     }
 
-    /**
-     * Eliminar un favorito por ID de publicación
-     */
     eliminarFavorito(publicacionId: number): Observable<any> {
         const params = new HttpParams().set('usuarioId', this.userId.toString());
         return this.http.delete<any>(`${this.API_URL}/publicacion/${publicacionId}`, { params });

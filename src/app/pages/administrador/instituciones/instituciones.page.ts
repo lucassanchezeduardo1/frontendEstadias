@@ -19,7 +19,7 @@ export class InstitucionesPage implements OnInit {
   // Lista de instituciones desde la BD
   institutions: Institucion[] = [];
 
-  // Objeto para el formulario (vaciado según tu entidad)
+  // Objeto para el formulario 
   newInstitution: Institucion = {
     nombre: '',
     tipo_institucion: '',
@@ -38,9 +38,7 @@ export class InstitucionesPage implements OnInit {
     this.cargarInstituciones();
   }
 
-  /**
-   * Cargar lista de instituciones desde el backend
-   */
+
   async cargarInstituciones() {
     this.instService.getInstituciones().subscribe({
       next: (data) => {
@@ -53,9 +51,7 @@ export class InstitucionesPage implements OnInit {
     });
   }
 
-  /**
-   * Cargar datos en el formulario para editar
-   */
+
   editInstitution(inst: Institucion) {
     this.isEditing = true;
     this.selectedId = inst.id || null;
@@ -71,9 +67,7 @@ export class InstitucionesPage implements OnInit {
     this.resetForm();
   }
 
-  /**
-   * Guardar (Crear o Actualizar)
-   */
+
   async saveInstitution() {
     if (!this.newInstitution.nombre || !this.newInstitution.tipo_institucion ||
       !this.newInstitution.pais || !this.newInstitution.estado || !this.newInstitution.direccion) {
@@ -115,9 +109,7 @@ export class InstitucionesPage implements OnInit {
     }
   }
 
-  /**
-   * Eliminar institución con confirmación
-   */
+
   async deleteInstitution(id: number | undefined) {
     if (!id) return;
 

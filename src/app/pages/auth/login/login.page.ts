@@ -30,28 +30,17 @@ export class LoginPage implements OnInit {
 
     constructor() { }
 
-    ngOnInit() {
-        // Inicialización de login
-    }
+    ngOnInit() { }
 
-    /**
-     * Se ejecuta cada vez que la vista entra (útil al regresar tras logout)
-     */
     ionViewDidEnter() {
         this.usernameOrEmail = '';
         this.password = '';
     }
 
-    /**
-     * Seleccionar tipo de usuario
-     */
     selectUserType(type: 'student' | 'researcher' | 'admin') {
         this.selectedUserType = type;
     }
 
-    /**
-     * Manejar el envío del formulario de login
-     */
     async onLogin() {
         if (!this.usernameOrEmail || !this.password) {
             this.showToast('Por favor completa todos los campos', 'warning');

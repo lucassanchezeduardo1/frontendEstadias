@@ -20,55 +20,35 @@ export class EventosService {
     crearEvento(datos: any, imagen: File): Observable<any> {
         const formData = new FormData();
 
-        // Agregamos los campos del DTO
         Object.keys(datos).forEach(key => {
             formData.append(key, datos[key]);
         });
 
-        // Agregamos la imagen con el nombre que espera el backend ('imagen')
         formData.append('imagen', imagen);
 
         return this.http.post(this.API_URL, formData);
     }
 
-    /**
-     * Obtener todos los eventos
-     */
     getEventos(): Observable<any[]> {
         return this.http.get<any[]>(`${this.API_URL}/all`);
     }
 
-    /**
-     * Obtener eventos de un investigador específico
-     */
     getMisEventosById(investigadorId: number): Observable<any> {
         return this.http.get<any>(`${this.API_URL}/investigador/${investigadorId}`);
     }
 
-    /**
-     * Obtener eventos propios del investigador (vía Token)
-     */
     getMisEventos(): Observable<any> {
         return this.http.get<any>(`${this.API_URL}/mis-eventos`);
     }
 
-    /**
-     * Obtener un evento por ID
-     */
     getEvento(id: number): Observable<any> {
         return this.http.get<any>(`${this.API_URL}/${id}`);
     }
 
-    /**
-     * Actualizar un evento (solo campos de texto)
-     */
     actualizarEvento(id: number, datos: any): Observable<any> {
         return this.http.patch(`${this.API_URL}/${id}`, datos);
     }
 
-    /**
-     * Eliminar un evento
-     */
     eliminarEvento(id: number): Observable<any> {
         return this.http.delete(`${this.API_URL}/${id}`);
     }

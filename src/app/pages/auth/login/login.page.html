@@ -26,7 +26,6 @@
 
             <!-- Formulario -->
             <form class="login-form" (ngSubmit)="onLogin()">
-                <!-- Campo de usuario o correo electrónico -->
                 <div class="input-group">
                     <ion-icon [name]="selectedUserType === 'admin' ? 'person-outline' : 'mail-outline'"
                         class="input-icon"></ion-icon>
@@ -35,7 +34,6 @@
                         [(ngModel)]="usernameOrEmail" name="usernameOrEmail" required>
                 </div>
 
-                <!-- Campo de contraseña -->
                 <div class="input-group">
                     <ion-icon name="lock-closed-outline" class="input-icon"></ion-icon>
                     <input [type]="showPassword ? 'text' : 'password'" class="custom-input" placeholder="Contraseña"

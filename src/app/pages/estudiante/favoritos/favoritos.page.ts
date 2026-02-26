@@ -36,11 +36,9 @@ export class FavoritosPage implements OnInit {
         await this.usuariosService.ready;
         this.favoritosService.getFavoritos().subscribe({
             next: (res: any) => {
-                // El backend devuelve { total, favoritos: [...] }
-                // Mapeamos para aplanar la estructura y que coincida con el template
                 this.favoritos = res.favoritos.map((f: any) => ({
                     ...f.publicacion,
-                    id_favorito: f.id // Por si necesitamos el ID del favorito
+                    id_favorito: f.id
                 }));
                 this.cargando = false;
             },

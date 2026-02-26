@@ -22,16 +22,11 @@ export class InvestigadorService {
         this.currentInvestigador = await this.storage.get('inv_user');
     }
 
-    /**
-     * Login de investigador
-     */
+
     login(datos: { email: string; password: string }): Observable<any> {
         return this.http.post(`${this.API_URL}/login`, datos);
     }
 
-    /**
-     * Registrar nuevo investigador (Usa FormData para enviar la foto)
-     */
     registrar(datos: any, foto: File): Observable<any> {
         const formData = new FormData();
 
@@ -46,58 +41,38 @@ export class InvestigadorService {
         return this.http.post(this.API_URL, formData);
     }
 
-    /**
-     * Obtener investigadores pendientes (Para el Administrador)
-     */
+
     getPendientes(): Observable<Investigador[]> {
         return this.http.get<Investigador[]>(`${this.API_URL}/pendientes`);
     }
 
-    /**
-     * Aprobar un investigador
-     */
+    //Aprobar un investigador
     aprobar(id: number): Observable<any> {
         return this.http.patch(`${this.API_URL}/${id}/aprobar`, {});
     }
 
-    /**
-     * Rechazar un investigador
-     */
+    //Rechazar un investigador
     rechazar(id: number): Observable<any> {
         return this.http.patch(`${this.API_URL}/${id}/rechazar`, {});
     }
 
-    /**
-     * Eliminar un investigador (Ya aceptado o rechazado)
-     */
     eliminar(id: number): Observable<any> {
         return this.http.delete(`${this.API_URL}/${id}`);
     }
 
-    /**
-     * Obtener un investigador por ID (Para detalles completos)
-     */
     getInvestigador(id: number): Observable<Investigador> {
         return this.http.get<Investigador>(`${this.API_URL}/${id}`);
     }
 
-    /**
-     * Obtener todos los investigadores aprobados (Para el directorio público)
-     */
     getAprobados(): Observable<Investigador[]> {
         return this.http.get<Investigador[]>(`${this.API_URL}/aprobados`);
     }
 
-    /**
-     * Obtener todos los investigadores (aprobados, pendientes, etc.)
-     */
     getTodos(): Observable<Investigador[]> {
         return this.http.get<Investigador[]>(`${this.API_URL}/all`);
     }
 
-    /**
-     * Actualizar datos del investigador
-     */
+
     update(id: number, datos: any, foto?: File): Observable<any> {
         const formData = new FormData();
         Object.keys(datos).forEach(key => {
