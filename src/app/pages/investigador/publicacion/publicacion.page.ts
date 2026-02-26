@@ -204,8 +204,9 @@ export class PublicacionPage implements OnInit {
       },
       error: (err) => {
         loading.dismiss();
-        console.error('Error al publicar', err);
-        this.showToast('Error al publicar la investigación', 'danger');
+        console.error('Error al publicar:', err);
+        const detailedMsg = (err.error && err.error.message) ? (Array.isArray(err.error.message) ? err.error.message.join(', ') : err.error.message) : 'Error al publicar la investigación';
+        this.showToast(detailedMsg, 'danger');
       }
     });
   }
