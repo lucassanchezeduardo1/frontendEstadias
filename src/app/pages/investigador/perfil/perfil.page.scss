@@ -277,3 +277,34 @@ ion-toolbar {
         margin: 0;
     }
 }
+
+.activity-section {
+    .stats-row {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 20px;
+        .stat-card {
+            flex: 1;
+            background: #f8f9fa;
+            padding: 16px;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            .stat-value { font-size: 1.5rem; font-weight: 800; color: #800020; }
+            .stat-label { font-size: 0.75rem; color: #777; font-weight: 700; text-transform: uppercase; }
+        }
+    }
+    .empty-actions {
+        background: #fffafa;
+        border-radius: 15px;
+        padding: 16px;
+        border: 1px dashed #ffc10777;
+        text-align: center;
+        .empty-hint { font-size: 0.85rem; color: #666; margin-bottom: 12px; }
+        .action-btn { --border-radius: 12px; font-weight: 700; width: 100%; margin-bottom: 8px; }
+    }
+}

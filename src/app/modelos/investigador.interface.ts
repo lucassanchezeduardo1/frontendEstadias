@@ -18,4 +18,6 @@ export interface Investigador {
     estado?: 'pendiente' | 'aprobado' | 'rechazado';
     created_at?: Date;
     updated_at?: Date;
+    num_publicaciones?: number;
+    num_eventos?: number;
 }
