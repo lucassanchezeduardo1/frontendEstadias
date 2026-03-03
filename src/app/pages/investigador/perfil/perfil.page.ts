@@ -68,7 +68,7 @@ export class PerfilPage implements OnInit {
       grado_academico: [data.grado_academico, [Validators.required]],
       cargo_actual: [data.cargo_actual, [Validators.required]],
       areas_investigacion: [data.areas_investigacion, [Validators.required]],
-      descripcion_trayectoria: [data.descripcion_trayectoria, [Validators.required]],
+      descripcion_trayectoria: [data.descripcion_trayectoria, [Validators.required, Validators.minLength(50)]],
       google_academico_url: [data.google_academico_url || ''],
       researchgate_url: [data.researchgate_url || ''],
       direccion_oficina: [data.direccion_oficina || ''],
@@ -97,7 +97,11 @@ export class PerfilPage implements OnInit {
 
   async saveProfile() {
     if (this.profileForm.invalid) {
-      this.showToast('Por favor completa todos los campos requeridos', 'warning');
+      if (this.profileForm.get('descripcion_trayectoria')?.errors?.['minlength']) {
+        this.showToast('La trayectoria académica debe tener al menos 50 caracteres', 'warning');
+      } else {
+        this.showToast('Por favor completa todos los campos requeridos correctamente', 'warning');
+      }
       return;
     }
 
@@ -107,21 +111,41 @@ export class PerfilPage implements OnInit {
     });
     await loading.present();
 
-    this.invService.update(this.user!.id!, this.profileForm.value, this.selectedImg || undefined).subscribe({
+    const formData = { ...this.profileForm.value };
+
+    // Limpiar campos vacíos para evitar errores de validación en el backend (ej. @IsUrl)
+    Object.keys(formData).forEach(key => {
+      if (formData[key] === '' || formData[key] === null) {
+        delete formData[key];
+      }
+    });
+
+    this.invService.update(this.user!.id!, formData, this.selectedImg || undefined).subscribe({
       next: (res) => {
         loading.dismiss();
         this.showToast('Perfil actualizado con éxito', 'success');
         this.isEditing = false;
 
         // Actualizar localmente la sesión
-        this.invService.saveSession(res.investigador || res, 'TOKEN_INV'); // Rescatamos el token o mantenemos el actual si fuera necesario
-        this.user = res.investigador || res;
+        const updatedUser = res.investigador || res;
+        this.invService.saveSession(updatedUser, 'TOKEN_INV');
+        this.user = updatedUser;
         this.imgPreview = null;
       },
       error: (err) => {
         loading.dismiss();
         console.error('Error al actualizar perfil', err);
-        this.showToast('Error al actualizar el perfil', 'danger');
+
+        // Extraer mensaje detallado de error del backend
+        let errorMsg = 'Error al actualizar el perfil';
+        if (err.error?.message) {
+          if (Array.isArray(err.error.message)) {
+            errorMsg = err.error.message.join('. ');
+          } else {
+            errorMsg = err.error.message;
+          }
+        }
+        this.showToast(errorMsg, 'danger');
       }
     });
   }

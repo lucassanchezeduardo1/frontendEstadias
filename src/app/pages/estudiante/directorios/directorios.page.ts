@@ -42,7 +42,7 @@ export class DirectoriosPage implements OnInit {
   }
 
   verPerfil(id: number) {
-    this.router.navigate(['/estudiante/tabs/directorios', id]);
+    this.router.navigate(['/estudiante/investigador-detalle', id]);
   }
 
   getRandomColor(id: number) {

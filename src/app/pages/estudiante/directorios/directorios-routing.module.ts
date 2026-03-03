@@ -7,12 +7,7 @@ const routes: Routes = [
   {
     path: '',
     component: DirectoriosPage
-  },
-  {
-    path: ':id',
-    loadChildren: () => import('./investigador-detalle/investigador-detalle.module').then(m => m.InvestigadorDetallePageModule)
   }
-
 ];
 
 @NgModule({

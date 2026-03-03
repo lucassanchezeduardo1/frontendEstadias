@@ -40,6 +40,10 @@ const routes: Routes = [
     loadChildren: () => import('./detalle-publicacion/detalle-publicacion.module').then(m => m.DetallePublicacionPageModule)
   },
   {
+    path: 'investigador-detalle/:id',
+    loadChildren: () => import('./directorios/investigador-detalle/investigador-detalle.module').then(m => m.InvestigadorDetallePageModule)
+  },
+  {
     path: '',
     redirectTo: 'tabs/inicio',
     pathMatch: 'full'
