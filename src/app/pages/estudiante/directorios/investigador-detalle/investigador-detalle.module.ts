@@ -17,4 +17,4 @@ import { InvestigadorDetallePage } from './investigador-detalle.page';
   ],
   declarations: [InvestigadorDetallePage]
 })
-export class InvestigadorDetallePageModule {}
+export class InvestigadorDetallePageModule { }
