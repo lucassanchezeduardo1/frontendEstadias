@@ -1,0 +1,96 @@
+<div class="modal-wrapper">
+    <!-- Header -->
+    <header class="modal-header">
+        <div class="header-info">
+            <span class="badge-ia">IA EDUCATIVA</span>
+            <h2>Test de Comprensión</h2>
+        </div>
+        <button class="btn-close" (click)="cerrar()">
+            <ion-icon name="close-outline"></ion-icon>
+        </button>
+    </header>
+
+    <div class="modal-body">
+        <!-- Estado: Cargando / Generando -->
+        <div class="loading-state" *ngIf="generando">
+            <div class="ai-loader">
+                <div class="sparkle one"></div>
+                <div class="sparkle two"></div>
+                <div class="sparkle three"></div>
+            </div>
+            <h3>Generando Test Inteligente...</h3>
+            <p>La IA está analizando la publicación para crear preguntas personalizadas para ti.</p>
+        </div>
+
+        <!-- Estado: Error -->
+        <div class="error-state" *ngIf="error && !generando">
+            <div class="error-icon">
+                <ion-icon name="alert-circle-outline"></ion-icon>
+            </div>
+            <h3>¡Oops! Algo salió mal</h3>
+            <p>{{ error }}</p>
+            <button class="btn-retry" (click)="iniciarGeneracion()">Reintentar</button>
+        </div>
+
+        <!-- Pantalla de Test -->
+        <div class="test-container" *ngIf="!generando && !error && !examenFinalizado">
+            <div class="test-intro">
+                <p>Basado en: <strong>{{ publicacion.titulo }}</strong></p>
+                <div class="progress-info">
+                    Respuestas: {{ obtenerContadorRespuestas }} / {{ preguntas.length }}
+                </div>
+            </div>
+
+            <div class="questions-list">
+                <div class="question-card" *ngFor="let q of preguntas; let i = index">
+                    <h3 class="question-text"><span>{{ i + 1 }}.</span> {{ q.pregunta }}</h3>
+                    <div class="options-grid">
+                        <button class="option-btn" *ngFor="let opt of q.opciones; let j = index"
+                            [class.selected]="respuestasUsuario[i] === j" (click)="seleccionarOpcion(i, j)">
+                            <span class="option-letter">{{ getLetra(j) }}</span>
+                            <span class="option-content">{{ opt }}</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-actions">
+                <button class="btn-finish" [disabled]="respuestasUsuario.includes(-1)" (click)="finalizarExamen()">
+                    Finalizar Evaluación
+                </button>
+            </div>
+        </div>
+
+        <!-- Pantalla de Resultados -->
+        <div class="results-container" *ngIf="examenFinalizado">
+            <div class="result-header">
+                <div class="score-circle" [style.--score-color]="puntaje >= 70 ? '#2dd36f' : '#eb445a'">
+                    <span class="score-value">{{ puntaje }}%</span>
+                </div>
+                <h2>{{ puntaje >= 70 ? '¡Excelente Trabajo!' : 'Sigue Practicando' }}</h2>
+                <p>Has obtenido {{ puntaje }} puntos de 100 posibles.</p>
+            </div>
+
+            <div class="review-list">
+                <div class="review-card" *ngFor="let q of preguntas; let i = index"
+                    [class.correct]="respuestasUsuario[i] === q.respuestaCorrecta"
+                    [class.incorrect]="respuestasUsuario[i] !== q.respuestaCorrecta">
+                    <p class="review-question">{{ i + 1 }}. {{ q.pregunta }}</p>
+                    <div class="review-details">
+                        <div class="your-answer">
+                            Tu respuesta: <span>{{ q.opciones[respuestasUsuario[i]] || 'Sin responder' }}</span>
+                        </div>
+                        <div class="correct-answer" *ngIf="respuestasUsuario[i] !== q.respuestaCorrecta">
+                            Respuesta correcta: <span>{{ q.opciones[q.respuestaCorrecta] }}</span>
+                        </div>
+                    </div>
+                    <ion-icon
+                        [name]="respuestasUsuario[i] === q.respuestaCorrecta ? 'checkmark-circle' : 'close-circle'"
+                        class="review-icon"></ion-icon>
+                </div>
+            </div>
+
+            <button class="btn-done" (click)="cerrar()">Cerrar Resultados</button>
+        </div>
+    </div>
+</div>

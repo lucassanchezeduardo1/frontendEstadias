@@ -5,6 +5,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { DetallePublicacionPageRoutingModule } from './detalle-publicacion-routing.module';
 import { DetallePublicacionPage } from './detalle-publicacion.page';
+import { ExamenIaComponent } from './examen-ia/examen-ia.component';
 
 @NgModule({
     imports: [
@@ -13,6 +14,6 @@ import { DetallePublicacionPage } from './detalle-publicacion.page';
         IonicModule,
         DetallePublicacionPageRoutingModule
     ],
-    declarations: [DetallePublicacionPage]
+    declarations: [DetallePublicacionPage, ExamenIaComponent]
 })
 export class DetallePublicacionPageModule { }

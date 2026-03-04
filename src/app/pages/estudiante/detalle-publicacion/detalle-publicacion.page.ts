@@ -3,7 +3,9 @@ import { ActivatedRoute } from '@angular/router';
 import { PublicacionesService } from '../../../servicios/publicaciones.service';
 import { ComentarioService } from '../../../servicios/comentarios.service';
 import { UsuariosService } from '../../../servicios/usuarios.service';
-import { NavController, ToastController } from '@ionic/angular';
+import { PruebasIaService } from '../../../servicios/pruebas-ia.service';
+import { NavController, ToastController, ModalController } from '@ionic/angular';
+import { ExamenIaComponent } from './examen-ia/examen-ia.component';
 
 @Component({
     selector: 'app-detalle-publicacion',
@@ -31,8 +33,10 @@ export class DetallePublicacionPage implements OnInit, OnDestroy {
         private publicacionesService: PublicacionesService,
         private comentarioService: ComentarioService,
         private usuariosService: UsuariosService,
+        private pruebasService: PruebasIaService,
         private navCtrl: NavController,
-        private toastCtrl: ToastController
+        private toastCtrl: ToastController,
+        private modalCtrl: ModalController
     ) { }
 
     async ngOnInit() {
@@ -170,6 +174,32 @@ export class DetallePublicacionPage implements OnInit, OnDestroy {
 
         this.reproduciendo = tipo;
         this.synth.speak(this.utterance);
+    }
+
+    /** Logic for AI Test */
+    async abrirTest() {
+        if (!this.usuarioActual) {
+            this.mostrarToast('Debes iniciar sesión para realizar el test', 'warning');
+            return;
+        }
+
+        const puedeSiguente = await this.pruebasService.puedeGenerarTest(this.usuarioActual.id);
+
+        if (!puedeSiguente) {
+            const restantes = await this.pruebasService.obtenerIntentosRestantes(this.usuarioActual.id);
+            this.mostrarToast('Has alcanzado el límite de 2 tests por día.', 'danger');
+            return;
+        }
+
+        const modal = await this.modalCtrl.create({
+            component: ExamenIaComponent,
+            componentProps: {
+                publicacion: this.publicacion,
+                usuarioId: this.usuarioActual.id
+            }
+        });
+
+        return await modal.present();
     }
 
     ngOnDestroy() {
