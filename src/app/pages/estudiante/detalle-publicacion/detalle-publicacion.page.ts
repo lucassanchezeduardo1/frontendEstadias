@@ -6,6 +6,7 @@ import { UsuariosService } from '../../../servicios/usuarios.service';
 import { PruebasIaService } from '../../../servicios/pruebas-ia.service';
 import { NavController, ToastController, ModalController } from '@ionic/angular';
 import { ExamenIaComponent } from './examen-ia/examen-ia.component';
+import { environment } from '../../../../environments/environment';
 
 @Component({
     selector: 'app-detalle-publicacion',
@@ -21,7 +22,7 @@ export class DetallePublicacionPage implements OnInit, OnDestroy {
     cargando: boolean = true;
     enviando: boolean = false;
     error: boolean = false;
-    readonly API_URL = 'http://localhost:3000';
+    readonly API_URL = environment.apiUrl;
 
     // Para la lectura por voz
     reproduciendo: 'investigador' | 'ia' | null = null;

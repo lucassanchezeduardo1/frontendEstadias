@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { InvestigadorService } from '../../../../servicios/investigador.service';
 import { Location } from '@angular/common';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-investigador-detalle',
@@ -17,7 +18,7 @@ export class InvestigadorDetallePage implements OnInit {
 
   investigador: any = null;
   loading: boolean = true;
-  readonly API_URL = 'http://localhost:3000/investigador';
+  readonly API_URL = `${environment.apiUrl}/investigador`;
 
   constructor() { }
 

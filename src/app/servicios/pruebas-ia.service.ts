@@ -72,7 +72,7 @@ export class PruebasIaService {
                 let message = 'Error al generar el test';
 
                 if (err.status === 0) {
-                    message = 'No se pudo conectar con el servidor backend. Asegúrate de que esté encendido (Puerto 3000).';
+                    message = 'No se pudo conectar con el servidor backend';
                 } else if (err.error && err.error.message) {
                     message = `Error del servidor: ${err.error.message}`;
                 }
