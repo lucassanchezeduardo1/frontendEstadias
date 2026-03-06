@@ -30,6 +30,10 @@
           <div class="mode-badge" [ngClass]="ev.modalidad.toLowerCase()">
             {{ ev.modalidad }}
           </div>
+          <div class="status-badge" [ngClass]="ev.fecha | estadoEvento">
+            <ion-icon [name]="(ev.fecha | estadoEvento) === 'proximo' ? 'checkmark-circle-outline' : 'close-circle-outline'"></ion-icon>
+            {{ (ev.fecha | estadoEvento) === 'proximo' ? 'Próximo' : 'Finalizado' }}
+          </div>
         </div>
 
         <div class="event-details">

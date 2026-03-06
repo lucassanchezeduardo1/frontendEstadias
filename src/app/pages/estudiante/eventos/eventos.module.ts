@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { EventosPageRoutingModule } from './eventos-routing.module';
 
 import { EventosPage } from './eventos.page';
+import { EstadoEventoPipe } from '../../../pipes/estado-evento.pipe';
 
 @NgModule({
   imports: [
@@ -15,6 +16,6 @@ import { EventosPage } from './eventos.page';
     IonicModule,
     EventosPageRoutingModule
   ],
-  declarations: [EventosPage]
+  declarations: [EventosPage, EstadoEventoPipe]
 })
-export class EventosPageModule {}
+export class EventosPageModule { }
