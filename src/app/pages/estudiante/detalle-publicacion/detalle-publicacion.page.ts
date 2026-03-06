@@ -4,7 +4,7 @@ import { PublicacionesService } from '../../../servicios/publicaciones.service';
 import { ComentarioService } from '../../../servicios/comentarios.service';
 import { UsuariosService } from '../../../servicios/usuarios.service';
 import { PruebasIaService } from '../../../servicios/pruebas-ia.service';
-import { NavController, ToastController, ModalController } from '@ionic/angular';
+import { NavController, ToastController, ModalController, AlertController } from '@ionic/angular';
 import { ExamenIaComponent } from './examen-ia/examen-ia.component';
 import { environment } from '../../../../environments/environment';
 
@@ -37,7 +37,8 @@ export class DetallePublicacionPage implements OnInit, OnDestroy {
         private pruebasService: PruebasIaService,
         private navCtrl: NavController,
         private toastCtrl: ToastController,
-        private modalCtrl: ModalController
+        private modalCtrl: ModalController,
+        private alertCtrl: AlertController
     ) { }
 
     async ngOnInit() {
@@ -114,14 +115,48 @@ export class DetallePublicacionPage implements OnInit, OnDestroy {
         this.navCtrl.back();
     }
 
-    descargarPdf() {
-        if (this.publicacion && this.publicacion.id) {
-            // Incrementar contador en el backend de forma silenciosa
-            this.publicacionesService.incrementarDescargas(this.publicacion.id).subscribe();
+    async descargarPdf() {
+        if (!this.publicacion || !this.publicacion.id) return;
 
-            const url = `${this.API_URL}/publicacion/${this.publicacion.id}/pdf`;
-            window.open(url, '_blank');
-        }
+        const alert = await this.alertCtrl.create({
+            header: 'Acceso Restringido',
+            subHeader: 'Por favor, introduce el código de acceso para ver y descargar el documento.',
+            inputs: [
+                {
+                    name: 'codigo',
+                    type: 'password',
+                    placeholder: 'Introduce el código...'
+                }
+            ],
+            buttons: [
+                {
+                    text: 'Cancelar',
+                    role: 'cancel',
+                    cssClass: 'secondary'
+                },
+                {
+                    text: 'Confirmar',
+                    handler: async (data) => {
+                        if (data.codigo === 'Ab3j4') {
+                            // Incrementar contador en el backend
+                            this.publicacionesService.incrementarDescargas(this.publicacion.id).subscribe();
+
+                            // Abrir PDF con el código como parámetro para la validación del backend
+                            const url = `${this.API_URL}/publicacion/${this.publicacion.id}/pdf?codigo=${data.codigo}`;
+                            window.open(url, '_blank');
+
+                            this.mostrarToast('Acceso concedido', 'success');
+                            return true;
+                        } else {
+                            this.mostrarToast('Código incorrecto. No tienes permiso para descargar este archivo.', 'danger');
+                            return false;
+                        }
+                    }
+                }
+            ]
+        });
+
+        await alert.present();
     }
 
     /** Convierte un string separado por comas en un array de strings limpios */
