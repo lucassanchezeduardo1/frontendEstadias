@@ -103,7 +103,7 @@ export class InicioPage implements OnInit {
     // Cargar Investigadores Pendientes
     this.invService.getPendientes().subscribe({
       next: (data) => {
-        this.researcherRequests = data;
+        this.researcherRequests = data.items;
       },
       error: (err) => {
         console.error('Error al cargar pendientes:', err);
@@ -116,9 +116,9 @@ export class InicioPage implements OnInit {
       this.stats.totalInstitutions = data.length;
     });
     this.catService.getCategorias().subscribe(data => this.stats.totalCategories = data.length);
-    this.invService.getAprobados().subscribe(data => this.stats.totalResearchers = data.length);
+    this.invService.getAprobados().subscribe(data => this.stats.totalResearchers = data.total);
     this.usuariosService.getTodos().subscribe({
-      next: (data) => this.stats.totalStudents = data.length,
+      next: (data) => this.stats.totalStudents = data.total,
       error: () => this.stats.totalStudents = 0
     });
   }

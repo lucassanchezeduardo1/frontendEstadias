@@ -36,7 +36,7 @@ export class FavoritosPage implements OnInit {
         await this.usuariosService.ready;
         this.favoritosService.getFavoritos().subscribe({
             next: (res: any) => {
-                this.favoritos = res.favoritos.map((f: any) => ({
+                this.favoritos = res.items.map((f: any) => ({
                     ...f.publicacion,
                     id_favorito: f.id
                 }));

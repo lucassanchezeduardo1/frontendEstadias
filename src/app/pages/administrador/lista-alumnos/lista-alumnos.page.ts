@@ -31,8 +31,8 @@ export class ListaAlumnosPage implements OnInit {
         this.cargando = true;
         this.usuariosService.getTodos().subscribe({
             next: (data) => {
-                this.alumnos = data;
-                this.alumnosFiltrados = [...data];
+                this.alumnos = data.items;
+                this.alumnosFiltrados = [...data.items];
                 this.cargando = false;
             },
             error: (err) => {

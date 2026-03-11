@@ -61,7 +61,7 @@ export class InicioPage implements OnInit {
     this.publicacionesService.getMisPublicaciones(this.investigadorId).subscribe({
       next: (res) => {
         console.log('Publicaciones recibidas:', res);
-        this.publications = res;
+        this.publications = res.items;
       },
       error: (err) => console.error('Error al cargar publicaciones', err)
     });
@@ -70,7 +70,7 @@ export class InicioPage implements OnInit {
     this.eventosService.getMisEventosById(this.investigadorId).subscribe({
       next: (res) => {
         console.log('Eventos recibidos:', res);
-        this.events = res.eventos || [];
+        this.events = res.items || [];
       },
       error: (err) => console.error('Error al cargar eventos', err)
     });

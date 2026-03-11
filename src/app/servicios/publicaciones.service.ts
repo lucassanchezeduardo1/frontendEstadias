@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Publicacion } from '../modelos/publicacion.interface';
+import { PaginatedResponse } from '../modelos/paginated-response.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -40,12 +41,12 @@ export class PublicacionesService {
     return this.http.post(this.API_URL, formData);
   }
 
-  getMisPublicaciones(investigadorId: number): Observable<Publicacion[]> {
-    return this.http.get<Publicacion[]>(`${this.API_URL}/investigador/${investigadorId}`);
+  getMisPublicaciones(investigadorId: number, page: number = 1, limit: number = 10): Observable<PaginatedResponse<Publicacion>> {
+    return this.http.get<PaginatedResponse<Publicacion>>(`${this.API_URL}/investigador/${investigadorId}?page=${page}&limit=${limit}`);
   }
 
-  getPublicaciones(): Observable<Publicacion[]> {
-    return this.http.get<Publicacion[]>(this.API_URL);
+  getPublicaciones(page: number = 1, limit: number = 10): Observable<PaginatedResponse<Publicacion>> {
+    return this.http.get<PaginatedResponse<Publicacion>>(`${this.API_URL}?page=${page}&limit=${limit}`);
   }
 
   getPublicacion(id: number): Observable<Publicacion> {

@@ -25,7 +25,7 @@ export class EventosPage implements OnInit {
     this.cargando = true;
     this.eventosService.getEventos().subscribe({
       next: (data) => {
-        this.eventos = data;
+        this.eventos = data.items;
         this.cargando = false;
       },
       error: (err) => {

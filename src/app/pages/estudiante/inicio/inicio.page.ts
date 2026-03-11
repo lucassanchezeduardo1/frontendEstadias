@@ -106,7 +106,7 @@ export class InicioPage implements OnInit {
     await this.usuariosService.ready;
     this.favoritosService.getFavoritos().subscribe({
       next: (res: any) => {
-        const ids = res.favoritos.map((f: any) => f.publicacion.id);
+        const ids = (res.items || []).map((f: any) => f.publicacion.id);
         this.favoritosIds = new Set(ids);
         this.cargarPublicaciones();
       },
@@ -123,7 +123,7 @@ export class InicioPage implements OnInit {
 
     this.publicacionesService.getPublicaciones().subscribe({
       next: (data) => {
-        this.todasLasPublicaciones = data.map(pub => ({
+        this.todasLasPublicaciones = data.items.map(pub => ({
           ...pub,
           esFavorito: this.favoritosIds.has(pub.id)
         }));

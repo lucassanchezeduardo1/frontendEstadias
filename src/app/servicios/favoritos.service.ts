@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { UsuariosService } from './usuarios.service';
 import { Injectable, inject } from '@angular/core';
 import { environment } from '../../environments/environment';
+import { PaginatedResponse } from '../modelos/paginated-response.interface';
 
 @Injectable({
     providedIn: 'root'
@@ -18,9 +19,12 @@ export class FavoritosService {
         return this.usuariosService.getUser()?.id || 0;
     }
 
-    getFavoritos(): Observable<any[]> {
-        const params = new HttpParams().set('usuarioId', this.userId.toString());
-        return this.http.get<any[]>(this.API_URL, { params });
+    getFavoritos(page: number = 1, limit: number = 10): Observable<PaginatedResponse<any>> {
+        const params = new HttpParams()
+            .set('usuarioId', this.userId.toString())
+            .set('page', page.toString())
+            .set('limit', limit.toString());
+        return this.http.get<PaginatedResponse<any>>(this.API_URL, { params });
     }
 
     /**

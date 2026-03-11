@@ -26,8 +26,8 @@ export class DirectoriosPage implements OnInit {
   cargarInvestigadores() {
     this.loading = true;
     this.invService.getAprobados().subscribe({
-      next: (data: any[]) => {
-        this.investigadores = data.map(inv => ({
+      next: (data) => {
+        this.investigadores = data.items.map(inv => ({
           ...inv,
           // Definir un color basado en el ID para el fondo de la tarjeta si no tiene uno
           color: this.getRandomColor(inv.id || 0)

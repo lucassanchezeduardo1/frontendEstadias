@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Investigador } from '../modelos/investigador.interface';
+import { PaginatedResponse } from '../modelos/paginated-response.interface';
 import { StorageService } from './storage.service';
 
 import { environment } from '../../environments/environment';
@@ -44,8 +45,8 @@ export class InvestigadorService {
     }
 
 
-    getPendientes(): Observable<Investigador[]> {
-        return this.http.get<Investigador[]>(`${this.API_URL}/pendientes`);
+    getPendientes(page: number = 1, limit: number = 10): Observable<PaginatedResponse<Investigador>> {
+        return this.http.get<PaginatedResponse<Investigador>>(`${this.API_URL}/pendientes?page=${page}&limit=${limit}`);
     }
 
     //Aprobar un investigador
@@ -66,12 +67,12 @@ export class InvestigadorService {
         return this.http.get<Investigador>(`${this.API_URL}/${id}`);
     }
 
-    getAprobados(): Observable<Investigador[]> {
-        return this.http.get<Investigador[]>(`${this.API_URL}/aprobados`);
+    getAprobados(page: number = 1, limit: number = 10): Observable<PaginatedResponse<Investigador>> {
+        return this.http.get<PaginatedResponse<Investigador>>(`${this.API_URL}/aprobados?page=${page}&limit=${limit}`);
     }
 
-    getTodos(): Observable<Investigador[]> {
-        return this.http.get<Investigador[]>(`${this.API_URL}/all`);
+    getTodos(page: number = 1, limit: number = 10): Observable<PaginatedResponse<Investigador>> {
+        return this.http.get<PaginatedResponse<Investigador>>(`${this.API_URL}/all?page=${page}&limit=${limit}`);
     }
 
 

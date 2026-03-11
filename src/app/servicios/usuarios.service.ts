@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { StorageService } from './storage.service';
+import { PaginatedResponse } from '../modelos/paginated-response.interface';
 
 import { environment } from '../../environments/environment';
 
@@ -98,8 +99,8 @@ export class UsuariosService {
         return this.http.patch(`${this.API_URL}/usuarios/${id}`, formData);
     }
 
-    getTodos(): Observable<any[]> {
-        return this.http.get<any[]>(`${this.API_URL}/usuarios/all`);
+    getTodos(page: number = 1, limit: number = 10): Observable<PaginatedResponse<any>> {
+        return this.http.get<PaginatedResponse<any>>(`${this.API_URL}/usuarios/all?page=${page}&limit=${limit}`);
     }
 
     eliminar(id: number): Observable<any> {

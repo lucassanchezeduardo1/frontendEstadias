@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { PaginatedResponse } from '../modelos/paginated-response.interface';
 
 @Injectable({
     providedIn: 'root'
@@ -30,16 +31,16 @@ export class EventosService {
         return this.http.post(this.API_URL, formData);
     }
 
-    getEventos(): Observable<any[]> {
-        return this.http.get<any[]>(`${this.API_URL}/all`);
+    getEventos(page: number = 1, limit: number = 10): Observable<PaginatedResponse<any>> {
+        return this.http.get<PaginatedResponse<any>>(`${this.API_URL}/all?page=${page}&limit=${limit}`);
     }
 
-    getMisEventosById(investigadorId: number): Observable<any> {
-        return this.http.get<any>(`${this.API_URL}/investigador/${investigadorId}`);
+    getMisEventosById(investigadorId: number, page: number = 1, limit: number = 10): Observable<PaginatedResponse<any>> {
+        return this.http.get<PaginatedResponse<any>>(`${this.API_URL}/investigador/${investigadorId}?page=${page}&limit=${limit}`);
     }
 
-    getMisEventos(): Observable<any> {
-        return this.http.get<any>(`${this.API_URL}/mis-eventos`);
+    getMisEventos(page: number = 1, limit: number = 10): Observable<PaginatedResponse<any>> {
+        return this.http.get<PaginatedResponse<any>>(`${this.API_URL}/mis-eventos?page=${page}&limit=${limit}`);
     }
 
     getEvento(id: number): Observable<any> {

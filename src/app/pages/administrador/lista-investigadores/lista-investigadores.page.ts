@@ -30,9 +30,9 @@ export class ListaInvestigadoresPage implements OnInit {
     cargarInvestigadores() {
         this.cargando = true;
         this.invService.getTodos().subscribe({
-            next: (data: any[]) => {
+            next: (data) => {
                 // Todos los investigadores
-                this.investigadores = data.map((inv: any) => {
+                this.investigadores = data.items.map((inv: any) => {
                     let estadoLabel = 'Pendiente';
                     const st = inv.estado?.toLowerCase();
                     if (st === 'aprobado') estadoLabel = 'Aprobado';
