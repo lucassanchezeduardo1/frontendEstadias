@@ -62,7 +62,7 @@
                         publicacion.investigador_principal?.apellidos }}
                     </h2>
                     <p class="sub-value" *ngIf="publicacion.investigador_principal?.institucion">
-                        {{ publicacion.investigador_principal.institucion.nombre }}
+                        {{ publicacion.investigador_principal?.institucion?.nombre }}
                     </p>
                 </div>
             </div>
@@ -197,7 +197,7 @@
                 </h3>
                 <ul class="links-list">
                     <li *ngFor="let link of parseLista(publicacion.links_referencia)">
-                        <a [href]="link" target="_blank">{{ link }}</a>
+                        <a (click)="abrirEnlaceExterno(link)" style="cursor: pointer;">{{ link }}</a>
                     </li>
                 </ul>
             </div>
@@ -209,7 +209,7 @@
                 </h3>
                 <ul class="links-list">
                     <li *ngFor="let video of parseLista(publicacion.videos_url)">
-                        <a [href]="video" target="_blank">{{ video }}</a>
+                        <a (click)="abrirEnlaceExterno(video)" style="cursor: pointer;">{{ video }}</a>
                     </li>
                 </ul>
             </div>

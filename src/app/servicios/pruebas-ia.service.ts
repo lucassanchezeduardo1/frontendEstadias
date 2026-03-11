@@ -4,6 +4,8 @@ import { Observable, from, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { StorageService } from './storage.service';
 
+import { environment } from '../../environments/environment';
+
 @Injectable({
     providedIn: 'root'
 })
@@ -12,7 +14,7 @@ export class PruebasIaService {
     private storage = inject(StorageService);
 
     // URL de nuestro backend (Proxy de IA seguro)
-    private readonly API_URL = 'http://localhost:3000/ai/examen';
+    private readonly API_URL = `${environment.apiUrl}/ai/examen`;
 
     constructor() { }
 

@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { UsuariosService } from './usuarios.service';
 import { Injectable, inject } from '@angular/core';
+import { environment } from '../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
@@ -9,7 +10,7 @@ import { Injectable, inject } from '@angular/core';
 export class FavoritosService {
     private http = inject(HttpClient);
     private usuariosService = inject(UsuariosService);
-    private readonly API_URL = 'http://localhost:3000/favoritos';
+    private readonly API_URL = `${environment.apiUrl}/favoritos`;
 
     constructor() { }
 

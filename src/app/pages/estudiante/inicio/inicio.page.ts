@@ -6,6 +6,8 @@ import { NavController, ToastController } from '@ionic/angular';
 import { FavoritosService } from '../../../servicios/favoritos.service';
 import { UsuariosService } from '../../../servicios/usuarios.service';
 import { Router } from '@angular/router';
+import { environment } from '../../../../environments/environment';
+import { Publicacion } from '../../../modelos/publicacion.interface';
 
 // Paleta de colores vibrantes para las tarjetas de categoría
 const CATEGORIA_COLORS = [
@@ -38,7 +40,7 @@ const CATEGORIA_ICONS = [
 })
 export class InicioPage implements OnInit {
 
-  readonly API_URL = 'http://localhost:3000';
+  readonly API_URL = environment.apiUrl;
 
   searchTerm: string = '';
 
@@ -49,8 +51,8 @@ export class InicioPage implements OnInit {
   categoriaSeleccionada: (Categoria & { color: string; icono: string }) | null = null;
 
   // Publicaciones
-  todasLasPublicaciones: any[] = [];
-  publicacionesFiltradas: any[] = [];
+  todasLasPublicaciones: Publicacion[] = [];
+  publicacionesFiltradas: Publicacion[] = [];
   favoritosIds: Set<number> = new Set();
   cargandoPublicaciones: boolean = true;
   errorPublicaciones: boolean = false;

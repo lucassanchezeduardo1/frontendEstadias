@@ -1,3 +1,5 @@
+import { Institucion } from './institucion.interface';
+
 export interface Investigador {
     id?: number;
     nombre: string;
@@ -20,4 +22,5 @@ export interface Investigador {
     updated_at?: Date;
     num_publicaciones?: number;
     num_eventos?: number;
+    institucion?: Institucion;
 }

@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { StorageService } from './storage.service';
 
+import { environment } from '../../environments/environment';
+
 @Injectable({
     providedIn: 'root'
 })
@@ -10,7 +12,7 @@ export class UsuariosService {
     private http = inject(HttpClient);
     private storage = inject(StorageService);
 
-    private readonly API_URL = 'http://localhost:3000';
+    private readonly API_URL = environment.apiUrl;
     private currentUser: any = null;
     public ready: Promise<void>;
 

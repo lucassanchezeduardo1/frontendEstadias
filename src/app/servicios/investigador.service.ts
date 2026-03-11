@@ -4,13 +4,15 @@ import { Observable } from 'rxjs';
 import { Investigador } from '../modelos/investigador.interface';
 import { StorageService } from './storage.service';
 
+import { environment } from '../../environments/environment';
+
 @Injectable({
     providedIn: 'root'
 })
 export class InvestigadorService {
     private http = inject(HttpClient);
     private storage = inject(StorageService);
-    private readonly API_URL = 'http://localhost:3000/investigador';
+    private readonly API_URL = `${environment.apiUrl}/investigador`;
     private currentInvestigador: Investigador | null = null;
     public ready: Promise<void>;
 

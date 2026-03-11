@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Administrador, AuthResponse } from '../modelos/administrador.interface';
 import { StorageService } from './storage.service';
+import { environment } from '../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
@@ -11,7 +12,7 @@ export class AutenticacionService {
     private http = inject(HttpClient);
     private storage = inject(StorageService);
 
-    private readonly API_URL = 'http://localhost:3000';
+    private readonly API_URL = environment.apiUrl;
     private currentAdmin: Administrador | null = null;
     private currentToken: string | null = null;
 

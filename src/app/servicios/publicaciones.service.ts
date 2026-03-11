@@ -1,13 +1,15 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
+import { Publicacion } from '../modelos/publicacion.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PublicacionesService {
   private http = inject(HttpClient);
-  private readonly API_URL = 'http://localhost:3000/publicacion';
+  private readonly API_URL = `${environment.apiUrl}/publicacion`;
 
   constructor() { }
 
@@ -38,16 +40,16 @@ export class PublicacionesService {
     return this.http.post(this.API_URL, formData);
   }
 
-  getMisPublicaciones(investigadorId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.API_URL}/investigador/${investigadorId}`);
+  getMisPublicaciones(investigadorId: number): Observable<Publicacion[]> {
+    return this.http.get<Publicacion[]>(`${this.API_URL}/investigador/${investigadorId}`);
   }
 
-  getPublicaciones(): Observable<any[]> {
-    return this.http.get<any[]>(this.API_URL);
+  getPublicaciones(): Observable<Publicacion[]> {
+    return this.http.get<Publicacion[]>(this.API_URL);
   }
 
-  getPublicacion(id: number): Observable<any> {
-    return this.http.get<any>(`${this.API_URL}/${id}`);
+  getPublicacion(id: number): Observable<Publicacion> {
+    return this.http.get<Publicacion>(`${this.API_URL}/${id}`);
   }
 
   actualizarPublicacion(id: number, datos: any): Observable<any> {

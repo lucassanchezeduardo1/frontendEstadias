@@ -7,6 +7,8 @@ import { PruebasIaService } from '../../../servicios/pruebas-ia.service';
 import { NavController, ToastController, ModalController, AlertController } from '@ionic/angular';
 import { ExamenIaComponent } from './examen-ia/examen-ia.component';
 import { environment } from '../../../../environments/environment';
+import { Publicacion } from '../../../modelos/publicacion.interface';
+import { Browser } from '@capacitor/browser';
 
 @Component({
     selector: 'app-detalle-publicacion',
@@ -16,7 +18,7 @@ import { environment } from '../../../../environments/environment';
 })
 export class DetallePublicacionPage implements OnInit, OnDestroy {
 
-    publicacion: any = null;
+    publicacion: Publicacion | null = null;
     nuevoComentario: string = '';
     usuarioActual: any = null;
     cargando: boolean = true;
@@ -74,7 +76,7 @@ export class DetallePublicacionPage implements OnInit, OnDestroy {
 
 
     async enviarComentario() {
-        if (!this.nuevoComentario.trim()) return;
+        if (!this.nuevoComentario.trim() || !this.publicacion) return;
         if (!this.usuarioActual) {
             this.mostrarToast('Debes iniciar sesión para comentar', 'warning');
             return;
@@ -139,13 +141,19 @@ export class DetallePublicacionPage implements OnInit, OnDestroy {
                     handler: async (data) => {
                         if (data.codigo === 'Ab3j4') {
                             // Incrementar contador en el backend
-                            this.publicacionesService.incrementarDescargas(this.publicacion.id).subscribe();
+                            this.publicacionesService.incrementarDescargas(this.publicacion!.id).subscribe();
 
-                            // Abrir PDF con el código como parámetro para la validación del backend
-                            const url = `${this.API_URL}/publicacion/${this.publicacion.id}/pdf?codigo=${data.codigo}`;
-                            window.open(url, '_blank');
-
-                            this.mostrarToast('Acceso concedido', 'success');
+                            // Abrir PDF con Capacitor Browser
+                            const url = `${this.API_URL}/publicacion/${this.publicacion!.id}/pdf?codigo=${data.codigo}`;
+                            
+                            try {
+                                await Browser.open({ url });
+                                this.mostrarToast('Abriendo documento...', 'success');
+                            } catch (error) {
+                                console.error('Error al abrir el navegador:', error);
+                                // Fallback a window.open si algo falla
+                                window.open(url, '_blank');
+                            }
                             return true;
                         } else {
                             this.mostrarToast('Código incorrecto. No tienes permiso para descargar este archivo.', 'danger');
@@ -157,6 +165,16 @@ export class DetallePublicacionPage implements OnInit, OnDestroy {
         });
 
         await alert.present();
+    }
+
+    async abrirEnlaceExterno(url: string) {
+        if (!url) return;
+        try {
+            await Browser.open({ url });
+        } catch (error) {
+            console.error('Error al abrir enlace:', error);
+            window.open(url, '_blank');
+        }
     }
 
     /** Convierte un string separado por comas en un array de strings limpios */

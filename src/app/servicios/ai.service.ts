@@ -16,7 +16,7 @@ export class AiService {
     private http = inject(HttpClient);
 
     // URL de nuestro backend (Proxy de IA seguro)
-    private readonly API_URL = 'http://localhost:3000/ai/sintesis';
+    private readonly API_URL = `${environment.apiUrl}/ai/sintesis`;
 
     constructor() { }
 
