@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { UsuariosService } from '../../../servicios/usuarios.service';
 import { ToastController, LoadingController, AlertController } from '@ionic/angular';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-perfil',
@@ -23,7 +24,7 @@ export class PerfilPage implements OnInit {
   photoPreview: string | null = null;
 
   // URL base para las fotos
-  readonly API_URL = 'http://localhost:3000';
+  readonly API_URL = environment.apiUrl;
 
   constructor() { }
 

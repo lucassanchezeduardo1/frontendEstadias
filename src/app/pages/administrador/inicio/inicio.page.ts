@@ -6,6 +6,7 @@ import { UsuariosService } from '../../../servicios/usuarios.service';
 import { Investigador } from '../../../modelos/investigador.interface';
 import { ToastController, AlertController, LoadingController } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-inicio',
@@ -38,6 +39,9 @@ export class InicioPage implements OnInit {
   // Modal Detalles
   selectedResearcher: Investigador | null = null;
   isModalOpen = false;
+
+  // URL base del API para imágenes
+  readonly API_URL = `${environment.apiUrl}/investigador`;
 
   // Cache de Instituciones
   instituciones: any[] = [];
@@ -88,15 +92,32 @@ export class InicioPage implements OnInit {
   }
 
 
-  getProfileImage(buffer: any): string {
-    if (!buffer) return 'assets/images/default-avatar.png'; // Imagen por defecto
+  getProfileImage(investigador: Investigador): string {
+    const foto = investigador.foto_perfil;
+    if (!foto) return 'assets/images/default-avatar.png';
+
     // Si viene como buffer byte array e.g. { type: 'Buffer', data: [...] }
-    if (buffer.type === 'Buffer' && buffer.data) {
-      const binary = String.fromCharCode(...buffer.data);
+    if (foto && typeof foto === 'object' && (foto as any).type === 'Buffer' && (foto as any).data) {
+      const binary = String.fromCharCode(...(foto as any).data);
       return `data:image/jpeg;base64,${btoa(binary)}`;
     }
-    // Si ya es un string base64 o url
-    return buffer;
+
+    // Si ya es una URL completa o datos base64
+    if (typeof foto === 'string' && (foto.startsWith('http') || foto.startsWith('data:'))) {
+      return foto;
+    }
+
+    // Para cualquier otro caso (ID de Google Drive, string corto, etc.)
+    // delegamos al endpoint del backend que sabe cómo obtener la foto
+    if (investigador.id) {
+      return `${environment.apiUrl}/investigador/${investigador.id}/foto`;
+    }
+
+    return 'assets/images/default-avatar.png';
+  }
+
+  onImageError(event: Event) {
+    (event.target as HTMLImageElement).src = 'assets/images/default-avatar.png';
   }
 
   async cargarDatosDashboard() {

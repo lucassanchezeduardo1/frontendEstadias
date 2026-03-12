@@ -1,5 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { EventosService } from '../../../servicios/eventos.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-eventos',
@@ -13,7 +14,7 @@ export class EventosPage implements OnInit {
 
   eventos: any[] = [];
   cargando: boolean = true;
-  readonly API_URL = 'http://localhost:3000';
+  readonly API_URL = environment.apiUrl;
 
   constructor() { }
 

@@ -1,6 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { InvestigadorService } from '../../../servicios/investigador.service';
 import { NavController, AlertController, ToastController } from '@ionic/angular';
+import { environment } from '../../../../environments/environment';
 
 @Component({
     selector: 'app-lista-investigadores',
@@ -19,7 +20,7 @@ export class ListaInvestigadoresPage implements OnInit {
     investigadoresFiltrados: any[] = [];
     cargando: boolean = true;
     termino: string = '';
-    readonly API_URL = 'http://localhost:3000';
+    readonly API_URL = environment.apiUrl;
 
     constructor() { }
 

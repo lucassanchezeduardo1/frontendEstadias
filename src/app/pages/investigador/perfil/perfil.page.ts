@@ -4,6 +4,7 @@ import { InvestigadorService } from '../../../servicios/investigador.service';
 import { ToastController, LoadingController, AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Investigador } from '../../../modelos/investigador.interface';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-perfil',
@@ -24,7 +25,7 @@ export class PerfilPage implements OnInit {
   profileForm!: FormGroup;
   selectedImg: File | null = null;
   imgPreview: string | null = null;
-  apiUrl = 'http://localhost:3000/investigador';
+  apiUrl = `${environment.apiUrl}/investigador`;
   defaultAvatar = 'https://ionicframework.com/docs/img/demos/avatar.svg';
 
   constructor() { }

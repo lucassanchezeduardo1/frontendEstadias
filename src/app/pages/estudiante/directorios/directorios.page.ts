@@ -1,6 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { InvestigadorService } from '../../../servicios/investigador.service';
 import { Router } from '@angular/router';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-directorios',
@@ -15,7 +16,7 @@ export class DirectoriosPage implements OnInit {
 
   investigadores: any[] = [];
   loading: boolean = true;
-  readonly API_URL = 'http://localhost:3000/investigador';
+  readonly API_URL = `${environment.apiUrl}/investigador`;
 
   constructor() { }
 

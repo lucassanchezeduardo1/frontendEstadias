@@ -4,6 +4,7 @@ import { EventosService } from '../../../servicios/eventos.service';
 import { CategoriasService } from '../../../servicios/categorias.service';
 import { ToastController, LoadingController } from '@ionic/angular';
 import { Router, ActivatedRoute } from '@angular/router';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-eventos-edit',
@@ -95,7 +96,7 @@ export class EventosEditPage implements OnInit {
           ponentes: evento.ponentes,
           publico_objetivo: evento.publico_objetivo
         });
-        this.imgPreview = `http://localhost:3000/eventos/${id}/imagen`;
+        this.imgPreview = `${environment.apiUrl}/eventos/${id}/imagen`;
       },
       error: (err) => {
         console.error('Error al cargar evento', err);

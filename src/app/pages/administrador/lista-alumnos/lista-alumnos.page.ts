@@ -1,6 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { UsuariosService } from '../../../servicios/usuarios.service';
 import { NavController, AlertController, ToastController } from '@ionic/angular';
+import { environment } from '../../../../environments/environment';
 
 @Component({
     selector: 'app-lista-alumnos',
@@ -19,7 +20,7 @@ export class ListaAlumnosPage implements OnInit {
     alumnosFiltrados: any[] = [];
     cargando: boolean = true;
     termino: string = '';
-    readonly API_URL = 'http://localhost:3000';
+    readonly API_URL = environment.apiUrl;
 
     constructor() { }
 

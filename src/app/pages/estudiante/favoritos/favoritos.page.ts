@@ -3,6 +3,7 @@ import { FavoritosService } from '../../../servicios/favoritos.service';
 import { Router } from '@angular/router';
 import { ToastController, AlertController } from '@ionic/angular';
 import { UsuariosService } from '../../../servicios/usuarios.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
     selector: 'app-favoritos',
@@ -19,7 +20,7 @@ export class FavoritosPage implements OnInit {
 
     favoritos: any[] = [];
     cargando: boolean = true;
-    apiUrl = 'http://localhost:3000/publicacion';
+    apiUrl = `${environment.apiUrl}/publicacion`;
 
     constructor() { }
 

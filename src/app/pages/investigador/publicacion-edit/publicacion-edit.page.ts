@@ -4,6 +4,7 @@ import { PublicacionesService } from '../../../servicios/publicaciones.service';
 import { CategoriasService } from '../../../servicios/categorias.service';
 import { ToastController, LoadingController, AlertController } from '@ionic/angular';
 import { Router, ActivatedRoute } from '@angular/router';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-publicacion-edit',
@@ -74,7 +75,7 @@ export class PublicacionEditPage implements OnInit {
           videos_url: pub.videos_url
         });
         // Vista previa de la imagen actual
-        this.imgPreview = `http://localhost:3000/publicacion/${id}/imagen`;
+        this.imgPreview = `${environment.apiUrl}/publicacion/${id}/imagen`;
       },
       error: (err) => {
         console.error('Error al cargar la investigación', err);

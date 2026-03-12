@@ -42,9 +42,10 @@
     <div class="researcher-card" *ngFor="let req of researcherRequests">
       <div class="card-header" (click)="viewDetails(req)" style="cursor: pointer;">
         <div class="initials-avatar">
-          <img *ngIf="req.foto_perfil" [src]="getProfileImage(req.foto_perfil)"
+          <img *ngIf="req.id" [src]="API_URL + '/' + req.id + '/foto'"
+            onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='inline';"
             style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
-          <span *ngIf="!req.foto_perfil">{{ req.nombre.substring(0,1) }}{{ req.apellidos.substring(0,1) }}</span>
+          <span [style.display]="req.id ? 'none' : 'inline'">{{ req.nombre.substring(0,1) }}{{ req.apellidos.substring(0,1) }}</span>
         </div>
         <div class="researcher-info">
           <h3>{{ req.nombre }} {{ req.apellidos }}</h3>
@@ -132,7 +133,8 @@
 
         <div class="profile-header">
           <div class="profile-avatar-large">
-            <img [src]="getProfileImage(selectedResearcher.foto_perfil)" alt="Foto Perfil">
+            <img [src]="API_URL + '/' + selectedResearcher.id + '/foto'" alt="Foto Perfil"
+              onerror="this.src='assets/images/default-avatar.png'">
           </div>
           <h2>{{ selectedResearcher.nombre }} {{ selectedResearcher.apellidos }}</h2>
           <p class="subtitle">{{ selectedResearcher.grado_academico }}</p>

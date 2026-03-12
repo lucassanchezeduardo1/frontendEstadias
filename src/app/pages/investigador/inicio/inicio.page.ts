@@ -5,6 +5,7 @@ import { InvestigadorService } from '../../../servicios/investigador.service';
 import { AlertController, ToastController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { ModalComentariosComponent } from './componentes/modal-comentarios/modal-comentarios.component';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-inicio',
@@ -77,11 +78,11 @@ export class InicioPage implements OnInit {
   }
 
   getImagenUrl(pubId: number) {
-    return `http://localhost:3000/publicacion/${pubId}/imagen`;
+    return `${environment.apiUrl}/publicacion/${pubId}/imagen`;
   }
 
   getEventoImagenUrl(eventoId: number) {
-    return `http://localhost:3000/eventos/${eventoId}/imagen`;
+    return `${environment.apiUrl}/eventos/${eventoId}/imagen`;
   }
 
   editPublication(pub: any) {
