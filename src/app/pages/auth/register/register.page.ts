@@ -118,7 +118,16 @@ export class RegisterPage implements OnInit {
             error: (err) => {
                 loading.dismiss();
                 console.error('Error registro estudiante:', err);
-                const msg = err.error?.message || 'Error al registrar. Verifica tus datos.';
+                
+                let msg = 'Error al registrar. Verifica tus datos.';
+                if (err.error?.message) {
+                    if (Array.isArray(err.error.message)) {
+                        msg = err.error.message.join('\n');
+                    } else {
+                        msg = err.error.message;
+                    }
+                }
+                
                 this.showToast(msg, 'danger');
             }
         });
@@ -130,8 +139,16 @@ export class RegisterPage implements OnInit {
             return;
         }
 
-        if (!this.newInvestigador.nombre || !this.newInvestigador.email || !this.newInvestigador.password) {
-            this.showToast('Por favor completa los campos obligatorios', 'warning');
+        // Validación básica en frontend para evitar peticiones innecesarias
+        const { nombre, apellidos, grado_academico, cargo_actual, direccion_oficina, horario_atencion, email, password, matricula, institucion_id, descripcion_trayectoria, areas_investigacion } = this.newInvestigador;
+
+        if (!nombre || !apellidos || !grado_academico || !cargo_actual || !direccion_oficina || !horario_atencion || !email || !password || !matricula || !institucion_id || !descripcion_trayectoria || !areas_investigacion) {
+            this.showToast('Por favor completa todos los campos del formulario', 'warning');
+            return;
+        }
+
+        if (descripcion_trayectoria.length < 50) {
+            this.showToast('La descripción de la trayectoria debe tener al menos 50 caracteres', 'warning');
             return;
         }
 
@@ -147,7 +164,16 @@ export class RegisterPage implements OnInit {
             error: (err) => {
                 loading.dismiss();
                 console.error('Error registro:', err);
-                const msg = err.error?.message || 'Error al registrar. Verifica tus datos.';
+                
+                let msg = 'Error al registrar. Verifica tus datos.';
+                if (err.error?.message) {
+                    if (Array.isArray(err.error.message)) {
+                        msg = err.error.message.join('\n');
+                    } else {
+                        msg = err.error.message;
+                    }
+                }
+                
                 this.showToast(msg, 'danger');
             }
         });

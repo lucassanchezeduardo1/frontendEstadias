@@ -33,9 +33,11 @@ export class InvestigadorService {
     registrar(datos: any, foto: File): Observable<any> {
         const formData = new FormData();
 
-        // Agregamos todos los campos al FormData
+        // Agregamos solo los campos que tienen valor
         Object.keys(datos).forEach(key => {
-            formData.append(key, datos[key]);
+            if (datos[key] !== null && datos[key] !== undefined && datos[key] !== '') {
+                formData.append(key, datos[key]);
+            }
         });
 
         // Agregamos la foto
@@ -79,7 +81,7 @@ export class InvestigadorService {
     update(id: number, datos: any, foto?: File): Observable<any> {
         const formData = new FormData();
         Object.keys(datos).forEach(key => {
-            if (datos[key] !== null && datos[key] !== undefined) {
+            if (datos[key] !== null && datos[key] !== undefined && datos[key] !== '') {
                 formData.append(key, datos[key]);
             }
         });
