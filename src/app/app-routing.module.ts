@@ -15,21 +15,21 @@ const routes: Routes = [
     path: 'register',
     loadChildren: () => import('./pages/auth/register/register.module').then(m => m.RegisterPageModule)
   },
-  {
-    path: 'tabs',
-    loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule)
-  },
+  // {
+  //   path: 'tabs',
+  //   loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule)
+  // },
   {
     path: 'investigador',
-    loadChildren: () => import('./pages/investigador/investigador.module').then( m => m.InvestigadorPageModule)
+    loadChildren: () => import('./pages/investigador/investigador.module').then(m => m.InvestigadorPageModule)
   },
   {
     path: 'estudiante',
-    loadChildren: () => import('./pages/estudiante/estudiante.module').then( m => m.EstudiantePageModule)
+    loadChildren: () => import('./pages/estudiante/estudiante.module').then(m => m.EstudiantePageModule)
   },
   {
     path: 'administrador',
-    loadChildren: () => import('./pages/administrador/administrador.module').then( m => m.AdministradorPageModule)
+    loadChildren: () => import('./pages/administrador/administrador.module').then(m => m.AdministradorPageModule)
   },
 
 ];
