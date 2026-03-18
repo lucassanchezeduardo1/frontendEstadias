@@ -80,7 +80,7 @@ export class AiService {
                 let message = 'Error al generar la síntesis';
 
                 if (err.status === 0) {
-                    message = 'No se pudo conectar con el servidor backend. Asegúrate de que esté encendido (Puerto 3000).';
+                    message = 'No se pudo conectar con el servidor backend. Verifica tu conexión o el estado del servidor.';
                 } else if (err.error && err.error.message) {
                     message = `Error del servidor: ${err.error.message}`;
                 }
