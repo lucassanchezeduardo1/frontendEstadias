@@ -25,6 +25,9 @@ export class EventosEditPage implements OnInit {
   categorias: any[] = [];
   eventoId: number | null = null;
   imgPreview: string | null = null;
+  
+  selectedImg: File | null = null;
+  fileName: string = '';
 
   constructor() {
     this.initForm();
@@ -59,6 +62,19 @@ export class EventosEditPage implements OnInit {
     if (invUser) {
       const user = JSON.parse(invUser);
       this.eventoForm.patchValue({ investigador_organizador_id: user.id });
+    }
+  }
+
+  onImgSelected(event: any) {
+    const file = event.target.files[0];
+    if (file && file.type.startsWith('image/')) {
+      const maxSize = 5 * 1024 * 1024;
+      if (file.size > maxSize) {
+        this.showToast('La imagen no puede superar los 5MB', 'warning');
+        return;
+      }
+      this.selectedImg = file;
+      this.fileName = file.name;
     }
   }
 
@@ -118,7 +134,7 @@ export class EventosEditPage implements OnInit {
     });
     await loading.present();
 
-    this.eventosService.actualizarEvento(this.eventoId!, this.eventoForm.value).subscribe({
+    this.eventosService.actualizarEvento(this.eventoId!, this.eventoForm.value, this.selectedImg || undefined).subscribe({
       next: () => {
         loading.dismiss();
         this.showToast('¡Evento actualizado con éxito!', 'success');

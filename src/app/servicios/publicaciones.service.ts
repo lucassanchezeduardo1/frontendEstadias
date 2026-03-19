@@ -53,9 +53,26 @@ export class PublicacionesService {
     return this.http.get<Publicacion>(`${this.API_URL}/${id}`);
   }
 
-  actualizarPublicacion(id: number, datos: any): Observable<any> {
-    return this.http.patch(`${this.API_URL}/${id}`, datos);
+  actualizarPublicacion(id: number, datos: any, imgPortada?: File, imgContenido?: File): Observable<any> {
+    // Si no hay archivos, enviamos JSON normal
+    if (!imgPortada && !imgContenido) {
+      return this.http.patch(`${this.API_URL}/${id}`, datos);
+    }
+
+    // Si hay archivos, usamos FormData
+    const formData = new FormData();
+    Object.keys(datos).forEach(key => {
+      if (datos[key] !== null && datos[key] !== undefined) {
+        formData.append(key, datos[key]);
+      }
+    });
+
+    if (imgPortada) formData.append('img_portada', imgPortada);
+    if (imgContenido) formData.append('img_contenido', imgContenido);
+
+    return this.http.patch(`${this.API_URL}/${id}`, formData);
   }
+
 
   eliminarPublicacion(id: number): Observable<any> {
     return this.http.delete(`${this.API_URL}/${id}`);

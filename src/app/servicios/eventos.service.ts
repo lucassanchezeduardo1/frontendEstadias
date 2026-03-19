@@ -47,9 +47,25 @@ export class EventosService {
         return this.http.get<any>(`${this.API_URL}/${id}`);
     }
 
-    actualizarEvento(id: number, datos: any): Observable<any> {
-        return this.http.patch(`${this.API_URL}/${id}`, datos);
+    actualizarEvento(id: number, datos: any, imagen?: File): Observable<any> {
+        // Si no hay imagen, enviamos JSON normal
+        if (!imagen) {
+            return this.http.patch(`${this.API_URL}/${id}`, datos);
+        }
+
+        // Si hay imagen, usamos FormData
+        const formData = new FormData();
+        Object.keys(datos).forEach(key => {
+            if (datos[key] !== null && datos[key] !== undefined) {
+                formData.append(key, datos[key]);
+            }
+        });
+
+        formData.append('imagen', imagen);
+
+        return this.http.patch(`${this.API_URL}/${id}`, formData);
     }
+
 
     eliminarEvento(id: number): Observable<any> {
         return this.http.delete(`${this.API_URL}/${id}`);

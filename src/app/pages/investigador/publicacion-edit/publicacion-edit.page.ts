@@ -26,6 +26,11 @@ export class PublicacionEditPage implements OnInit {
   categorias: any[] = [];
   publicacionId: number | null = null;
   imgPreview: string | null = null;
+  
+  portadaFile: File | null = null;
+  portadaName: string = '';
+  contenidoFile: File | null = null;
+  contenidoName: string = '';
 
   constructor() {
     this.initForm();
@@ -59,6 +64,22 @@ export class PublicacionEditPage implements OnInit {
       next: (res) => this.categorias = res,
       error: (err) => console.error('Error al cargar categorías', err)
     });
+  }
+
+  onPortadaSelected(event: any) {
+    const file = event.target.files[0];
+    if (file && file.type.startsWith('image/')) {
+      this.portadaFile = file;
+      this.portadaName = file.name;
+    }
+  }
+
+  onContenidoSelected(event: any) {
+    const file = event.target.files[0];
+    if (file && file.type.startsWith('image/')) {
+      this.contenidoFile = file;
+      this.contenidoName = file.name;
+    }
   }
 
   cargarPublicacion(id: number) {
@@ -99,7 +120,7 @@ export class PublicacionEditPage implements OnInit {
     // Solo enviamos los campos que tienen valor
     const dataToUpdate = { ...this.publicacionForm.value };
 
-    this.publicacionesService.actualizarPublicacion(this.publicacionId!, dataToUpdate).subscribe({
+    this.publicacionesService.actualizarPublicacion(this.publicacionId!, dataToUpdate, this.portadaFile || undefined, this.contenidoFile || undefined).subscribe({
       next: () => {
         loading.dismiss();
         this.showToast('¡Investigación actualizada con éxito!', 'success');

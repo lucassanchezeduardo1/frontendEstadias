@@ -80,7 +80,17 @@
         <div class="preview-box">
           <img [src]="imgPreview" alt="Banner actual">
         </div>
-        <p class="helper-text">Para cambiar la imagen, crea un nuevo evento.</p>
+      </div>
+
+      <!-- Reemplazar imagen -->
+      <div class="form-group">
+        <ion-label position="stacked">Reemplazar Banner (Opcional)</ion-label>
+        <div class="upload-btn-container" (click)="imgInput.click()" [class.has-file]="fileName">
+          <ion-icon [name]="fileName ? 'checkmark-circle-outline' : 'cloud-upload-outline'"></ion-icon>
+          <span>{{ fileName || 'Seleccionar nueva imagen' }}</span>
+          <input type="file" #imgInput (change)="onImgSelected($event)" accept="image/*" hidden>
+        </div>
+        <p class="helper-text">Nota: Al subir una nueva imagen, la anterior se borrará permanentemente de Google Drive.</p>
       </div>
 
       <div class="submit-container">
