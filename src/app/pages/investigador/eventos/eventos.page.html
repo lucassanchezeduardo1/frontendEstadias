@@ -18,19 +18,19 @@
         <ion-input type="text" formControlName="titulo"
           placeholder="Ej. Congreso Anual de Ciencias Médicas"></ion-input>
         <div class="error-msg" *ngIf="eventoForm.get('titulo')?.touched && eventoForm.get('titulo')?.invalid">
-          El título debe tener entre 10 y 255 caracteres
+          El título debe tener mas de 10 caracteres
         </div>
       </div>
 
       <div class="form-group">
         <ion-label position="stacked">Imagen del Evento <span class="required">*</span></ion-label>
         <input type="file" #imgInput (change)="onImgSelected($event)" accept="image/*" hidden>
-        <div class="upload-box" (click)="imgInput.click()" [class.has-preview]="imgPreview">
-          <div *ngIf="!imgPreview" class="upload-content">
-            <ion-icon name="image-outline"></ion-icon>
-            <span>Seleccionar Banner del Evento</span>
+        <div class="upload-box" (click)="imgInput.click()" [class.has-file]="fileName">
+          <div class="upload-content">
+            <ion-icon [name]="fileName ? 'document-attach-outline' : 'image-outline'"></ion-icon>
+            <span *ngIf="!fileName">Seleccionar Banner del Evento</span>
+            <span *ngIf="fileName" class="file-name">{{ fileName }}</span>
           </div>
-          <img *ngIf="imgPreview" [src]="imgPreview" class="preview-img">
         </div>
       </div>
 

@@ -50,7 +50,10 @@ export class CategoriasPage implements OnInit {
   editCategory(cat: Categoria) {
     this.isEditing = true;
     this.selectedId = cat.id || null;
-    this.newCategory = { ...cat };
+    this.newCategory = {
+      nombre: cat.nombre,
+      descripcion: cat.descripcion
+    };
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -61,7 +64,9 @@ export class CategoriasPage implements OnInit {
   }
 
   async saveCategory() {
-    if (!this.newCategory.nombre || !this.newCategory.descripcion) {
+    const { nombre, descripcion } = this.newCategory;
+    
+    if (!nombre || !descripcion) {
       this.showToast('Todos los campos son obligatorios', 'warning');
       return;
     }
@@ -71,35 +76,28 @@ export class CategoriasPage implements OnInit {
     });
     await loading.present();
 
-    if (this.isEditing && this.selectedId) {
-      // ACTUALIZAR
-      this.catService.updateCategoria(this.selectedId, this.newCategory).subscribe({
-        next: () => {
-          loading.dismiss();
-          this.showToast('Categoría actualizada con éxito', 'success');
-          this.cancelEdit();
-          this.cargarCategorias();
-        },
-        error: () => {
-          loading.dismiss();
-          this.showToast('Error al actualizar', 'danger');
-        }
-      });
-    } else {
-      // CREAR
-      this.catService.createCategoria(this.newCategory).subscribe({
-        next: () => {
-          loading.dismiss();
-          this.showToast('Categoría registrada con éxito', 'success');
-          this.resetForm();
-          this.cargarCategorias();
-        },
-        error: (err) => {
-          loading.dismiss();
-          this.showToast('Error al guardar', 'danger');
-        }
-      });
-    }
+    // Limpiamos el objeto para enviar solo lo que el DTO espera
+    const payload = { nombre, descripcion };
+
+    const operation = (this.isEditing && this.selectedId)
+      ? this.catService.updateCategoria(this.selectedId, payload)
+      : this.catService.createCategoria(payload);
+
+    operation.subscribe({
+      next: () => {
+        loading.dismiss();
+        const msg = this.isEditing ? 'Categoría actualizada con éxito' : 'Categoría registrada con éxito';
+        this.showToast(msg, 'success');
+        this.cancelEdit();
+        this.cargarCategorias();
+      },
+      error: (err) => {
+        loading.dismiss();
+        console.error('Error:', err);
+        const errMsg = err.error?.message || 'Error al procesar la solicitud';
+        this.showToast(Array.isArray(errMsg) ? errMsg[0] : errMsg, 'danger');
+      }
+    });
   }
 
 
@@ -114,9 +112,15 @@ export class CategoriasPage implements OnInit {
         {
           text: 'Eliminar',
           handler: () => {
-            this.catService.deleteCategoria(id).subscribe(() => {
-              this.showToast('Categoría eliminada', 'success');
-              this.cargarCategorias();
+            this.catService.deleteCategoria(id).subscribe({
+              next: () => {
+                this.showToast('Categoría eliminada', 'success');
+                this.cargarCategorias();
+              },
+              error: (err) => {
+                const msg = err.error?.message || 'Error al eliminar';
+                this.showToast(msg, 'danger');
+              }
             });
           }
         }

@@ -24,7 +24,7 @@ export class EventosPage implements OnInit {
   eventoForm!: FormGroup;
   categorias: any[] = [];
   selectedImg: File | null = null;
-  imgPreview: string | null = null;
+  fileName: string | null = null;
 
   constructor() {
     this.initForm();
@@ -75,11 +75,7 @@ export class EventosPage implements OnInit {
         return;
       }
       this.selectedImg = file;
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.imgPreview = reader.result as string;
-      };
-      reader.readAsDataURL(file);
+      this.fileName = file.name;
     } else {
       this.showToast('Por favor selecciona una imagen válida', 'warning');
     }
@@ -117,7 +113,7 @@ export class EventosPage implements OnInit {
     this.initForm();
     this.syncUser();
     this.selectedImg = null;
-    this.imgPreview = null;
+    this.fileName = null;
   }
 
   async showToast(message: string, color: string) {

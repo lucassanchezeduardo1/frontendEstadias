@@ -52,8 +52,8 @@
       </div>
 
       <div class="form-group">
-        <ion-label position="stacked">Síntesis IA (Solo Lectura)</ion-label>
-        <ion-textarea rows="4" formControlName="sintesis_ia" [readonly]="true" class="readonly-text"></ion-textarea>
+        <ion-label position="stacked">Síntesis Generada por IA</ion-label>
+        <ion-textarea rows="6" formControlName="sintesis_ia" placeholder="Puedes ajustar la síntesis generada por la IA aquí..."></ion-textarea>
       </div>
 
       <div class="section-title">
@@ -76,8 +76,7 @@
         <div class="preview-box">
           <img [src]="imgPreview" alt="Portada actual">
         </div>
-        <p class="helper-text">Para cambiar la imagen o el PDF, debes crear una nueva publicación (funcionalidad de
-          reemplazo masivo no disponible en esta edición rápida).</p>
+        <p class="helper-text">Para cambiar la imagen o el PDF, debes crear una nueva publicación.</p>
       </div>
 
       <div class="submit-container">

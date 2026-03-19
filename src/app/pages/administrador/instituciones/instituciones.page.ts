@@ -55,9 +55,13 @@ export class InstitucionesPage implements OnInit {
   editInstitution(inst: Institucion) {
     this.isEditing = true;
     this.selectedId = inst.id || null;
-    // Clonamos el objeto para no editar la lista directamente antes de guardar
-    this.newInstitution = { ...inst };
-    // Scroll suave hacia arriba para que el usuario vea el formulario
+    this.newInstitution = {
+      nombre: inst.nombre,
+      tipo_institucion: inst.tipo_institucion,
+      pais: inst.pais,
+      estado: inst.estado,
+      direccion: inst.direccion
+    };
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -69,44 +73,39 @@ export class InstitucionesPage implements OnInit {
 
 
   async saveInstitution() {
-    if (!this.newInstitution.nombre || !this.newInstitution.tipo_institucion ||
-      !this.newInstitution.pais || !this.newInstitution.estado || !this.newInstitution.direccion) {
+    const { nombre, tipo_institucion, pais, estado, direccion } = this.newInstitution;
+    
+    if (!nombre || !tipo_institucion || !pais || !estado || !direccion) {
       this.showToast('Todos los campos son obligatorios', 'warning');
       return;
     }
 
-    const loading = await this.loadingCtrl.create({ message: this.isEditing ? 'Actualizando...' : 'Guardando...' });
+    const loading = await this.loadingCtrl.create({
+      message: this.isEditing ? 'Actualizando...' : 'Guardando...'
+    });
     await loading.present();
 
-    if (this.isEditing && this.selectedId) {
-      // ACTUALIZAR
-      this.instService.updateInstitucion(this.selectedId, this.newInstitution).subscribe({
-        next: () => {
-          loading.dismiss();
-          this.showToast('Institución actualizada con éxito', 'success');
-          this.cancelEdit();
-          this.cargarInstituciones();
-        },
-        error: () => {
-          loading.dismiss();
-          this.showToast('Error al actualizar', 'danger');
-        }
-      });
-    } else {
-      // CREAR
-      this.instService.createInstitucion(this.newInstitution).subscribe({
-        next: () => {
-          loading.dismiss();
-          this.showToast('Institución registrada con éxito', 'success');
-          this.resetForm();
-          this.cargarInstituciones();
-        },
-        error: (err) => {
-          loading.dismiss();
-          this.showToast('Error al guardar', 'danger');
-        }
-      });
-    }
+    const payload = { nombre, tipo_institucion, pais, estado, direccion };
+
+    const operation = (this.isEditing && this.selectedId)
+      ? this.instService.updateInstitucion(this.selectedId, payload)
+      : this.instService.createInstitucion(payload);
+
+    operation.subscribe({
+      next: () => {
+        loading.dismiss();
+        const msg = this.isEditing ? 'Institución actualizada con éxito' : 'Institución registrada con éxito';
+        this.showToast(msg, 'success');
+        this.cancelEdit();
+        this.cargarInstituciones();
+      },
+      error: (err) => {
+        loading.dismiss();
+        console.error('Error Api:', err);
+        const errMsg = err.error?.message || 'Error al procesar la solicitud';
+        this.showToast(Array.isArray(errMsg) ? errMsg[0] : errMsg, 'danger');
+      }
+    });
   }
 
 
@@ -121,9 +120,15 @@ export class InstitucionesPage implements OnInit {
         {
           text: 'Eliminar',
           handler: () => {
-            this.instService.deleteInstitution(id).subscribe(() => {
-              this.showToast('Institución eliminada', 'success');
-              this.cargarInstituciones();
+            this.instService.deleteInstitution(id).subscribe({
+              next: () => {
+                this.showToast('Institución eliminada', 'success');
+                this.cargarInstituciones();
+              },
+              error: (err) => {
+                const msg = err.error?.message || 'Error al eliminar';
+                this.showToast(msg, 'danger');
+              }
             });
           }
         }
