@@ -9,6 +9,7 @@ import { ExamenIaComponent } from './examen-ia/examen-ia.component';
 import { environment } from '../../../../environments/environment';
 import { Publicacion } from '../../../modelos/publicacion.interface';
 import { Browser } from '@capacitor/browser';
+import { TextToSpeech } from '@capacitor-community/text-to-speech';
 
 @Component({
     selector: 'app-detalle-publicacion',
@@ -26,10 +27,8 @@ export class DetallePublicacionPage implements OnInit, OnDestroy {
     error: boolean = false;
     readonly API_URL = environment.apiUrl;
 
-    // Para la lectura por voz
+    // Para la lectura por voz (Nativa con Capacitor)
     reproduciendo: 'investigador' | 'ia' | null = null;
-    synth = window.speechSynthesis;
-    utterance: SpeechSynthesisUtterance | null = null;
 
     constructor(
         private route: ActivatedRoute,
@@ -197,37 +196,35 @@ export class DetallePublicacionPage implements OnInit, OnDestroy {
         return `${this.API_URL}/publicacion/${id}/imagen-contenido`;
     }
 
-    /** Control de lectura por voz */
-    escucharSintesis(texto: string, tipo: 'investigador' | 'ia') {
+    /** Control de lectura por voz nativa */
+    async escucharSintesis(texto: string, tipo: 'investigador' | 'ia') {
         // Si ya se está reproduciendo lo mismo, detenerlo
         if (this.reproduciendo === tipo) {
-            this.synth.cancel();
+            await TextToSpeech.stop();
             this.reproduciendo = null;
             return;
         }
 
-        // Detener cualquier reproducción anterior
-        this.synth.cancel();
+        // Detener cualquier reproducción anterior antes de iniciar la nueva
+        await TextToSpeech.stop();
 
-        this.utterance = new SpeechSynthesisUtterance(texto);
-        this.utterance.lang = 'es-MX';
-        this.utterance.rate = 1;
-
-        // Intentar buscar una voz en español
-        const voces = this.synth.getVoices();
-        const vozEspañol = voces.find(v => v.lang.includes('es'));
-        if (vozEspañol) this.utterance.voice = vozEspañol;
-
-        this.utterance.onend = () => {
+        try {
+            this.reproduciendo = tipo;
+            await TextToSpeech.speak({
+                text: texto,
+                lang: 'es-MX',
+                rate: 1.0,
+                pitch: 1.0,
+                volume: 1.0,
+                category: 'ambient',
+            });
+            // Una vez que termina de hablar
             this.reproduciendo = null;
-        };
-
-        this.utterance.onerror = () => {
+        } catch (error) {
+            console.error('Error en TTS:', error);
             this.reproduciendo = null;
-        };
-
-        this.reproduciendo = tipo;
-        this.synth.speak(this.utterance);
+            this.mostrarToast('Error al iniciar la lectura por voz', 'danger');
+        }
     }
 
     /** Logic for AI Test */
@@ -258,8 +255,6 @@ export class DetallePublicacionPage implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         // Asegurar que el audio se detenga al salir de la página
-        if (this.synth) {
-            this.synth.cancel();
-        }
+        TextToSpeech.stop();
     }
 }
