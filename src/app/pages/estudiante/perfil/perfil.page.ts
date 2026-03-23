@@ -22,6 +22,8 @@ export class PerfilPage implements OnInit {
   isEditing: boolean = false;
   selectedFile: File | null = null;
   photoPreview: string | null = null;
+  showPassword = false;
+
 
   // URL base para las fotos
   readonly API_URL = environment.apiUrl;
@@ -81,7 +83,13 @@ export class PerfilPage implements OnInit {
     const loading = await this.loadingCtrl.create({ message: 'Guardando cambios...' });
     await loading.present();
 
-    const { id, password, created_at, updated_at, favoritos, comentarios, ...datosAEnviar } = this.usuario;
+    const { id, created_at, updated_at, favoritos, comentarios, ...datosAEnviar } = this.usuario;
+    
+    // Solo enviar el password si el usuario escribió algo en él
+    if (!datosAEnviar.password || datosAEnviar.password.trim() === '') {
+      delete datosAEnviar.password;
+    }
+
 
     // Asegurarse de que edad sea número
     if (datosAEnviar.edad) {
@@ -94,7 +102,9 @@ export class PerfilPage implements OnInit {
         this.usrService.saveSession(res); // Actualizar localStorage
         this.usuario = { ...res };
         this.isEditing = false;
+        this.showPassword = false;
         this.selectedFile = null;
+
         this.showToast('Perfil actualizado correctamente', 'success');
       },
       error: (err: any) => {

@@ -27,6 +27,8 @@ export class PerfilPage implements OnInit {
   imgPreview: string | null = null;
   apiUrl = `${environment.apiUrl}/investigador`;
   defaultAvatar = 'https://ionicframework.com/docs/img/demos/avatar.svg';
+  showPassword = false;
+
 
   constructor() { }
 
@@ -73,8 +75,10 @@ export class PerfilPage implements OnInit {
       google_academico_url: [data.google_academico_url || ''],
       researchgate_url: [data.researchgate_url || ''],
       direccion_oficina: [data.direccion_oficina || ''],
-      horario_atencion: [data.horario_atencion || '']
+      horario_atencion: [data.horario_atencion || ''],
+      password: ['']
     });
+
   }
 
   toggleEdit() {
@@ -106,6 +110,21 @@ export class PerfilPage implements OnInit {
       return;
     }
 
+    const alert = await this.alertCtrl.create({
+      header: 'Confirmar Cambios',
+      message: '¿Estás seguro de que deseas guardar los cambios realizados en tu perfil?',
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        {
+          text: 'Sí, Guardar',
+          handler: () => this.processSave()
+        }
+      ]
+    });
+    await alert.present();
+  }
+
+  async processSave() {
     const loading = await this.loadingCtrl.create({
       message: 'Actualizando perfil...',
       spinner: 'crescent'
@@ -126,6 +145,7 @@ export class PerfilPage implements OnInit {
         loading.dismiss();
         this.showToast('Perfil actualizado con éxito', 'success');
         this.isEditing = false;
+        this.showPassword = false;
 
         // Actualizar localmente la sesión
         const updatedUser = res.investigador || res;

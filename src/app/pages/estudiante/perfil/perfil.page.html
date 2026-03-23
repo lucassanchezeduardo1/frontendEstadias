@@ -61,13 +61,28 @@
 
       <div class="info-card">
         <div class="card-title">Contacto</div>
-
         <div class="field">
           <label>Correo Electrónico</label>
           <p *ngIf="!isEditing">{{ usuario.email }}</p>
           <ion-input *ngIf="isEditing" type="email" [(ngModel)]="usuario.email" class="custom-input"></ion-input>
         </div>
       </div>
+
+      <!-- Sección de Seguridad para password (solo en edición) -->
+      <div class="info-card animated-card" *ngIf="isEditing">
+        <div class="card-title">Cambiar Contraseña</div>
+        <div class="field">
+          <label>Nueva Contraseña (Opcional)</label>
+          <ion-input [type]="showPassword ? 'text' : 'password'" [(ngModel)]="usuario.password"
+            placeholder="Ingresa una nueva contraseña si deseas cambiarla" class="custom-input">
+            <ion-button fill="clear" slot="end" (click)="showPassword = !showPassword" color="medium">
+              <ion-icon [name]="showPassword ? 'eye-off-outline' : 'eye-outline'" slot="icon-only"></ion-icon>
+            </ion-button>
+          </ion-input>
+        </div>
+      </div>
+
+
     </div>
 
     <div class="actions-section">

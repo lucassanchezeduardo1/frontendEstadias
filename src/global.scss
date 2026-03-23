@@ -523,29 +523,42 @@ ion-header ion-toolbar {
     margin-top: 20px;
 }
 
-/* Tabs personalizadas (Actualizado para iconos rellenos) */
+/* Tabs personalizadas globales (Consistentes para todos los roles) */
 ion-tab-bar {
-    --background: white;
-    --border-top: none;
-    height: 75px;
-    padding-bottom: 0px;
+    --background: #ffffff;
+    --border: none;
+    min-height: 75px;
+    padding-bottom: calc(10px + env(safe-area-inset-bottom));
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
     box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.05);
+    border-top: 1px solid rgba(0, 0, 0, 0.02);
 
     ion-tab-button {
         --color: #94a3b8;
         --color-selected: var(--ion-color-primary);
+        --ripple-color: var(--ion-color-primary);
 
         ion-icon {
             font-size: 26px;
+            margin-bottom: 2px;
+            transition: transform 0.3s ease;
         }
 
         ion-label {
             font-size: 0.7rem;
             font-weight: 700;
-            margin-top: 6px;
+            margin-top: 4px;
+        }
+
+        &.tab-selected {
+            ion-icon {
+                transform: translateY(-2px);
+            }
         }
     }
 }
+
 
 /* ================================================
    ESTILOS DE AUTENTICACIÓN (LOGIN & REGISTER)

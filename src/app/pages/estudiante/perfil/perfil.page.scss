@@ -110,7 +110,15 @@
             font-size: 15px;
             min-height: 45px;
             border: 1px solid #eee;
+
+            ion-button {
+                --padding-end: 8px;
+                --padding-start: 8px;
+                height: 100%;
+                margin: 0;
+            }
         }
+
     }
 }
 
@@ -137,3 +145,19 @@
 .hidden-input {
     display: none;
 }
+
+.animated-card {
+    animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
